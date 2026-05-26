@@ -1,0 +1,31 @@
+services:
+  mysql:
+    image: mysql:8.4
+    container_name: bgtrack_mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: bgtrack
+      MYSQL_USER: bgtrack
+      MYSQL_PASSWORD: bgtrack
+    ports:
+      - "3306:3306"
+    volumes:
+      - bgtrack_mysql_data:/var/lib/mysql
+      - ./docker/mysql/init:/docker-entrypoint-initdb.d
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+
+  phpmyadmin:
+    image: phpmyadmin:5.2
+    container_name: bgtrack_phpmyadmin
+    restart: unless-stopped
+    depends_on:
+      - mysql                         # Primero arranca mysql.
+    environment:
+      PMA_HOST: mysql                 # Nombre del host al que se conecta (se usa el nombre del servicio).
+      PMA_PORT: 3306
+    ports:
+      - "8081:80"
+
+volumes:
+  bgtrack_mysql_data:
