@@ -14,7 +14,7 @@ INSERT INTO juegos
 VALUES
 ('7 Wonders', 'Draft', 30, 3, 7),
 ('7 Wonders Duel', 'Draft', 30, 2, 2),
-('Agricola', 'Eurogame', 120, 1, 5),
+('Agrícola', 'Eurogame', 120, 1, 5),
 ('Ark Nova', 'Eurogame', 150, 1, 4),
 ('Azul', 'Abstracto', 45, 2, 4),
 ('Brass: Birmingham', 'Eurogame', 120, 2, 4),
