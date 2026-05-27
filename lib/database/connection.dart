@@ -10,6 +10,10 @@ class DatabaseConnection {
       db: 'bgtrack',
     );
 
-    return await MySqlConnection.connect(settings);
+    final conexion = await MySqlConnection.connect(settings);
+
+    await conexion.query('SET NAMES utf8mb4 COLLATE utf8mb4_unicode_ci');
+
+    return conexion;
   }
 }

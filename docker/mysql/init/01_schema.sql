@@ -4,6 +4,9 @@ COLLATE utf8mb4_unicode_ci;
 
 USE bgtrack;
 
+SET NAMES utf8mb4;
+SET CHARACTER SET utf8mb4;
+
 CREATE TABLE usuarios (
     id INT AUTO_INCREMENT PRIMARY KEY,
     rol ENUM('admin', 'usuario') NOT NULL DEFAULT 'usuario',
@@ -13,7 +16,7 @@ CREATE TABLE usuarios (
     activo BOOLEAN NOT NULL DEFAULT TRUE,
     ultimo_login DATETIME NULL,
     fecha_registro DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE juegos (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -30,7 +33,7 @@ CREATE TABLE juegos (
 
     CONSTRAINT chk_juegos_jugadores
         CHECK (jugadores_min > 0 AND jugadores_max >= jugadores_min)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE jugadores (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -39,7 +42,7 @@ CREATE TABLE jugadores (
     residencia VARCHAR(100) NULL,
     fecha_alta DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     activo BOOLEAN NOT NULL DEFAULT TRUE
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE partidas (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -64,7 +67,7 @@ CREATE TABLE partidas (
 
     CONSTRAINT chk_partidas_duracion
         CHECK (duracion_minutos IS NULL OR duracion_minutos >= 0)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE participaciones (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -87,4 +90,4 @@ CREATE TABLE participaciones (
 
     CONSTRAINT uq_partida_jugador
         UNIQUE (id_partida, id_jugador)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
