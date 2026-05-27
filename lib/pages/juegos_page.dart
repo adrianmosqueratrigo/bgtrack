@@ -50,15 +50,19 @@ class _JuegosPageState extends State<JuegosPage> {
       child: Padding(
         padding: const EdgeInsets.symmetric(
           horizontal: 20,
-          vertical: 5
+          vertical: 10,
         ),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             CircleAvatar(
+              radius: 20,
               backgroundColor: primaryColor,
               foregroundColor: Colors.white,
-              child: Text(juego.id.toString()),
+              child: const Icon(
+                Icons.extension,
+                size: 22,
+              ),
             ),
             const SizedBox(width: 20),
             Expanded(
@@ -82,7 +86,7 @@ class _JuegosPageState extends State<JuegosPage> {
                   ),
                   const SizedBox(height: 2),
                   Text(
-                    '${juego.jugadoresMin}-${juego.jugadoresMax} jugadores · '
+                    '${juego.jugadoresMin}-${juego.jugadoresMax} jugs. ~ '
                     '${juego.duracionEstimadaMinutos ?? 0} min',
                     style: TextStyle(
                       color: secondaryTextColor,

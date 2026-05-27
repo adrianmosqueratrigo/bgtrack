@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../theme/app_theme.dart';
+import 'juego_form_page.dart';
 import 'juegos_page.dart';
 import 'mi_cuenta_page.dart';
 
@@ -13,22 +14,25 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   int paginaSeleccionada = 0;
+  int juegosKey = 0;
 
   final List<String> titulos = [
     'Jugadores',
-    'Juegos',
+    'Ludoteca',
     'Nueva partida',
-    'Partidas',
+    'Histórico de partidas',
     'Mi cuenta',
   ];
 
-  final List<Widget> paginas = const [
-    _PaginaPendiente(titulo: 'Jugadores'),
-    JuegosPage(),
-    _PaginaPendiente(titulo: 'Nueva partida'),
-    _PaginaPendiente(titulo: 'Partidas'),
-    MiCuentaPage(),
-  ];
+  List<Widget> obtenerPaginas() {
+    return [
+      const _PaginaPendiente(titulo: 'Jugadores'),
+      JuegosPage(key: ValueKey(juegosKey)),
+      const _PaginaPendiente(titulo: 'Nueva partida'),
+      const _PaginaPendiente(titulo: 'Partidas'),
+      const MiCuentaPage(),
+    ];
+  }
 
   void cambiarPagina(int index) {
     setState(() {
@@ -36,12 +40,19 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-  void abrirFormularioNuevoJuego() {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Formulario de juego pendiente de implementar'),
+  Future<void> abrirFormularioNuevoJuego() async {
+    final resultado = await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const JuegoFormPage(),
       ),
     );
+
+    if (resultado == true) {
+      setState(() {
+        juegosKey++;
+      });
+    }
   }
 
   void abrirEstadisticas() {
@@ -56,20 +67,32 @@ class _HomePageState extends State<HomePage> {
   List<Widget>? accionesAppBar() {
     if (paginaSeleccionada == 1) {
       return [
-        IconButton(
-          tooltip: 'Añadir juego',
-          icon: const Icon(Icons.add),
-          onPressed: abrirFormularioNuevoJuego,
+        Padding(
+          padding: const EdgeInsets.only(right: 20),
+          child: IconButton(
+            tooltip: 'Añadir juego',
+            icon: const Icon(
+              Icons.add_circle_outline_rounded,
+              size: 32,
+            ),
+            onPressed: abrirFormularioNuevoJuego,
+          ),
         ),
       ];
     }
 
     if (paginaSeleccionada == 3) {
       return [
-        IconButton(
-          tooltip: 'Estadísticas',
-          icon: const Icon(Icons.bar_chart),
-          onPressed: abrirEstadisticas,
+        Padding(
+          padding: const EdgeInsets.only(right: 20),
+          child: IconButton(
+            tooltip: 'Estadísticas',
+            icon: const Icon(
+              Icons.insert_chart_outlined_rounded,
+              size: 32,
+            ),
+            onPressed: abrirEstadisticas,
+          ),
         ),
       ];
     }
@@ -79,48 +102,50 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final paginas = obtenerPaginas();
+
     return Scaffold(
       appBar: AppBar(
         title: Text(titulos[paginaSeleccionada]),
         actions: accionesAppBar(),
       ),
       body: paginas[paginaSeleccionada],
-        bottomNavigationBar: Container(
-          decoration: const BoxDecoration(
-            border: Border(
-              top: BorderSide(
-                color: AppTheme.secondaryTextColor,
-                width: 0.6,
-              ),
+      bottomNavigationBar: Container(
+        decoration: const BoxDecoration(
+          border: Border(
+            top: BorderSide(
+              color: AppTheme.secondaryTextColor,
+              width: 0.6,
             ),
           ),
-          child: NavigationBar(
-            selectedIndex: paginaSeleccionada,
-            onDestinationSelected: cambiarPagina,
-            destinations: const [
-              NavigationDestination(
-                icon: Icon(Icons.groups),
-                label: 'Jugadores',
-              ),
-              NavigationDestination(
-                icon: Icon(Icons.extension),
-                label: 'Juegos',
-              ),
-              NavigationDestination(
-                icon: Icon(Icons.add_circle_outline),
-                label: 'Nueva',
-              ),
-              NavigationDestination(
-                icon: Icon(Icons.history),
-                label: 'Partidas',
-              ),
-              NavigationDestination(
-                icon: Icon(Icons.person),
-                label: 'Cuenta',
-              ),
-            ],
-          ),
         ),
+        child: NavigationBar(
+          selectedIndex: paginaSeleccionada,
+          onDestinationSelected: cambiarPagina,
+          destinations: const [
+            NavigationDestination(
+              icon: Icon(Icons.groups_2_rounded),
+              label: 'Jugadores',
+            ),
+            NavigationDestination(
+              icon: Icon(Icons.extension),
+              label: 'Ludoteca',
+            ),
+            NavigationDestination(
+              icon: Icon(Icons.add_circle_outline),
+              label: 'Nueva',
+            ),
+            NavigationDestination(
+              icon: Icon(Icons.history_rounded),
+              label: 'Partidas',
+            ),
+            NavigationDestination(
+              icon: Icon(Icons.person_2_rounded),
+              label: 'Mi cuenta',
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
