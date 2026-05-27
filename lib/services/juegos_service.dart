@@ -4,6 +4,7 @@ import '../models/juego.dart';
 class JuegosService {
   
   Future<List<Juego>> obtenerJuegos() async {
+
     final conexion = await DatabaseConnection.getConnection();
 
     try {
@@ -51,4 +52,36 @@ class JuegosService {
 
   }
   
+  Future<void> actualizarJuego(Juego juego) async {
+    
+    final conexion = await DatabaseConnection.getConnection();
+
+    try {
+      await conexion.query(
+        '''
+        UPDATE juegos
+        SET nombre = ?,
+            tipo = ?,
+            duracion_estimada_minutos = ?,
+            jugadores_min = ?,
+            jugadores_max = ?,
+            activo = ?
+        WHERE id = ?
+        ''',
+        [
+          juego.nombre,
+          juego.tipo,
+          juego.duracionEstimadaMinutos,
+          juego.jugadoresMin,
+          juego.jugadoresMax,
+          juego.activo ? 1 : 0,
+          juego.id,
+        ],
+      );
+    } finally {
+      await conexion.close();
+    }
+
+  }
+
 }

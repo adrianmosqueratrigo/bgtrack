@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../models/juego.dart';
 import '../services/juegos_service.dart';
+import 'juego_form_page.dart';
 
 class JuegosPage extends StatefulWidget {
   const JuegosPage({super.key});
@@ -31,12 +32,20 @@ class _JuegosPageState extends State<JuegosPage> {
     return activo ? Icons.check_circle : Icons.cancel;
   }
 
-  void editarJuego(Juego juego) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('Editar ${juego.nombre} pendiente de implementar'),
+  void editarJuego(Juego juego) async {
+    final resultado = await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => JuegoFormPage(juego: juego),
       ),
     );
+
+    if (resultado == true) {
+      setState(() {
+        cargarJuegos();
+      });
+    }
+    
   }
 
   // CONSTRUIR LOS CARDS DE JUEGOS.

@@ -4,7 +4,13 @@ import '../models/juego.dart';
 import '../services/juegos_service.dart';
 
 class JuegoFormPage extends StatefulWidget {
-  const JuegoFormPage({super.key});
+
+  final Juego? juego;
+
+  const JuegoFormPage({
+    super.key,
+    this.juego,
+  });
 
   @override
   State<JuegoFormPage> createState() => _JuegoFormPageState();
@@ -20,6 +26,25 @@ class _JuegoFormPageState extends State<JuegoFormPage> {
   final jugadoresMaxController = TextEditingController();
 
   bool activo = true;
+
+  bool get esEdicion {
+    return widget.juego != null;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    if (esEdicion) {
+      nombreController.text = widget.juego!.nombre;
+      tipoController.text = widget.juego!.tipo ?? '';
+      duracionController.text =
+          widget.juego!.duracionEstimadaMinutos?.toString() ?? '';
+      jugadoresMinController.text = widget.juego!.jugadoresMin.toString();
+      jugadoresMaxController.text = widget.juego!.jugadoresMax.toString();
+      activo = widget.juego!.activo;
+    }
+  }
 
   @override
   void dispose() {
@@ -38,6 +63,7 @@ class _JuegoFormPageState extends State<JuegoFormPage> {
     }
 
     final juego = Juego(
+      id: widget.juego?.id,
       nombre: nombreController.text.trim(),
       tipo: tipoController.text.trim().isEmpty
           ? null
@@ -51,19 +77,29 @@ class _JuegoFormPageState extends State<JuegoFormPage> {
     );
 
     try {
-      await JuegosService().insertarJuego(juego);
+
+      if (esEdicion) {
+        await JuegosService().actualizarJuego(juego);
+      } else {
+        await JuegosService().insertarJuego(juego);
+      }
 
       if (!mounted) {
         return;
       }
 
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Juego guardado correctamente'),
+        SnackBar(
+          content: Text(
+            esEdicion
+                ? 'Juego actualizado correctamente'
+                : 'Juego guardado correctamente',
+          ),
         ),
       );
 
       Navigator.pop(context, true);
+      
     } catch (e) {
       if (!mounted) {
         return;
@@ -76,6 +112,7 @@ class _JuegoFormPageState extends State<JuegoFormPage> {
       );
     }
   }
+
 
   String? validarObligatorio(String? value, String mensaje) {
     if (value == null || value.trim().isEmpty) {
@@ -137,7 +174,7 @@ class _JuegoFormPageState extends State<JuegoFormPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Añadir juego'),
+        title: Text(esEdicion ? 'Editar juego' : 'Nuevo juego'),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(
