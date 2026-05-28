@@ -4,7 +4,13 @@ import '../models/jugador.dart';
 import '../services/jugadores_service.dart';
 
 class JugadorFormPage extends StatefulWidget {
-  const JugadorFormPage({super.key});
+
+  final Jugador? jugador;
+
+  const JugadorFormPage({
+    super.key,
+    this.jugador,
+  });
 
   @override
   State<JugadorFormPage> createState() => _JugadorFormPageState();
@@ -18,6 +24,22 @@ class _JugadorFormPageState extends State<JugadorFormPage> {
 
   DateTime? fechaNacimiento;
   bool activo = true;
+
+  bool get esEdicion {
+    return widget.jugador != null;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    if (esEdicion) {
+      nombreController.text = widget.jugador!.nombre;
+      residenciaController.text = widget.jugador!.residencia ?? '';
+      fechaNacimiento = widget.jugador!.fechaNacimiento;
+      activo = widget.jugador!.activo;
+    }
+  }
 
   @override
   void dispose() {
@@ -67,6 +89,7 @@ class _JugadorFormPageState extends State<JugadorFormPage> {
     }
 
     final jugador = Jugador(
+      id: widget.jugador?.id,
       nombre: nombreController.text.trim(),
       fechaNacimiento: fechaNacimiento,
       residencia: residenciaController.text.trim().isEmpty
@@ -75,16 +98,26 @@ class _JugadorFormPageState extends State<JugadorFormPage> {
       activo: activo,
     );
 
+
+
     try {
-      await JugadoresService().insertarJugador(jugador);
+      if (esEdicion) {
+        await JugadoresService().actualizarJugador(jugador);
+      } else {
+        await JugadoresService().insertarJugador(jugador);
+      }
 
       if (!mounted) {
         return;
       }
 
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Jugador guardado correctamente'),
+        SnackBar(
+          content: Text(
+            esEdicion
+              ? 'Jugador actualizado correctamente'
+              : 'Jugador guardado correctamente',
+          ),
         ),
       );
 
@@ -106,7 +139,7 @@ class _JugadorFormPageState extends State<JugadorFormPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Nuevo jugador'),
+        title: Text(esEdicion ? 'Editar jugador' : 'Nuevo jugador'),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),

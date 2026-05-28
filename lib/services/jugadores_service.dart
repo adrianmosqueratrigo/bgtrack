@@ -44,4 +44,30 @@ class JugadoresService {
     }
   }
 
+  Future<void> actualizarJugador(Jugador jugador) async {
+    final conexion = await DatabaseConnection.getConnection();
+
+    try {
+      await conexion.query(
+        '''
+        UPDATE jugadores
+        SET nombre = ?,
+            fecha_nacimiento = ?,
+            residencia = ?,
+            activo = ?
+        WHERE id = ?
+        ''',
+        [
+          jugador.nombre,
+          jugador.fechaNacimiento?.toIso8601String().split('T')[0],
+          jugador.residencia,
+          jugador.activo ? 1 : 0,
+          jugador.id,
+        ],
+      );
+    } finally {
+      await conexion.close();
+    }
+  }
+
 }

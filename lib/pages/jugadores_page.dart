@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../models/jugador.dart';
 import '../services/jugadores_service.dart';
+import 'jugador_form_page.dart';
 
 class JugadoresPage extends StatefulWidget {
   const JugadoresPage({super.key});
@@ -51,12 +52,19 @@ class _JugadoresPageState extends State<JugadoresPage> {
     return '$edad años';
   }
 
-  void editarJugador(Jugador jugador) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('Editar ${jugador.nombre} pendiente de implementar'),
+  Future<void> editarJugador(Jugador jugador) async {
+    final resultado = await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => JugadorFormPage(jugador: jugador),
       ),
     );
+
+    if (resultado == true) {
+      setState(() {
+        cargarJugadores();
+      });
+    }
   }
 
   Widget construirCardJugador(
