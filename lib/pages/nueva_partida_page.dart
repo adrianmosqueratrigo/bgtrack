@@ -6,6 +6,7 @@ import '../models/juego.dart';
 import '../models/jugador.dart';
 import '../services/juegos_service.dart';
 import '../services/jugadores_service.dart';
+import '../utils/app_snackbar.dart';
 import 'finalizar_partida_page.dart';
 
 class NuevaPartidaPage extends StatefulWidget {
@@ -227,24 +228,13 @@ class _NuevaPartidaPageState extends State<NuevaPartidaPage> {
         datosPartidaDesplegados = true;
       });
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('No puede haber jugadores repetidos'),
-        ),
-      );
-      return;
-    }
+    AppSnackbar.mostrar(
+      context,
+      'No puede haber jugadores repetidos',
+    );
 
-/*
-    if (segundos == 0) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Inicia el reloj antes de finalizar la partida'),
-        ),
-      );
       return;
     }
-*/
 
     pausarReloj();
 

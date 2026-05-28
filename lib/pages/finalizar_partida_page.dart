@@ -5,6 +5,7 @@ import '../models/jugador.dart';
 import '../models/participacion.dart';
 import '../models/partida.dart';
 import '../services/partidas_service.dart';
+import '../utils/app_snackbar.dart';
 
 class FinalizarPartidaPage extends StatefulWidget {
   final Juego juego;
@@ -160,10 +161,9 @@ class _FinalizarPartidaPageState extends State<FinalizarPartidaPage> {
     }
 
     if (hayJugadoresRepetidos()) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('No puede haber jugadores repetidos'),
-        ),
+      AppSnackbar.mostrar(
+        context,
+        'No puede haber jugadores repetidos',
       );
       return;
     }
@@ -207,22 +207,21 @@ class _FinalizarPartidaPageState extends State<FinalizarPartidaPage> {
         return;
       }
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Partida guardada correctamente'),
-        ),
-      );
+    AppSnackbar.mostrar(
+      context,
+      'Partida guardada correctamente',
+    );
 
       Navigator.pop(context, true);
+      
     } catch (e) {
       if (!mounted) {
         return;
       }
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Error al guardar la partida: $e'),
-        ),
+      AppSnackbar.mostrarError(
+        context,
+        'Error al guardar la partida: $e',
       );
     }
   }

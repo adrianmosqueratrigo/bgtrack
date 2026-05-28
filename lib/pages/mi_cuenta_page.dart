@@ -1,29 +1,28 @@
 import 'package:flutter/material.dart';
 
+import '../utils/app_snackbar.dart';
+
 class MiCuentaPage extends StatelessWidget {
   const MiCuentaPage({super.key});
 
   void editarMisDatos(BuildContext context) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Editar mis datos pendiente de implementar'),
-      ),
+    AppSnackbar.mostrar(
+      context,
+      'Editar mis datos pendiente de implementar',
     );
   }
 
   void gestionarUsuarios(BuildContext context) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Gestión de usuarios pendiente de implementar'),
-      ),
+    AppSnackbar.mostrar(
+      context,
+      'Gestión de usuarios pendiente de implementar',
     );
   }
 
   void cerrarSesion(BuildContext context) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Cerrar sesión pendiente de implementar'),
-      ),
+    AppSnackbar.mostrar(
+      context,
+      'Cerrar sesión pendiente de implementar',
     );
   }
 

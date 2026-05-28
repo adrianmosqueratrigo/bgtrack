@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../models/partida_detalle.dart';
 import '../models/partida_resumen.dart';
 import '../services/partidas_service.dart';
+import '../utils/app_snackbar.dart';
 
 class PartidaFormPage extends StatefulWidget {
   final PartidaResumen partida;
@@ -59,10 +60,13 @@ class _PartidaFormPageState extends State<PartidaFormPage> {
         cargandoDetalle = false;
       });
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error al cargar detalle de partida: $e')),
+      AppSnackbar.mostrarError(
+        context,
+        'Error al cargar detalle de partida: $e',
       );
+
     }
+
   }
 
   @override
@@ -154,8 +158,9 @@ class _PartidaFormPageState extends State<PartidaFormPage> {
         return;
       }
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Partida actualizada correctamente')),
+      AppSnackbar.mostrar(
+        context,
+        'Partida actualizada correctamente',
       );
 
       Navigator.pop(context, true);
@@ -164,9 +169,11 @@ class _PartidaFormPageState extends State<PartidaFormPage> {
         return;
       }
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error al actualizar la partida: $e')),
+      AppSnackbar.mostrarError(
+        context,
+        'Error al actualizar la partida',
       );
+
     }
   }
 

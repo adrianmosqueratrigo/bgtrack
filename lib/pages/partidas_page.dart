@@ -4,6 +4,7 @@ import '../models/participante_partida.dart';
 import '../models/partida_detalle.dart';
 import '../models/partida_resumen.dart';
 import '../services/partidas_service.dart';
+import '../utils/app_snackbar.dart';
 import 'partida_form_page.dart';
 
 class PartidasPage extends StatefulWidget {
@@ -129,10 +130,9 @@ class _PartidasPageState extends State<PartidasPage> {
       Navigator.pop(context);
 
       if (detalle == null) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('No se encontró el detalle de la partida'),
-          ),
+        AppSnackbar.mostrarError(
+          context,
+          'No se encontró el detalle de la partida',
         );
         return;
       }
@@ -150,10 +150,13 @@ class _PartidasPageState extends State<PartidasPage> {
 
       Navigator.pop(context);
 
-      ScaffoldMessenger.of(
+      AppSnackbar.mostrarError(
         context,
-      ).showSnackBar(SnackBar(content: Text('Error al cargar el detalle: $e')));
+        'Error al cargar el detalle: $e',
+      );
+
     }
+    
   }
 
   Widget construirDialogDetalle(

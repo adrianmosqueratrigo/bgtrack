@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../models/jugador.dart';
 import '../services/jugadores_service.dart';
+import '../utils/app_snackbar.dart';
 
 class JugadorFormPage extends StatefulWidget {
 
@@ -111,28 +112,27 @@ class _JugadorFormPageState extends State<JugadorFormPage> {
         return;
       }
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            esEdicion
-              ? 'Jugador actualizado correctamente'
-              : 'Jugador guardado correctamente',
-          ),
-        ),
+      AppSnackbar.mostrar(
+        context,
+        esEdicion
+            ? 'Jugador actualizado correctamente'
+            : 'Jugador guardado correctamente',
       );
 
       Navigator.pop(context, true);
+
     } catch (e) {
       if (!mounted) {
         return;
       }
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Error al guardar el jugador: $e'),
-        ),
+      AppSnackbar.mostrarError(
+        context,
+        'Error al guardar el jugador',
       );
+
     }
+
   }
 
   @override

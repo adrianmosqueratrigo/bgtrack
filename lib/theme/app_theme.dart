@@ -72,6 +72,23 @@ class AppTheme {
         }),
       ),
 
+      snackBarTheme: SnackBarThemeData(
+        backgroundColor: primaryDarkColor,
+        contentTextStyle: const TextStyle(
+          color: Colors.white,
+          fontSize: 17,
+          fontWeight: FontWeight.w500,
+        ),
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(15),
+        ),
+        insetPadding: const EdgeInsets.symmetric(
+          horizontal: 16,
+          vertical: 12,
+        ),
+      ),
+
       cardTheme: CardThemeData(
         color: cardColor,
         elevation: 6,
@@ -81,7 +98,7 @@ class AppTheme {
           vertical: 6,
         ),
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(14),
+          borderRadius: BorderRadius.circular(20),
           side: const BorderSide(
             color: cardBorderColor,
             width: 1,
