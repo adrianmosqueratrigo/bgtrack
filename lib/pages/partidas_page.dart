@@ -96,16 +96,15 @@ class _PartidasPageState extends State<PartidasPage> {
       context: context,
       barrierDismissible: false,
       builder: (context) {
-        return const Center(
-          child: CircularProgressIndicator(),
-        );
+        return const Center(child: CircularProgressIndicator());
       },
     );
 
     try {
       final detalle = await PartidasService().obtenerDetallePartida(partida.id);
-      final participantes =
-          await PartidasService().obtenerParticipantesPartida(partida.id);
+      final participantes = await PartidasService().obtenerParticipantesPartida(
+        partida.id,
+      );
 
       if (!mounted) {
         return;
@@ -135,11 +134,9 @@ class _PartidasPageState extends State<PartidasPage> {
 
       Navigator.pop(context);
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Error al cargar el detalle: $e'),
-        ),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Error al cargar el detalle: $e')));
     }
   }
 
@@ -150,90 +147,100 @@ class _PartidasPageState extends State<PartidasPage> {
     return AlertDialog(
       insetPadding: const EdgeInsets.symmetric(
         horizontal: 40,
-        vertical: 50,
+        vertical: 40
       ),
       title: Center(
         child: Text(
           'Partida nº ${detalle.id}',
           textAlign: TextAlign.center,
-          ),
+          style: Theme.of(
+            context,
+          ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+        ),
       ),
       content: SizedBox(
         width: double.maxFinite,
         child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              construirLineaDetalle('Juego', detalle.nombreJuego),
-              construirLineaDetalle('Fecha', textoFechaHora(detalle.fechaHora)),
-              construirLineaDetalle('Estado', textoEstado(detalle.estado)),
-              construirLineaDetalle('Duración', textoDuracion(detalle.duracionMinutos)),
-              construirLineaDetalle('Ganador', textoGanadoresParticipantes(participantes),),
-              
-              const SizedBox(height: 15),
-
-              Text(
-                'Participantes',
-                textAlign: TextAlign.center,
-                style: Theme.of(context).textTheme.titleMedium,
-              ),
-
-              if (participantes.isEmpty)
+          child: Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 15,
+              vertical: 10,
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
                 Text(
-                  'No hay participantes registrados.',
+                  'Datos generales',
                   textAlign: TextAlign.center,
-                  style: Theme.of(context).textTheme.bodyMedium,
-                )
-              else
-                Column(
-                  children: participantes.map((participante) {
-                    return Padding(
-                      padding: const EdgeInsets.only(bottom: 6),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: Text(
-                              participante.nombreJugador,
-                              textAlign: TextAlign.left,
-                            ),
-                          ),
-                          Text(
-                            participante.puntuacion == null
-                                ? 'Sin puntuación'
-                                : '${participante.puntuacion} pts',
-                            textAlign: TextAlign.right,
-                          ),
-                          if (participante.esGanador) ...[
-                            const SizedBox(width: 6),
-                            const Icon(
-                              Icons.emoji_events,
-                              size: 18,
-                              color: Colors.amber,
-                            ),
-                          ] else
-                            const SizedBox(width: 24),
-                        ],
-                      ),
-                    );
-                  }).toList(),
+                  style: Theme.of(
+                    context,
+                  ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
                 ),
-
-              const SizedBox(height: 12),
-              Text(
-                'Observaciones',
-                style: Theme.of(context).textTheme.titleMedium,
-              ),
-              const SizedBox(height: 6),
-              Text(
-                detalle.notas == null || detalle.notas!.trim().isEmpty
-                    ? 'Sin observaciones'
-                    : detalle.notas!,
-              ),
-            ],
+                const SizedBox(height: 10),
+                Table(
+                  columnWidths: const {
+                    0: IntrinsicColumnWidth(),
+                    1: FlexColumnWidth(),
+                  },
+                  defaultVerticalAlignment: TableCellVerticalAlignment.top,
+                  children: [
+                    construirFilaTablaDetalle('Juego', detalle.nombreJuego),
+                    construirFilaTablaDetalle(
+                      'Fecha',
+                      textoFechaHora(detalle.fechaHora),
+                    ),
+                    construirFilaTablaDetalle(
+                      'Estado',
+                      textoEstado(detalle.estado),
+                    ),
+                    construirFilaTablaDetalle(
+                      'Duración',
+                      textoDuracion(detalle.duracionMinutos),
+                    ),
+                    construirFilaTablaDetalle(
+                      'Ganador',
+                      textoGanadoresParticipantes(participantes),
+                    ),
+                    construirFilaTablaDetalle(
+                      'Observ.',
+                      detalle.notas == null || detalle.notas!.trim().isEmpty
+                          ? 'Sin observaciones'
+                          : detalle.notas!,
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 30),
+                Text(
+                  'Jugadores',
+                  textAlign: TextAlign.center,
+                  style: Theme.of(
+                    context,
+                  ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 10),
+                if (participantes.isEmpty)
+                  Text(
+                    'No hay jugadores.',
+                    textAlign: TextAlign.center,
+                    style: Theme.of(context).textTheme.bodyMedium,
+                  )
+                else
+                  Table(
+                    columnWidths: const {
+                      0: FlexColumnWidth(),
+                      1: IntrinsicColumnWidth(),
+                      2: IntrinsicColumnWidth(),
+                    },
+                    defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+                    children: participantes.map((participante) {
+                      return construirFilaTablaParticipante(participante);
+                    }).toList(),
+                  ),
+              ],
+            ),
           ),
         ),
       ),
-      
       actionsAlignment: MainAxisAlignment.center,
       actions: [
         TextButton(
@@ -242,38 +249,67 @@ class _PartidasPageState extends State<PartidasPage> {
           },
           child: const Text(
             'Cerrar',
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-            ),
+            style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
           ),
         ),
       ],
     );
   }
 
-Widget construirLineaDetalle(String titulo, String valor) {
-  return Padding(
-    padding: const EdgeInsets.only(bottom: 14),
-    child: Column(
+  TableRow construirFilaTablaDetalle(String titulo, String valor) {
+    return TableRow(
       children: [
-        Text(
-          titulo,
-          textAlign: TextAlign.center,
-          style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
+        Padding(
+          padding: const EdgeInsets.only(right: 12, bottom: 10),
+          child: Text(
+            '$titulo',
+            style: Theme.of(
+              context,
+            ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold),
+          ),
         ),
-        const SizedBox(height: 4),
-        Text(
-          valor,
-          textAlign: TextAlign.center,
-          style: Theme.of(context).textTheme.bodyMedium,
+        Padding(
+          padding: const EdgeInsets.only(bottom: 10),
+          child: Text(
+            valor,
+            textAlign: TextAlign.left,
+            style: Theme.of(context).textTheme.bodyMedium,
+          ),
         ),
       ],
-    ),
-  );
-}
+    );
+  }
+
+  TableRow construirFilaTablaParticipante(ParticipantePartida participante) {
+    return TableRow(
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(bottom: 8, right: 12),
+          child: Text(
+            participante.nombreJugador,
+            textAlign: TextAlign.left,
+            style: Theme.of(context).textTheme.bodyMedium,
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(bottom: 8),
+          child: Text(
+            participante.puntuacion == null
+                ? 'n/a'
+                : '${participante.puntuacion} pts',
+            textAlign: TextAlign.right,
+            style: Theme.of(context).textTheme.bodyMedium,
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(bottom: 8, left: 6),
+          child: participante.esGanador
+              ? const Icon(Icons.emoji_events, size: 18, color: Colors.amber)
+              : const SizedBox(width: 18),
+        ),
+      ],
+    );
+  }
 
   Widget construirCardPartida(
     BuildContext context,
@@ -286,10 +322,7 @@ Widget construirLineaDetalle(String titulo, String valor) {
         borderRadius: BorderRadius.circular(14),
         onTap: () => mostrarDetallePartida(partida),
         child: Padding(
-          padding: const EdgeInsets.symmetric(
-            horizontal: 20,
-            vertical: 10,
-          ),
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
@@ -314,30 +347,24 @@ Widget construirLineaDetalle(String titulo, String valor) {
                     Text(
                       partida.nombreJuego,
                       style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          ),
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                     const SizedBox(height: 2),
                     Text(
                       '${textoFechaHora(partida.fechaHora)}',
-                      style: TextStyle(
-                        color: secondaryTextColor,
-                      ),
+                      style: TextStyle(color: secondaryTextColor),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
                     Text(
                       'Duración: ${textoDuracion(partida.duracionMinutos)}',
-                      style: TextStyle(
-                        color: secondaryTextColor,
-                      ),
+                      style: TextStyle(color: secondaryTextColor),
                     ),
                     Text(
                       'Jugadores: ${partida.numeroJugadores}',
-                      style: TextStyle(
-                        color: secondaryTextColor,
-                      ),
+                      style: TextStyle(color: secondaryTextColor),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -368,9 +395,7 @@ Widget construirLineaDetalle(String titulo, String valor) {
       future: futurePartidas,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(
-            child: CircularProgressIndicator(),
-          );
+          return const Center(child: CircularProgressIndicator());
         }
 
         if (snapshot.hasError) {
@@ -378,9 +403,7 @@ Widget construirLineaDetalle(String titulo, String valor) {
             padding: const EdgeInsets.all(16),
             child: Text(
               'Error al cargar partidas:\n${snapshot.error}',
-              style: TextStyle(
-                color: Theme.of(context).colorScheme.error,
-              ),
+              style: TextStyle(color: Theme.of(context).colorScheme.error),
             ),
           );
         }
@@ -388,9 +411,7 @@ Widget construirLineaDetalle(String titulo, String valor) {
         final partidas = snapshot.data ?? [];
 
         if (partidas.isEmpty) {
-          return const Center(
-            child: Text('No hay partidas registradas.'),
-          );
+          return const Center(child: Text('No hay partidas.'));
         }
 
         return ListView.builder(
