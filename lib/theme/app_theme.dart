@@ -31,6 +31,13 @@ class AppTheme {
         elevation: 0,
         backgroundColor: primaryDarkColor,
         foregroundColor: Colors.white,
+        titleTextStyle: TextStyle(
+          fontFamily: 'monospace',
+          color: Colors.white,
+          fontSize: 20,
+          fontWeight: FontWeight.w600,
+          letterSpacing: 2,
+        ),
         shape: Border(
           bottom: BorderSide(
             color: secondaryTextColor,
