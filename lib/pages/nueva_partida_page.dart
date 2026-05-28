@@ -234,6 +234,7 @@ class _NuevaPartidaPageState extends State<NuevaPartidaPage> {
       return;
     }
 
+/*
     if (segundos == 0) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -242,6 +243,7 @@ class _NuevaPartidaPageState extends State<NuevaPartidaPage> {
       );
       return;
     }
+*/
 
     pausarReloj();
 
@@ -328,7 +330,7 @@ class _NuevaPartidaPageState extends State<NuevaPartidaPage> {
                         : Icons.play_circle_outline_rounded,
                   ),
                 ),
-                const SizedBox(width: 15),
+                const SizedBox(width: 10),
                 IconButton(
                   tooltip: 'Reiniciar',
                   iconSize: 42,
@@ -357,7 +359,6 @@ class _NuevaPartidaPageState extends State<NuevaPartidaPage> {
         ),
         child: SizedBox(
           width: double.infinity,
-          height: 52,
           child: FilledButton.icon(
             onPressed: finalizarPartida,
             icon: const Icon(
@@ -399,6 +400,7 @@ class _NuevaPartidaPageState extends State<NuevaPartidaPage> {
                   Expanded(
                     child: Text(
                       'DATOS DE LA PARTIDA',
+                      textAlign: TextAlign.center,
                       style: Theme.of(context).textTheme.titleMedium?.copyWith(
                             fontWeight: FontWeight.bold,
                           ),
@@ -413,7 +415,7 @@ class _NuevaPartidaPageState extends State<NuevaPartidaPage> {
               ),
             ),
             if (datosPartidaDesplegados) ...[
-              const SizedBox(height: 16),
+              const SizedBox(height: 10),
               DropdownButtonFormField<Juego>(
                 initialValue: juegoSeleccionado,
                 isExpanded: true,
@@ -449,7 +451,7 @@ class _NuevaPartidaPageState extends State<NuevaPartidaPage> {
                   return null;
                 },
               ),
-              const SizedBox(height: 15),
+              const SizedBox(height: 10),
               if (juegoSeleccionado != null)
                 DropdownButtonFormField<int>(
                   initialValue: numeroParticipantes,
@@ -469,7 +471,7 @@ class _NuevaPartidaPageState extends State<NuevaPartidaPage> {
                   },
                 ),
               if (numeroParticipantes != null) ...[
-                const SizedBox(height: 15),
+                const SizedBox(height: 10),
                 ...List.generate(numeroParticipantes!, (index) {
                   return Padding(
                     padding: const EdgeInsets.only(bottom: 16),
@@ -527,7 +529,7 @@ class _NuevaPartidaPageState extends State<NuevaPartidaPage> {
 
         if (snapshot.hasError) {
           return Padding(
-            padding: const EdgeInsets.all(15),
+            padding: const EdgeInsets.all(10),
             child: Text(
               'Error al cargar datos:\n${snapshot.error}',
               style: TextStyle(

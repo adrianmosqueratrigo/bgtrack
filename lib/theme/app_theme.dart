@@ -36,7 +36,7 @@ class AppTheme {
           color: Colors.white,
           fontSize: 20,
           fontWeight: FontWeight.w600,
-          letterSpacing: 1,
+          letterSpacing: 0.4,
         ),
         shape: Border(
           bottom: BorderSide(

@@ -17,7 +17,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  int paginaSeleccionada = 0;
+  int paginaSeleccionada = 2;
   int juegosKey = 0;
   int jugadoresKey = 0;
 
