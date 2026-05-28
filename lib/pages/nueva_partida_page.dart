@@ -546,10 +546,11 @@ class _NuevaPartidaPageState extends State<NuevaPartidaPage> {
             child: Column(
               children: [
                 construirSeccionReloj(),
-                const SizedBox(height: 2),
+                //const SizedBox(height: 2),
                 construirSeccionFinalizarPartida(),
-                const SizedBox(height: 2),
+                //const SizedBox(height: 2),
                 construirSeccionDatosPartida(),
+                const SizedBox(height: 40),
               ],
             ),
           ),

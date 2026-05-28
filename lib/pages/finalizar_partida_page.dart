@@ -230,7 +230,7 @@ class _FinalizarPartidaPageState extends State<FinalizarPartidaPage> {
       titulo,
       textAlign: TextAlign.center,
       style: Theme.of(context).textTheme.titleMedium?.copyWith(
-            fontWeight: FontWeight.bold,
+            //fontWeight: FontWeight.bold,
           ),
     );
   }
@@ -247,7 +247,7 @@ class _FinalizarPartidaPageState extends State<FinalizarPartidaPage> {
             construirTituloSeccion('Resumen de partida'),
             const SizedBox(height: 10),
             TextFormField(
-              initialValue: 'widget.juego.nombre',
+              initialValue: widget.juego.nombre,
               enabled: false,
               decoration: const InputDecoration(
                 labelText: 'Juego',
@@ -323,7 +323,71 @@ class _FinalizarPartidaPageState extends State<FinalizarPartidaPage> {
     );
   }
 
-  Widget construirCardJugador(int index) {
+  Widget construirFormularioJugador(int index) {
+    return Column(
+      children: [
+        construirTituloSeccion('Jugador ${index + 1}'),
+        const SizedBox(height: 10),
+        DropdownButtonFormField<Jugador>(
+          initialValue: jugadoresSeleccionados[index],
+          isExpanded: true,
+          decoration: const InputDecoration(
+            labelText: 'Jugador',
+            prefixIcon: Icon(Icons.person),
+          ),
+          items: jugadoresDisponiblesParaDropdown(index).map(
+            (jugador) {
+              return DropdownMenuItem(
+                value: jugador,
+                child: Text(
+                  jugador.nombre,
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
+                ),
+              );
+            },
+          ).toList(),
+          selectedItemBuilder: (context) {
+            return jugadoresDisponiblesParaDropdown(index).map(
+              (jugador) {
+                return Text(
+                  jugador.nombre,
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
+                );
+              },
+            ).toList();
+          },
+          onChanged: (jugador) {
+            cambiarJugador(index, jugador);
+          },
+          validator: validarJugador,
+        ),
+        const SizedBox(height: 10),
+        TextFormField(
+          controller: puntuacionControllers[index],
+          keyboardType: TextInputType.number,
+          decoration: const InputDecoration(
+            labelText: 'Puntuación (opcional)',
+            prefixIcon: Icon(Icons.numbers),
+          ),
+          validator: validarPuntuacionOpcional,
+        ),
+        //const SizedBox(height: 5),
+        SwitchListTile(
+          title: const Text('Ganador'),
+          value: ganadores[index],
+          onChanged: estado == 'cancelada'
+              ? null
+              : (value) {
+                  cambiarGanador(index, value);
+                },
+        ),
+      ],
+    );
+  }
+
+  Widget construirSeccionJugadores() {
     return Card(
       child: Padding(
         padding: const EdgeInsets.symmetric(
@@ -332,64 +396,20 @@ class _FinalizarPartidaPageState extends State<FinalizarPartidaPage> {
         ),
         child: Column(
           children: [
-            construirTituloSeccion('Jugador ${index + 1}'),
+            construirTituloSeccion('PARTICIPANTES'),
             const SizedBox(height: 10),
-            DropdownButtonFormField<Jugador>(
-              initialValue: jugadoresSeleccionados[index],
-              isExpanded: true,
-              decoration: const InputDecoration(
-                labelText: 'Jugador',
-                prefixIcon: Icon(Icons.person),
-              ),
-              items: jugadoresDisponiblesParaDropdown(index).map(
-                (jugador) {
-                  return DropdownMenuItem(
-                    value: jugador,
-                    child: Text(
-                      jugador.nombre,
-                      overflow: TextOverflow.ellipsis,
-                      maxLines: 1,
-                    ),
-                  );
-                },
-              ).toList(),
-              selectedItemBuilder: (context) {
-                return jugadoresDisponiblesParaDropdown(index).map(
-                  (jugador) {
-                    return Text(
-                      jugador.nombre,
-                      overflow: TextOverflow.ellipsis,
-                      maxLines: 1,
-                    );
-                  },
-                ).toList();
-              },
-              onChanged: (jugador) {
-                cambiarJugador(index, jugador);
-              },
-              validator: validarJugador,
-            ),
-            const SizedBox(height: 10),
-            TextFormField(
-              controller: puntuacionControllers[index],
-              keyboardType: TextInputType.number,
-              decoration: const InputDecoration(
-                labelText: 'Puntuación (opcional)',
-                prefixIcon: Icon(Icons.numbers),
-                //hintText: 'Opcional',
-              ),
-              validator: validarPuntuacionOpcional,
-            ),
-            const SizedBox(height: 6),
-            SwitchListTile(
-              title: const Text('Ganador'),
-              value: ganadores[index],
-              onChanged: estado == 'cancelada'
-                  ? null
-                  : (value) {
-                      cambiarGanador(index, value);
-                    },
-            ),
+            ...List.generate(jugadoresSeleccionados.length, (index) {
+              return Column(
+                children: [
+                  construirFormularioJugador(index),
+                  if (index < jugadoresSeleccionados.length - 1) ...[
+                    //const SizedBox(height: 2),
+                    const Divider(),
+                    const SizedBox(height: 10),
+                  ],
+                ],
+              );
+            }),
           ],
         ),
       ),
@@ -437,16 +457,11 @@ class _FinalizarPartidaPageState extends State<FinalizarPartidaPage> {
           child: Column(
             children: [
               construirSeccionResumenPartida(),
-              const SizedBox(height: 2),
-              ...List.generate(jugadoresSeleccionados.length, (index) {
-                return Column(
-                  children: [
-                    construirCardJugador(index),
-                    const SizedBox(height: 2),
-                  ],
-                );
-              }),
+              //const SizedBox(height: 2),
+              construirSeccionJugadores(),
+              //const SizedBox(height: 2),
               construirSeccionGuardar(),
+              const SizedBox(height: 30),
             ],
           ),
         ),
