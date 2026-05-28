@@ -187,24 +187,6 @@ class _HomePageState extends State<HomePage> {
   }
 }
 
-class _PaginaPendiente extends StatelessWidget {
-  final String titulo;
-
-  const _PaginaPendiente({
-    required this.titulo,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Text(
-        titulo,
-        style: Theme.of(context).textTheme.titleLarge,
-      ),
-    );
-  }
-}
-
 class _EstadisticasPage extends StatelessWidget {
   const _EstadisticasPage();
 
