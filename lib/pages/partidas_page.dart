@@ -4,6 +4,7 @@ import '../models/participante_partida.dart';
 import '../models/partida_detalle.dart';
 import '../models/partida_resumen.dart';
 import '../services/partidas_service.dart';
+import 'partida_form_page.dart';
 
 class PartidasPage extends StatefulWidget {
   const PartidasPage({super.key});
@@ -91,14 +92,19 @@ class _PartidasPageState extends State<PartidasPage> {
     return Icons.info;
   }
 
-  void editarPartida(PartidaResumen partida) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(
-          'Editar partida nº ${partida.id} pendiente de implementar',
-        ),
+  Future<void> editarPartida(PartidaResumen partida) async {
+    final resultado = await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => PartidaFormPage(partida: partida),
       ),
     );
+
+    if (resultado == true) {
+      setState(() {
+        cargarPartidas();
+      });
+    }
   }
 
   Future<void> mostrarDetallePartida(PartidaResumen partida) async {

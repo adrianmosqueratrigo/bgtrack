@@ -110,4 +110,37 @@ class PartidasService {
       await conexion.close();
     }
   }
+
+  Future<void> actualizarPartidaBasica({
+    required int idPartida,
+    required DateTime fechaHora,
+    int? duracionMinutos,
+    required String estado,
+    String? notas,
+  }) async {
+    final conexion = await DatabaseConnection.getConnection();
+
+    try {
+      await conexion.query(
+        '''
+        UPDATE partidas
+        SET fecha_hora = ?,
+            duracion_minutos = ?,
+            estado = ?,
+            notas = ?
+        WHERE id = ?
+        ''',
+        [
+          fechaHora.toIso8601String().replaceFirst('T', ' ').substring(0, 19),
+          duracionMinutos,
+          estado,
+          notas,
+          idPartida,
+        ],
+      );
+    } finally {
+      await conexion.close();
+    }
+  }
+
 }
