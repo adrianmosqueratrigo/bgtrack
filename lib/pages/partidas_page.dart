@@ -91,6 +91,16 @@ class _PartidasPageState extends State<PartidasPage> {
     return Icons.info;
   }
 
+  void editarPartida(PartidaResumen partida) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          'Editar partida nº ${partida.id} pendiente de implementar',
+        ),
+      ),
+    );
+  }
+
   Future<void> mostrarDetallePartida(PartidaResumen partida) async {
     showDialog(
       context: context,
@@ -145,10 +155,7 @@ class _PartidasPageState extends State<PartidasPage> {
     List<ParticipantePartida> participantes,
   ) {
     return AlertDialog(
-      insetPadding: const EdgeInsets.symmetric(
-        horizontal: 40,
-        vertical: 40
-      ),
+      insetPadding: const EdgeInsets.symmetric(horizontal: 40, vertical: 40),
       title: Center(
         child: Text(
           'Partida nº ${detalle.id}',
@@ -162,19 +169,16 @@ class _PartidasPageState extends State<PartidasPage> {
         width: double.maxFinite,
         child: SingleChildScrollView(
           child: Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 15,
-              vertical: 10,
-            ),
+            padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Text(
                   'Datos generales',
                   textAlign: TextAlign.center,
-                  style: Theme.of(
-                    context,
-                  ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
                 const SizedBox(height: 10),
                 Table(
@@ -213,9 +217,9 @@ class _PartidasPageState extends State<PartidasPage> {
                 Text(
                   'Jugadores',
                   textAlign: TextAlign.center,
-                  style: Theme.of(
-                    context,
-                  ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
                 const SizedBox(height: 10),
                 if (participantes.isEmpty)
@@ -359,24 +363,32 @@ class _PartidasPageState extends State<PartidasPage> {
                       overflow: TextOverflow.ellipsis,
                     ),
                     Text(
-                      'Duración: ${textoDuracion(partida.duracionMinutos)}',
+                      '${partida.numeroJugadores} jugs. ~ ${textoDuracion(partida.duracionMinutos)}',
                       style: TextStyle(color: secondaryTextColor),
-                    ),
-                    Text(
-                      'Jugadores: ${partida.numeroJugadores}',
-                      style: TextStyle(color: secondaryTextColor),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
                     ),
                     const SizedBox(height: 2),
                   ],
                 ),
               ),
               const SizedBox(width: 20),
-              Icon(
-                iconoEstado(partida.estado),
-                color: colorEstado(partida.estado),
-                size: 24,
+              Column(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    iconoEstado(partida.estado),
+                    color: colorEstado(partida.estado),
+                    size: 24,
+                  ),
+                  const SizedBox(height: 6),
+                  IconButton(
+                    padding: EdgeInsets.zero,
+                    constraints: const BoxConstraints(),
+                    tooltip: 'Editar partida',
+                    icon: const Icon(Icons.edit, size: 24),
+                    onPressed: () => editarPartida(partida),
+                  ),
+                ],
               ),
             ],
           ),
