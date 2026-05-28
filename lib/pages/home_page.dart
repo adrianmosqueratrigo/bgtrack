@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../theme/app_theme.dart';
 import 'juego_form_page.dart';
 import 'juegos_page.dart';
+import 'jugador_form_page.dart';
 import 'jugadores_page.dart';
 import 'mi_cuenta_page.dart';
 
@@ -42,12 +43,19 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-  void abrirFormularioNuevoJugador() {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Formulario de jugador pendiente de implementar'),
+  Future<void> abrirFormularioNuevoJugador() async {
+    final resultado = await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const JugadorFormPage(),
       ),
     );
+
+    if (resultado == true) {
+      setState(() {
+        jugadoresKey++;
+      });
+    }
   }
 
   Future<void> abrirFormularioNuevoJuego() async {

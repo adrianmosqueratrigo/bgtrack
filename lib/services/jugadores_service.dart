@@ -21,4 +21,27 @@ class JugadoresService {
       await conexion.close();
     }
   }
+
+  Future<void> insertarJugador(Jugador jugador) async {
+    final conexion = await DatabaseConnection.getConnection();
+
+    try {
+      await conexion.query(
+        '''
+        INSERT INTO jugadores
+        (nombre, fecha_nacimiento, residencia, activo)
+        VALUES (?, ?, ?, ?)
+        ''',
+        [
+          jugador.nombre,
+          jugador.fechaNacimiento?.toIso8601String().split('T')[0],
+          jugador.residencia,
+          jugador.activo ? 1 : 0,
+        ],
+      );
+    } finally {
+      await conexion.close();
+    }
+  }
+
 }
