@@ -167,7 +167,7 @@ class _PartidasPageState extends State<PartidasPage> {
       insetPadding: const EdgeInsets.symmetric(horizontal: 40, vertical: 40),
       title: Center(
         child: Text(
-          'Partida nº ${detalle.id}',
+          'Partida #${detalle.id}',
           textAlign: TextAlign.center,
           style: Theme.of(
             context,
@@ -340,11 +340,11 @@ class _PartidasPageState extends State<PartidasPage> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               CircleAvatar(
-                radius: 20,
+                radius: 22,
                 backgroundColor: primaryColor,
                 foregroundColor: Colors.white,
                 child: Text(
-                  partida.id.toString(),
+                  '#' + partida.id.toString(),
                   style: const TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.bold,

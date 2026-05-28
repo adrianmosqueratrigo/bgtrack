@@ -65,7 +65,7 @@ class _JuegosPageState extends State<JuegosPage> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             CircleAvatar(
-              radius: 20,
+              radius: 22,
               backgroundColor: primaryColor,
               foregroundColor: Colors.white,
               child: const Icon(
