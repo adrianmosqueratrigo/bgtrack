@@ -74,8 +74,8 @@ class AppTheme {
 
       cardTheme: CardThemeData(
         color: cardColor,
-        elevation: 4,
-        shadowColor: Colors.black.withValues(alpha: 0.75),
+        elevation: 6,
+        shadowColor: Colors.black.withValues(alpha: 0.8),
         margin: const EdgeInsets.symmetric(
           horizontal: 18,
           vertical: 6,
