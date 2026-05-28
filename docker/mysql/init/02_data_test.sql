@@ -45,7 +45,7 @@ VALUES
 ('Spartacus: A Game of Blood and Treachery', 'Negociación', 180, 3, 4),
 ('Splendor', 'Set collection', 30, 2, 4),
 ('Splendor Duel', 'Set collection', 30, 2, 2),
-('Star Wars: Jabbas Palace – A Love Letter Game', 'Cartas', 20, 2, 6),
+('Star Wars: Jabbas Palace', 'Cartas', 20, 2, 6),
 ('Stone Age', 'Eurogame', 90, 2, 4),
 ('Sushi Go!', 'Familiar', 20, 2, 5),
 ('Terraforming Mars', 'Eurogame ', 120, 1, 5),
@@ -58,7 +58,7 @@ VALUES
 ('Unicorn Fever', 'Apuestas', 45, 2, 6),
 ('Virus!', 'Cartas', 20, 2, 6),
 ('Welcome to the Moon', 'Roll & write', 30, 1, 6),
-('Welcome To...', 'Roll & write', 30, 1, 100),
+('Welcome To...', 'Roll & write', 30, 1, 10),
 ('Wingspan', 'Eurogame', 70, 1, 5),
 ('Zombicide: Second Edition', 'Cooperativo', 60, 1, 6);
 

@@ -70,4 +70,24 @@ class JugadoresService {
     }
   }
 
+  Future<List<Jugador>> obtenerJugadoresActivos() async {
+    final conexion = await DatabaseConnection.getConnection();
+
+    try {
+      final resultados = await conexion.query(
+        'SELECT * FROM jugadores WHERE activo = 1 ORDER BY nombre',
+      );
+
+      List<Jugador> jugadores = [];
+
+      for (var row in resultados) {
+        jugadores.add(Jugador.fromMap(row.fields));
+      }
+
+      return jugadores;
+    } finally {
+      await conexion.close();
+    }
+  }
+
 }

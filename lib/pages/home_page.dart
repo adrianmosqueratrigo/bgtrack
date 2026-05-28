@@ -6,6 +6,7 @@ import 'juegos_page.dart';
 import 'jugador_form_page.dart';
 import 'jugadores_page.dart';
 import 'mi_cuenta_page.dart';
+import 'nueva_partida_page.dart';
 import 'partidas_page.dart';
 
 class HomePage extends StatefulWidget {
@@ -32,7 +33,7 @@ class _HomePageState extends State<HomePage> {
     return [
       JugadoresPage(key: ValueKey(jugadoresKey)),
       JuegosPage(key: ValueKey(juegosKey)),
-      const _PaginaPendiente(titulo: 'Nueva partida'),
+      const NuevaPartidaPage(),
       const PartidasPage(),
       const MiCuentaPage(),
     ];
