@@ -34,6 +34,7 @@ class _NuevaPartidaPageState extends State<NuevaPartidaPage> {
   DateTime? fechaHoraInicio;
 
   bool datosPartidaDesplegados = true;
+  int formularioKey = 0;
 
   @override
   void initState() {
@@ -275,6 +276,7 @@ class _NuevaPartidaPageState extends State<NuevaPartidaPage> {
       relojIniciado = false;
       fechaHoraInicio = null;
       datosPartidaDesplegados = true;
+      formularioKey++;
     });
   }
 
@@ -553,17 +555,19 @@ class _NuevaPartidaPageState extends State<NuevaPartidaPage> {
 
         return SingleChildScrollView(
           padding: const EdgeInsets.all(15),
-          child: Form(
-            key: formKey,
-            child: Column(
-              children: [
-                construirSeccionReloj(),
-                //const SizedBox(height: 2),
-                construirSeccionFinalizarPartida(),
-                //const SizedBox(height: 2),
-                construirSeccionDatosPartida(),
-                const SizedBox(height: 40),
-              ],
+          child: KeyedSubtree(
+            key: ValueKey(formularioKey),
+            child: Form(
+              key: formKey,
+              child: Column(
+                children: [
+                  construirSeccionReloj(),
+                  const SizedBox(height: 12),
+                  construirSeccionFinalizarPartida(),
+                  const SizedBox(height: 12),
+                  construirSeccionDatosPartida(),
+                ],
+              ),
             ),
           ),
         );

@@ -277,7 +277,7 @@ class _FinalizarPartidaPageState extends State<FinalizarPartidaPage> {
         child: Column(
           children: [
             construirCabeceraDesplegable(
-              titulo: 'RESUMEN',
+              titulo: 'Resumen',
               desplegado: resumenPartidaDesplegado,
               onTap: () {
                 setState(() {
@@ -366,13 +366,12 @@ class _FinalizarPartidaPageState extends State<FinalizarPartidaPage> {
   Widget construirFormularioJugador(int index) {
     return Column(
       children: [
-        construirTituloSeccion('Jugador ${index + 1}'),
         const SizedBox(height: 10),
         DropdownButtonFormField<Jugador>(
           initialValue: jugadoresSeleccionados[index],
           isExpanded: true,
-          decoration: const InputDecoration(
-            labelText: 'Jugador',
+          decoration: InputDecoration(
+            labelText: 'Jugador ${index + 1}',
             prefixIcon: Icon(Icons.person),
           ),
           items: jugadoresDisponiblesParaDropdown(index).map(
@@ -437,7 +436,7 @@ class _FinalizarPartidaPageState extends State<FinalizarPartidaPage> {
         child: Column(
           children: [
             construirCabeceraDesplegable(
-              titulo: 'PARTICIPANTES',
+              titulo: 'Participantes',
               desplegado: participantesDesplegados,
               onTap: () {
                 setState(() {
