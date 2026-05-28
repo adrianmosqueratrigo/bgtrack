@@ -221,7 +221,7 @@ class _FinalizarPartidaPageState extends State<FinalizarPartidaPage> {
 
       AppSnackbar.mostrarError(
         context,
-        'Error al guardar la partida: $e',
+        'Error al guardar la partida',
       );
     }
   }

@@ -62,7 +62,7 @@ class _PartidaFormPageState extends State<PartidaFormPage> {
 
       AppSnackbar.mostrarError(
         context,
-        'Error al cargar detalle de partida: $e',
+        'Error al cargar detalle de partida',
       );
 
     }
@@ -83,7 +83,7 @@ class _PartidaFormPageState extends State<PartidaFormPage> {
     final hora = fechaHora.hour.toString().padLeft(2, '0');
     final minuto = fechaHora.minute.toString().padLeft(2, '0');
 
-    return '$dia/$mes/$anio · $hora:$minuto';
+    return '$dia/$mes/$anio $hora:$minuto';
   }
 
   String? validarEnteroPositivoOpcional(String? value) {
@@ -251,7 +251,8 @@ class _PartidaFormPageState extends State<PartidaFormPage> {
                         const SizedBox(height: 16),
                         TextFormField(
                           controller: observacionesController,
-                          maxLines: 4,
+                          minLines: 1,
+                          maxLines: 3,
                           decoration: const InputDecoration(
                             labelText: 'Observaciones',
                             prefixIcon: Icon(Icons.notes),

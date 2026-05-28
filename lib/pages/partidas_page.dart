@@ -152,7 +152,7 @@ class _PartidasPageState extends State<PartidasPage> {
 
       AppSnackbar.mostrarError(
         context,
-        'Error al cargar el detalle: $e',
+        'Error al cargar el detalle',
       );
 
     }
