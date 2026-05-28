@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../models/juego.dart';
 import '../services/juegos_service.dart';
+import 'juego_form_page.dart';
 
 class JuegosPage extends StatefulWidget {
   const JuegosPage({super.key});
@@ -31,12 +32,20 @@ class _JuegosPageState extends State<JuegosPage> {
     return activo ? Icons.check_circle : Icons.cancel;
   }
 
-  void editarJuego(Juego juego) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('Editar ${juego.nombre} pendiente de implementar'),
+  void editarJuego(Juego juego) async {
+    final resultado = await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => JuegoFormPage(juego: juego),
       ),
     );
+
+    if (resultado == true) {
+      setState(() {
+        cargarJuegos();
+      });
+    }
+    
   }
 
   // CONSTRUIR LOS CARDS DE JUEGOS.
@@ -50,15 +59,19 @@ class _JuegosPageState extends State<JuegosPage> {
       child: Padding(
         padding: const EdgeInsets.symmetric(
           horizontal: 20,
-          vertical: 5
+          vertical: 10,
         ),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             CircleAvatar(
+              radius: 20,
               backgroundColor: primaryColor,
               foregroundColor: Colors.white,
-              child: Text(juego.id.toString()),
+              child: const Icon(
+                Icons.extension,
+                size: 22,
+              ),
             ),
             const SizedBox(width: 20),
             Expanded(
@@ -82,7 +95,7 @@ class _JuegosPageState extends State<JuegosPage> {
                   ),
                   const SizedBox(height: 2),
                   Text(
-                    '${juego.jugadoresMin}-${juego.jugadoresMax} jugadores · '
+                    '${juego.jugadoresMin}-${juego.jugadoresMax} jugs. ~ '
                     '${juego.duracionEstimadaMinutos ?? 0} min',
                     style: TextStyle(
                       color: secondaryTextColor,
