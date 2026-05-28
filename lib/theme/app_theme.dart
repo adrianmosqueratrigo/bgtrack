@@ -4,7 +4,7 @@ class AppTheme {
   static const Color primaryColor = Color(0xFF00A99D);
   static const Color primaryDarkColor = Color(0xFF00897B);
 
-  static const Color backgroundColor = Color(0xFFFFF4EF);
+  static const Color backgroundColor = Color(0xFFD5EBDC);
   static const Color cardColor = Color(0xFFFFE9DF);
   static const Color cardBorderColor = Color(0xFFFFCEBE);
 
@@ -36,7 +36,7 @@ class AppTheme {
           color: Colors.white,
           fontSize: 20,
           fontWeight: FontWeight.w600,
-          letterSpacing: 2,
+          letterSpacing: 1,
         ),
         shape: Border(
           bottom: BorderSide(
