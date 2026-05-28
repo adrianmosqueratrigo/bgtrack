@@ -36,6 +36,8 @@ class _FinalizarPartidaPageState extends State<FinalizarPartidaPage> {
   final notasController = TextEditingController();
 
   String estado = 'finalizada';
+  bool resumenPartidaDesplegado = true;
+  bool participantesDesplegados = true;
 
   @override
   void initState() {
@@ -235,6 +237,36 @@ class _FinalizarPartidaPageState extends State<FinalizarPartidaPage> {
     );
   }
 
+  Widget construirCabeceraDesplegable({
+    required String titulo,
+    required bool desplegado,
+    required VoidCallback onTap,
+  }) {
+    return InkWell(
+      borderRadius: BorderRadius.circular(12),
+      onTap: onTap,
+      child: Row(
+        children: [
+          Expanded(
+            child: Text(
+              titulo,
+              textAlign: TextAlign.center,
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+            ),
+          ),
+          Icon(
+            desplegado
+                ? Icons.keyboard_arrow_up
+                : Icons.keyboard_arrow_down,
+          ),
+        ],
+      ),
+    );
+  }
+
+
   Widget construirSeccionResumenPartida() {
     return Card(
       child: Padding(
@@ -244,79 +276,87 @@ class _FinalizarPartidaPageState extends State<FinalizarPartidaPage> {
         ),
         child: Column(
           children: [
-            construirTituloSeccion('Resumen de partida'),
-            const SizedBox(height: 10),
-            TextFormField(
-              initialValue: widget.juego.nombre,
-              enabled: false,
-              decoration: const InputDecoration(
-                labelText: 'Juego',
-                prefixIcon: Icon(Icons.extension),
-              ),
-            ),
-            const SizedBox(height: 10),
-            TextFormField(
-              initialValue: textoFechaHora(widget.fechaHora),
-              enabled: false,
-              decoration: const InputDecoration(
-                labelText: 'Fecha y hora de inicio',
-                prefixIcon: Icon(Icons.calendar_month),
-              ),
-            ),
-            const SizedBox(height: 10),
-            TextFormField(
-              initialValue: textoDuracion(),
-              enabled: false,
-              decoration: const InputDecoration(
-                labelText: 'Duración',
-                prefixIcon: Icon(Icons.timer),
-              ),
-            ),
-            const SizedBox(height: 10),
-            DropdownButtonFormField<String>(
-              initialValue: estado,
-              isExpanded: true,
-              decoration: const InputDecoration(
-                labelText: 'Estado',
-                prefixIcon: Icon(Icons.flag),
-              ),
-              items: const [
-                DropdownMenuItem(
-                  value: 'finalizada',
-                  child: Text('Finalizada'),
-                ),
-                DropdownMenuItem(
-                  value: 'cancelada',
-                  child: Text('Cancelada'),
-                ),
-              ],
-              onChanged: (value) {
-                if (value != null) {
-                  setState(() {
-                    estado = value;
-
-                    if (estado == 'cancelada') {
-                      ganadores = List.generate(
-                        ganadores.length,
-                        (_) => false,
-                      );
-                    }
-                  });
-                }
+            construirCabeceraDesplegable(
+              titulo: 'RESUMEN',
+              desplegado: resumenPartidaDesplegado,
+              onTap: () {
+                setState(() {
+                  resumenPartidaDesplegado = !resumenPartidaDesplegado;
+                });
               },
             ),
-
-            const SizedBox(height: 10),
-            TextFormField(
-              controller: notasController,
-              minLines: 1,
-              maxLines: 3,
-              decoration: const InputDecoration(
-                labelText: 'Observaciones (opcional)',
-                prefixIcon: Icon(Icons.notes),
+            if (resumenPartidaDesplegado) ...[
+              const SizedBox(height: 10),
+              TextFormField(
+                initialValue: widget.juego.nombre,
+                enabled: false,
+                decoration: const InputDecoration(
+                  labelText: 'Juego',
+                  prefixIcon: Icon(Icons.extension),
+                ),
               ),
-            ),
+              const SizedBox(height: 10),
+              TextFormField(
+                initialValue: textoFechaHora(widget.fechaHora),
+                enabled: false,
+                decoration: const InputDecoration(
+                  labelText: 'Fecha y hora de inicio',
+                  prefixIcon: Icon(Icons.calendar_month),
+                ),
+              ),
+              const SizedBox(height: 10),
+              TextFormField(
+                initialValue: textoDuracion(),
+                enabled: false,
+                decoration: const InputDecoration(
+                  labelText: 'Duración',
+                  prefixIcon: Icon(Icons.timer),
+                ),
+              ),
+              const SizedBox(height: 10),
+              DropdownButtonFormField<String>(
+                initialValue: estado,
+                isExpanded: true,
+                decoration: const InputDecoration(
+                  labelText: 'Estado',
+                  prefixIcon: Icon(Icons.flag),
+                ),
+                items: const [
+                  DropdownMenuItem(
+                    value: 'finalizada',
+                    child: Text('Finalizada'),
+                  ),
+                  DropdownMenuItem(
+                    value: 'cancelada',
+                    child: Text('Cancelada'),
+                  ),
+                ],
+                onChanged: (value) {
+                  if (value != null) {
+                    setState(() {
+                      estado = value;
 
+                      if (estado == 'cancelada') {
+                        ganadores = List.generate(
+                          ganadores.length,
+                          (_) => false,
+                        );
+                      }
+                    });
+                  }
+                },
+              ),
+              const SizedBox(height: 10),
+              TextFormField(
+                controller: notasController,
+                minLines: 1,
+                maxLines: 3,
+                decoration: const InputDecoration(
+                  labelText: 'Observaciones (opcional)',
+                  prefixIcon: Icon(Icons.notes),
+                ),
+              ),
+            ],
           ],
         ),
       ),
@@ -396,20 +436,29 @@ class _FinalizarPartidaPageState extends State<FinalizarPartidaPage> {
         ),
         child: Column(
           children: [
-            construirTituloSeccion('PARTICIPANTES'),
-            const SizedBox(height: 10),
-            ...List.generate(jugadoresSeleccionados.length, (index) {
-              return Column(
-                children: [
-                  construirFormularioJugador(index),
-                  if (index < jugadoresSeleccionados.length - 1) ...[
-                    //const SizedBox(height: 2),
-                    const Divider(),
-                    const SizedBox(height: 10),
+            construirCabeceraDesplegable(
+              titulo: 'PARTICIPANTES',
+              desplegado: participantesDesplegados,
+              onTap: () {
+                setState(() {
+                  participantesDesplegados = !participantesDesplegados;
+                });
+              },
+            ),
+            if (participantesDesplegados) ...[
+              const SizedBox(height: 10),
+              ...List.generate(jugadoresSeleccionados.length, (index) {
+                return Column(
+                  children: [
+                    construirFormularioJugador(index),
+                    if (index < jugadoresSeleccionados.length - 1) ...[
+                      const Divider(),
+                      const SizedBox(height: 10),
+                    ],
                   ],
-                ],
-              );
-            }),
+                );
+              }),
+            ],
           ],
         ),
       ),
@@ -461,7 +510,7 @@ class _FinalizarPartidaPageState extends State<FinalizarPartidaPage> {
               construirSeccionJugadores(),
               //const SizedBox(height: 2),
               construirSeccionGuardar(),
-              const SizedBox(height: 30),
+              const SizedBox(height: 40),
             ],
           ),
         ),

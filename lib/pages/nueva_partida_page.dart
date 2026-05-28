@@ -296,6 +296,35 @@ class _NuevaPartidaPageState extends State<NuevaPartidaPage> {
     );
   }
 
+  Widget construirCabeceraDesplegable({
+    required String titulo,
+    required bool desplegado,
+    required VoidCallback onTap,
+  }) {
+    return InkWell(
+      borderRadius: BorderRadius.circular(12),
+      onTap: onTap,
+      child: Row(
+        children: [
+          Expanded(
+            child: Text(
+              titulo,
+              textAlign: TextAlign.center,
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+            ),
+          ),
+          Icon(
+            desplegado
+                ? Icons.keyboard_arrow_up
+                : Icons.keyboard_arrow_down,
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget construirSeccionReloj() {
     return Card(
       child: Padding(
@@ -388,31 +417,14 @@ class _NuevaPartidaPageState extends State<NuevaPartidaPage> {
         ),
         child: Column(
           children: [
-            InkWell(
-              borderRadius: BorderRadius.circular(12),
+            construirCabeceraDesplegable(
+              titulo: 'DATOS DE LA PARTIDA',
+              desplegado: datosPartidaDesplegados,
               onTap: () {
                 setState(() {
                   datosPartidaDesplegados = !datosPartidaDesplegados;
                 });
               },
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Text(
-                      'DATOS DE LA PARTIDA',
-                      textAlign: TextAlign.center,
-                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                            fontWeight: FontWeight.bold,
-                          ),
-                    ),
-                  ),
-                  Icon(
-                    datosPartidaDesplegados
-                        ? Icons.keyboard_arrow_up
-                        : Icons.keyboard_arrow_down,
-                  ),
-                ],
-              ),
             ),
             if (datosPartidaDesplegados) ...[
               const SizedBox(height: 10),
