@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../theme/app_theme.dart';
 import 'juego_form_page.dart';
 import 'juegos_page.dart';
+import 'jugadores_page.dart';
 import 'mi_cuenta_page.dart';
 
 class HomePage extends StatefulWidget {
@@ -15,6 +16,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   int paginaSeleccionada = 0;
   int juegosKey = 0;
+  int jugadoresKey = 0;
 
   final List<String> titulos = [
     'Jugadores',
@@ -26,7 +28,7 @@ class _HomePageState extends State<HomePage> {
 
   List<Widget> obtenerPaginas() {
     return [
-      const _PaginaPendiente(titulo: 'Jugadores'),
+      JugadoresPage(key: ValueKey(jugadoresKey)),
       JuegosPage(key: ValueKey(juegosKey)),
       const _PaginaPendiente(titulo: 'Nueva partida'),
       const _PaginaPendiente(titulo: 'Partidas'),
@@ -38,6 +40,14 @@ class _HomePageState extends State<HomePage> {
     setState(() {
       paginaSeleccionada = index;
     });
+  }
+
+  void abrirFormularioNuevoJugador() {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Formulario de jugador pendiente de implementar'),
+      ),
+    );
   }
 
   Future<void> abrirFormularioNuevoJuego() async {
@@ -65,6 +75,23 @@ class _HomePageState extends State<HomePage> {
   }
 
   List<Widget>? accionesAppBar() {
+
+    if (paginaSeleccionada == 0) {
+      return [
+        Padding(
+          padding: const EdgeInsets.only(right: 20),
+          child: IconButton(
+            tooltip: 'Añadir jugador',
+            icon: const Icon(
+              Icons.add_circle_outline_rounded,
+              size: 32,
+            ),
+            onPressed: abrirFormularioNuevoJugador,
+          ),
+        ),
+      ];
+    }
+    
     if (paginaSeleccionada == 1) {
       return [
         Padding(
