@@ -51,8 +51,8 @@ class _NuevaPartidaPageState extends State<NuevaPartidaPage> {
 
   Future<void> cargarDatos() async {
     final juegosObtenidos = await JuegosService().obtenerJuegosActivos();
-    final jugadoresObtenidos = await JugadoresService()
-        .obtenerJugadoresActivos();
+    final jugadoresObtenidos =
+        await JugadoresService().obtenerJugadoresActivos();
 
     juegos = juegosObtenidos;
     jugadores = jugadoresObtenidos;
@@ -128,27 +128,16 @@ class _NuevaPartidaPageState extends State<NuevaPartidaPage> {
     });
   }
 
-  String textoReloj() {
-    final horas = segundos ~/ 3600;
-    final minutos = (segundos % 3600) ~/ 60;
-    final segundosRestantes = segundos % 60;
-
-    final h = horas.toString().padLeft(2, '0');
-    final m = minutos.toString().padLeft(2, '0');
-    final s = segundosRestantes.toString().padLeft(2, '0');
-
-    return '$h:$m:$s';
-  }
-
   Future<void> confirmarReinicioReloj() async {
     final confirmar = await showDialog<bool>(
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Center(child: const Text('¿Reiniciar reloj?')),
+          title: const Center(
+            child: Text('¿Reiniciar reloj?'),
+          ),
           actionsAlignment: MainAxisAlignment.center,
           actions: [
-
             FilledButton.tonal(
               onPressed: () {
                 Navigator.pop(context, false);
@@ -161,7 +150,6 @@ class _NuevaPartidaPageState extends State<NuevaPartidaPage> {
                 ),
               ),
             ),
-
             FilledButton(
               onPressed: () {
                 Navigator.pop(context, true);
@@ -174,7 +162,6 @@ class _NuevaPartidaPageState extends State<NuevaPartidaPage> {
                 ),
               ),
             ),
-            
           ],
         );
       },
@@ -183,6 +170,18 @@ class _NuevaPartidaPageState extends State<NuevaPartidaPage> {
     if (confirmar == true) {
       reiniciarReloj();
     }
+  }
+
+  String textoReloj() {
+    final horas = segundos ~/ 3600;
+    final minutos = (segundos % 3600) ~/ 60;
+    final segundosRestantes = segundos % 60;
+
+    final h = horas.toString().padLeft(2, '0');
+    final m = minutos.toString().padLeft(2, '0');
+    final s = segundosRestantes.toString().padLeft(2, '0');
+
+    return '$h:$m:$s';
   }
 
   String textoBotonReloj() {
@@ -213,22 +212,6 @@ class _NuevaPartidaPageState extends State<NuevaPartidaPage> {
 
     return ids.toSet().length != ids.length;
   }
-
-  void confirmarDatosPartida() {
-    final datosValidos = validarDatosPartida();
-
-    if (!datosValidos) {
-      setState(() {
-        datosPartidaDesplegados = true;
-      });
-      return;
-    }
-
-    setState(() {
-      datosPartidaDesplegados = false;
-    });
-  }
-
 
   bool validarDatosPartida() {
     if (juegoSeleccionado == null) {
@@ -270,12 +253,21 @@ class _NuevaPartidaPageState extends State<NuevaPartidaPage> {
     return true;
   }
 
+  void confirmarDatosPartida() {
+    if (!validarDatosPartida()) {
+      setState(() {
+        datosPartidaDesplegados = true;
+      });
+      return;
+    }
+
+    setState(() {
+      datosPartidaDesplegados = false;
+    });
+  }
 
   Future<void> finalizarPartida() async {
-
-    final datosValidos = validarDatosPartida();
-    
-    if (!datosValidos) {
+    if (!validarDatosPartida()) {
       setState(() {
         datosPartidaDesplegados = true;
       });
@@ -284,7 +276,8 @@ class _NuevaPartidaPageState extends State<NuevaPartidaPage> {
 
     pausarReloj();
 
-    final jugadoresConfirmados = jugadoresSeleccionados.whereType<Jugador>().toList();
+    final jugadoresConfirmados =
+        jugadoresSeleccionados.whereType<Jugador>().toList();
 
     final resultado = await Navigator.push(
       context,
@@ -364,9 +357,9 @@ class _NuevaPartidaPageState extends State<NuevaPartidaPage> {
             child: Text(
               titulo,
               textAlign: TextAlign.center,
-              style: Theme.of(
-                context,
-              ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
             ),
           ),
           Icon(
@@ -377,73 +370,13 @@ class _NuevaPartidaPageState extends State<NuevaPartidaPage> {
     );
   }
 
-  Widget construirSeccionReloj() {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-        child: Column(
-          children: [
-            // RELOJ.
-            Text(
-              textoReloj(),
-              style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                fontWeight: FontWeight.bold,
-                fontSize: 60,
-              ),
-            ),
-            const SizedBox(height: 5),
-
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                IconButton(
-                  tooltip: textoBotonReloj(),
-                  iconSize: 42,
-                  color: Theme.of(context).colorScheme.primary,
-                  onPressed: relojActivo ? pausarReloj : iniciarReloj,
-                  icon: Icon(
-                    relojActivo
-                        ? Icons.pause_circle_outline_rounded
-                        : Icons.play_circle_outline_rounded,
-                  ),
-                ),
-                const SizedBox(width: 10),
-                IconButton(
-                  tooltip: 'Reiniciar',
-                  iconSize: 42,
-                  color: Theme.of(context).colorScheme.primary,
-                  onPressed: confirmarReinicioReloj,
-                  icon: const Icon(Icons.restart_alt_rounded),
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget construirSeccionFinalizarPartida() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-      child: SizedBox(
-        width: double.infinity,
-        child: FilledButton.icon(
-          onPressed: finalizarPartida,
-          icon: const Icon(Icons.flag, size: 22),
-          label: const Text(
-            'Finalizar partida',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-          ),
-        ),
-      ),
-    );
-  }
-
   Widget construirSeccionDatosPartida() {
     return Card(
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+        padding: const EdgeInsets.symmetric(
+          horizontal: 20,
+          vertical: 20,
+        ),
         child: Column(
           children: [
             construirCabeceraDesplegable(
@@ -457,118 +390,15 @@ class _NuevaPartidaPageState extends State<NuevaPartidaPage> {
             ),
             if (datosPartidaDesplegados) ...[
               const SizedBox(height: 10),
-              DropdownButtonFormField<Juego>(
-                initialValue: juegoSeleccionado,
-                isExpanded: true,
-                decoration: const InputDecoration(
-                  labelText: 'Juego',
-                  prefixIcon: Icon(Icons.extension),
-                ),
-                items: juegos.map((juego) {
-                  return DropdownMenuItem(
-                    value: juego,
-                    child: Text(
-                      juego.nombre,
-                      overflow: TextOverflow.ellipsis,
-                      maxLines: 1,
-                    ),
-                  );
-                }).toList(),
-                selectedItemBuilder: (context) {
-                  return juegos.map((juego) {
-                    return Text(
-                      juego.nombre,
-                      overflow: TextOverflow.ellipsis,
-                      maxLines: 1,
-                    );
-                  }).toList();
-                },
-                onChanged: cambiarJuego,
-                validator: (value) {
-                  if (value == null) {
-                    return 'Selecciona un juego';
-                  }
-
-                  return null;
-                },
-              ),
+              construirDropdownJuego(),
               const SizedBox(height: 10),
-              if (juegoSeleccionado != null)
-                DropdownButtonFormField<int>(
-                  initialValue: numeroParticipantes,
-                  isExpanded: true,
-                  decoration: const InputDecoration(
-                    labelText: 'Número de jugadores',
-                    prefixIcon: Icon(Icons.groups),
-                  ),
-                  items: opcionesNumeroParticipantes(),
-                  onChanged: cambiarNumeroParticipantes,
-                  validator: (value) {
-                    if (value == null) {
-                      return 'Selecciona el número de jugadores';
-                    }
-
-                    return null;
-                  },
-                ),
-
+              if (juegoSeleccionado != null) construirDropdownNumeroJugadores(),
               if (numeroParticipantes != null) ...[
                 const SizedBox(height: 10),
                 ...List.generate(numeroParticipantes!, (index) {
-                  return Padding(
-                    padding: const EdgeInsets.only(bottom: 16),
-                    child: DropdownButtonFormField<Jugador>(
-                      initialValue: jugadoresSeleccionados[index],
-                      isExpanded: true,
-                      decoration: InputDecoration(
-                        labelText: 'Jugador ${index + 1}',
-                        prefixIcon: const Icon(Icons.person),
-                      ),
-                      items: jugadoresDisponiblesParaDropdown(index).map((
-                        jugador,
-                      ) {
-                        return DropdownMenuItem(
-                          value: jugador,
-                          child: Text(
-                            jugador.nombre,
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 1,
-                          ),
-                        );
-                      }).toList(),
-                      selectedItemBuilder: (context) {
-                        return jugadoresDisponiblesParaDropdown(index).map((
-                          jugador,
-                        ) {
-                          return Text(
-                            jugador.nombre,
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 1,
-                          );
-                        }).toList();
-                      },
-                      onChanged: (jugador) {
-                        cambiarJugador(index, jugador);
-                      },
-                      validator: validarJugador,
-                    ),
-                  );
+                  return construirDropdownJugador(index);
                 }),
-
-                //const SizedBox(height: 2),
-                SizedBox(
-                  width: double.infinity,
-                  child: FilledButton.icon(
-                    onPressed: confirmarDatosPartida,
-                      label: const Text(
-                      'Confirmar',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ),
+                construirBotonConfirmarDatosPartida(),
               ],
             ],
           ],
@@ -577,43 +407,263 @@ class _NuevaPartidaPageState extends State<NuevaPartidaPage> {
     );
   }
 
+  Widget construirDropdownJuego() {
+    return DropdownButtonFormField<Juego>(
+      initialValue: juegoSeleccionado,
+      isExpanded: true,
+      decoration: const InputDecoration(
+        labelText: 'Juego',
+        prefixIcon: Icon(Icons.extension),
+      ),
+      items: juegos.map((juego) {
+        return DropdownMenuItem(
+          value: juego,
+          child: Text(
+            juego.nombre,
+            overflow: TextOverflow.ellipsis,
+            maxLines: 1,
+          ),
+        );
+      }).toList(),
+      selectedItemBuilder: (context) {
+        return juegos.map((juego) {
+          return Text(
+            juego.nombre,
+            overflow: TextOverflow.ellipsis,
+            maxLines: 1,
+          );
+        }).toList();
+      },
+      onChanged: cambiarJuego,
+      validator: (value) {
+        if (value == null) {
+          return 'Selecciona un juego';
+        }
+
+        return null;
+      },
+    );
+  }
+
+  Widget construirDropdownNumeroJugadores() {
+    return DropdownButtonFormField<int>(
+      initialValue: numeroParticipantes,
+      isExpanded: true,
+      decoration: const InputDecoration(
+        labelText: 'Número de jugadores',
+        prefixIcon: Icon(Icons.groups),
+      ),
+      items: opcionesNumeroParticipantes(),
+      onChanged: cambiarNumeroParticipantes,
+      validator: (value) {
+        if (value == null) {
+          return 'Selecciona el número de jugadores';
+        }
+
+        return null;
+      },
+    );
+  }
+
+  Widget construirDropdownJugador(int index) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 16),
+      child: DropdownButtonFormField<Jugador>(
+        initialValue: jugadoresSeleccionados[index],
+        isExpanded: true,
+        decoration: InputDecoration(
+          labelText: 'Jugador ${index + 1}',
+          prefixIcon: const Icon(Icons.person),
+        ),
+        items: jugadoresDisponiblesParaDropdown(index).map((jugador) {
+          return DropdownMenuItem(
+            value: jugador,
+            child: Text(
+              jugador.nombre,
+              overflow: TextOverflow.ellipsis,
+              maxLines: 1,
+            ),
+          );
+        }).toList(),
+        selectedItemBuilder: (context) {
+          return jugadoresDisponiblesParaDropdown(index).map((jugador) {
+            return Text(
+              jugador.nombre,
+              overflow: TextOverflow.ellipsis,
+              maxLines: 1,
+            );
+          }).toList();
+        },
+        onChanged: (jugador) {
+          cambiarJugador(index, jugador);
+        },
+        validator: validarJugador,
+      ),
+    );
+  }
+
+  Widget construirBotonConfirmarDatosPartida() {
+    return SizedBox(
+      width: double.infinity,
+      child: FilledButton(
+        onPressed: confirmarDatosPartida,
+        child: const Text(
+          'Confirmar',
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget construirSeccionReloj() {
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(
+          horizontal: 20,
+          vertical: 10,
+        ),
+        child: Column(
+          children: [
+            construirTextoReloj(),
+            const SizedBox(height: 5),
+            construirBotonesReloj(),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget construirTextoReloj() {
+    return Text(
+      textoReloj(),
+      style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+            fontWeight: FontWeight.bold,
+            fontSize: 60,
+          ),
+    );
+  }
+
+  Widget construirBotonesReloj() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        construirBotonIniciarPausarReloj(),
+        const SizedBox(width: 10),
+        construirBotonReiniciarReloj(),
+      ],
+    );
+  }
+
+  Widget construirBotonIniciarPausarReloj() {
+    return IconButton(
+      tooltip: textoBotonReloj(),
+      iconSize: 42,
+      color: Theme.of(context).colorScheme.primary,
+      onPressed: relojActivo ? pausarReloj : iniciarReloj,
+      icon: Icon(
+        relojActivo
+            ? Icons.pause_circle_outline_rounded
+            : Icons.play_circle_outline_rounded,
+      ),
+    );
+  }
+
+  Widget construirBotonReiniciarReloj() {
+    return IconButton(
+      tooltip: 'Reiniciar',
+      iconSize: 42,
+      color: Theme.of(context).colorScheme.primary,
+      onPressed: confirmarReinicioReloj,
+      icon: const Icon(Icons.restart_alt_rounded),
+    );
+  }
+
+  Widget construirSeccionFinalizarPartida() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(
+        horizontal: 20,
+        vertical: 10,
+      ),
+      child: SizedBox(
+        width: double.infinity,
+        child: FilledButton.icon(
+          onPressed: finalizarPartida,
+          icon: const Icon(
+            Icons.flag,
+            size: 22,
+          ),
+          label: const Text(
+            'Finalizar partida',
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget construirCarga() {
+    return const Center(
+      child: CircularProgressIndicator(),
+    );
+  }
+
+  Widget construirError(Object error) {
+    return Padding(
+      padding: const EdgeInsets.all(10),
+      child: Text(
+        'Error al cargar datos:\n$error',
+        style: TextStyle(
+          color: Theme.of(context).colorScheme.error,
+        ),
+      ),
+    );
+  }
+
+  Widget construirContenidoFormulario() {
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(15),
+      child: KeyedSubtree(
+        key: ValueKey(formularioKey),
+        child: Form(
+          key: formKey,
+          child: Column(
+            children: [
+              construirSeccionDatosPartida(),
+              const SizedBox(height: 10),
+              construirSeccionReloj(),
+              const SizedBox(height: 10),
+              construirSeccionFinalizarPartida(),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget construirContenido(AsyncSnapshot<void> snapshot) {
+    if (snapshot.connectionState == ConnectionState.waiting) {
+      return construirCarga();
+    }
+
+    if (snapshot.hasError) {
+      return construirError(snapshot.error!);
+    }
+
+    return construirContenidoFormulario();
+  }
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<void>(
       future: futureDatos,
       builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator());
-        }
-
-        if (snapshot.hasError) {
-          return Padding(
-            padding: const EdgeInsets.all(10),
-            child: Text(
-              'Error al cargar datos:\n${snapshot.error}',
-              style: TextStyle(color: Theme.of(context).colorScheme.error),
-            ),
-          );
-        }
-
-        return SingleChildScrollView(
-          padding: const EdgeInsets.all(15),
-          child: KeyedSubtree(
-            key: ValueKey(formularioKey),
-            child: Form(
-              key: formKey,
-              child: Column(
-                children: [
-                  construirSeccionDatosPartida(),
-                  const SizedBox(height: 10),
-                  construirSeccionReloj(),
-                  const SizedBox(height: 10),
-                  construirSeccionFinalizarPartida(),
-                ],
-              ),
-            ),
-          ),
-        );
+        return construirContenido(snapshot);
       },
     );
   }
