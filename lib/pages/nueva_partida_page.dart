@@ -372,26 +372,24 @@ class _NuevaPartidaPageState extends State<NuevaPartidaPage> {
   }
 
   Widget construirSeccionFinalizarPartida() {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(
-          horizontal: 20,
-          vertical: 10,
-        ),
-        child: SizedBox(
-          width: double.infinity,
-          child: FilledButton.icon(
-            onPressed: finalizarPartida,
-            icon: const Icon(
-              Icons.flag,
-              size: 22,
-            ),
-            label: const Text(
-              'Finalizar partida',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
+    return Padding(
+      padding: const EdgeInsets.symmetric(
+        horizontal: 20,
+        vertical: 10,
+      ),
+      child: SizedBox(
+        width: double.infinity,
+        child: FilledButton.icon(
+          onPressed: finalizarPartida,
+          icon: const Icon(
+            Icons.flag,
+            size: 22,
+          ),
+          label: const Text(
+            'Finalizar partida',
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
             ),
           ),
         ),
@@ -513,6 +511,26 @@ class _NuevaPartidaPageState extends State<NuevaPartidaPage> {
                   );
                 }),
               ],
+
+              //const SizedBox(height: 2),
+              SizedBox(
+                width: double.infinity,
+                child: FilledButton.icon(
+                  onPressed: () {
+                    setState(() {
+                      datosPartidaDesplegados = false;
+                    });
+                  },
+                  label: const Text(
+                    'OK',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ),
+
             ],
           ],
         ),
@@ -551,11 +569,11 @@ class _NuevaPartidaPageState extends State<NuevaPartidaPage> {
               key: formKey,
               child: Column(
                 children: [
-                  construirSeccionReloj(),
-                  const SizedBox(height: 12),
-                  construirSeccionFinalizarPartida(),
-                  const SizedBox(height: 12),
                   construirSeccionDatosPartida(),
+                  const SizedBox(height: 10),
+                  construirSeccionReloj(),
+                  const SizedBox(height: 10),
+                  construirSeccionFinalizarPartida(),
                 ],
               ),
             ),
