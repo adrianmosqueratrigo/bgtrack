@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../theme/app_theme.dart';
+import '../widgets/app_background.dart';
 import 'juego_form_page.dart';
 import 'juegos_page.dart';
 import 'jugador_form_page.dart';
@@ -146,7 +147,9 @@ class _HomePageState extends State<HomePage> {
         title: Text(titulos[paginaSeleccionada]),
         actions: accionesAppBar(),
       ),
-      body: paginas[paginaSeleccionada],
+      body: AppBackground(
+        child: paginas[paginaSeleccionada],
+      ),
       bottomNavigationBar: Container(
         decoration: const BoxDecoration(
           border: Border(

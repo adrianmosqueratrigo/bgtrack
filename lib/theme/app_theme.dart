@@ -5,12 +5,12 @@ class AppTheme {
   static const Color primaryDarkColor = Color(0xFF00897B);
 
   static const Color backgroundColor = Color(0xFFD5EBDC);
-  static const Color cardColor = Color(0xFFFFE9DF);
-  static const Color cardBorderColor = Color(0xFFFFCEBE);
+  static const Color cardColor = Color.fromARGB(255, 254, 243, 238);
+  static const Color cardBorderColor = Color.fromARGB(255, 251, 221, 211);
 
   static const Color accentColor = Color(0xFFFF8A65);
   static const Color textColor = Color(0xFF263238);
-  static const Color secondaryTextColor = Color(0xFF607D8B);
+  static const Color secondaryTextColor = Color.fromARGB(255, 116, 160, 182);
 
   static ThemeData lightTheme() {
     return ThemeData(

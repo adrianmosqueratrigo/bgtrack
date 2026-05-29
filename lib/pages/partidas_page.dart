@@ -39,7 +39,7 @@ class _PartidasPageState extends State<PartidasPage> {
 
   String textoDuracion(int? duracion) {
     if (duracion == null) {
-      return 'Duración desconocida';
+      return 'n/a';
     }
     return '$duracion min';
   }

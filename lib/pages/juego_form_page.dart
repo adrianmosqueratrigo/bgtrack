@@ -1,3 +1,4 @@
+import 'package:bgtrack/widgets/app_background.dart';
 import 'package:flutter/material.dart';
 
 import '../models/juego.dart';
@@ -174,106 +175,108 @@ class _JuegoFormPageState extends State<JuegoFormPage> {
       appBar: AppBar(
         title: Text(esEdicion ? 'Editar juego' : 'Nuevo juego'),
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(
-          horizontal: 20,
-          vertical: 20,
-        ),
-        child: Card(
-          child: Padding(
-            padding: const EdgeInsets.all(20),
-            child: Form(
-              key: formKey,
-              child: Column(
-                children: [
-                  TextFormField(
-                    controller: nombreController,
-                    decoration: const InputDecoration(
-                      labelText: 'Nombre del juego',
-                      prefixIcon: Icon(Icons.extension),
-                    ),
-                    validator: (value) {
-                      return validarObligatorio(
-                        value,
-                        'Introduce el nombre del juego',
-                      );
-                    },
-                  ),
-                  const SizedBox(height: 16),
-                  TextFormField(
-                    controller: tipoController,
-                    decoration: const InputDecoration(
-                      labelText: 'Tipo/categoría (opcional)',
-                      prefixIcon: Icon(Icons.category),
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  TextFormField(
-                    controller: duracionController,
-                    keyboardType: TextInputType.number,
-                    decoration: const InputDecoration(
-                      labelText: 'Duración aprox. (opcional)',
-                      prefixIcon: Icon(Icons.timer),
-                    ),
-                    validator: validarEnteroPositivoOpcional,
-                  ),
-                  const SizedBox(height: 16),
-                  TextFormField(
-                    controller: jugadoresMinController,
-                    keyboardType: TextInputType.number,
-                    decoration: const InputDecoration(
-                      labelText: 'Jugadores mínimos',
-                      prefixIcon: Icon(Icons.person),
-                    ),
-                    validator: (value) {
-                      return validarEnteroPositivo(
-                        value,
-                        'Introduce el mínimo de jugadores',
-                      );
-                    },
-                  ),
-                  const SizedBox(height: 16),
-                  TextFormField(
-                    controller: jugadoresMaxController,
-                    keyboardType: TextInputType.number,
-                    decoration: const InputDecoration(
-                      labelText: 'Jugadores máximos',
-                      prefixIcon: Icon(Icons.groups),
-                    ),
-                    validator: validarJugadoresMax,
-                  ),
-                  const SizedBox(height: 8),
-                  SwitchListTile(
-                    title: const Text('Juego activo'),
-                    subtitle: const Text(
-                      'Disponible en la ludoteca',
-                    ),
-                    value: activo,
-                    onChanged: (value) {
-                      setState(() {
-                        activo = value;
-                      });
-                    },
-                  ),
-                  const SizedBox(height: 16),
-                  SizedBox(
-                    width: double.infinity,
-                    child: FilledButton.icon(
-                      onPressed: guardarJuego,
-                      icon: const Icon(
-                        Icons.save,
-                        size: 20,
+      body: AppBackground(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.symmetric(
+            horizontal: 20,
+            vertical: 20,
+          ),
+          child: Card(
+            child: Padding(
+              padding: const EdgeInsets.all(20),
+              child: Form(
+                key: formKey,
+                child: Column(
+                  children: [
+                    TextFormField(
+                      controller: nombreController,
+                      decoration: const InputDecoration(
+                        labelText: 'Nombre del juego',
+                        prefixIcon: Icon(Icons.extension),
                       ),
-                      label: const Text(
-                        'Guardar',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
+                      validator: (value) {
+                        return validarObligatorio(
+                          value,
+                          'Introduce el nombre del juego',
+                        );
+                      },
+                    ),
+                    const SizedBox(height: 16),
+                    TextFormField(
+                      controller: tipoController,
+                      decoration: const InputDecoration(
+                        labelText: 'Tipo/categoría (opcional)',
+                        prefixIcon: Icon(Icons.category),
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    TextFormField(
+                      controller: duracionController,
+                      keyboardType: TextInputType.number,
+                      decoration: const InputDecoration(
+                        labelText: 'Duración aprox. (opcional)',
+                        prefixIcon: Icon(Icons.timer),
+                      ),
+                      validator: validarEnteroPositivoOpcional,
+                    ),
+                    const SizedBox(height: 16),
+                    TextFormField(
+                      controller: jugadoresMinController,
+                      keyboardType: TextInputType.number,
+                      decoration: const InputDecoration(
+                        labelText: 'Jugadores mínimos',
+                        prefixIcon: Icon(Icons.person),
+                      ),
+                      validator: (value) {
+                        return validarEnteroPositivo(
+                          value,
+                          'Introduce el mínimo de jugadores',
+                        );
+                      },
+                    ),
+                    const SizedBox(height: 16),
+                    TextFormField(
+                      controller: jugadoresMaxController,
+                      keyboardType: TextInputType.number,
+                      decoration: const InputDecoration(
+                        labelText: 'Jugadores máximos',
+                        prefixIcon: Icon(Icons.groups),
+                      ),
+                      validator: validarJugadoresMax,
+                    ),
+                    const SizedBox(height: 8),
+                    SwitchListTile(
+                      title: const Text('Juego activo'),
+                      subtitle: const Text(
+                        'Disponible en la ludoteca',
+                      ),
+                      value: activo,
+                      onChanged: (value) {
+                        setState(() {
+                          activo = value;
+                        });
+                      },
+                    ),
+                    const SizedBox(height: 16),
+                    SizedBox(
+                      width: double.infinity,
+                      child: FilledButton.icon(
+                        onPressed: guardarJuego,
+                        icon: const Icon(
+                          Icons.save,
+                          size: 20,
+                        ),
+                        label: const Text(
+                          'Guardar',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),

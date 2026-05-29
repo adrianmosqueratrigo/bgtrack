@@ -1,3 +1,4 @@
+import 'package:bgtrack/widgets/app_background.dart';
 import 'package:flutter/material.dart';
 
 import '../models/juego.dart';
@@ -497,19 +498,21 @@ class _FinalizarPartidaPageState extends State<FinalizarPartidaPage> {
       appBar: AppBar(
         title: const Text('Finalizar partida'),
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(15),
-        child: Form(
-          key: formKey,
-          child: Column(
-            children: [
-              construirSeccionResumenPartida(),
-              //const SizedBox(height: 2),
-              construirSeccionJugadores(),
-              //const SizedBox(height: 2),
-              construirSeccionGuardar(),
-              const SizedBox(height: 40),
-            ],
+      body: AppBackground(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(15),
+          child: Form(
+            key: formKey,
+            child: Column(
+              children: [
+                construirSeccionResumenPartida(),
+                //const SizedBox(height: 2),
+                construirSeccionJugadores(),
+                //const SizedBox(height: 2),
+                construirSeccionGuardar(),
+                const SizedBox(height: 40),
+              ],
+            ),
           ),
         ),
       ),
