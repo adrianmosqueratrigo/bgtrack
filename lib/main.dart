@@ -1,6 +1,6 @@
+import 'package:bgtrack/pages/auth_gate.dart';
 import 'package:flutter/material.dart';
 
-import 'pages/home_page.dart';
 import 'theme/app_theme.dart';
 
 void main() {
@@ -16,7 +16,7 @@ class BGTrackApp extends StatelessWidget {
       title: 'BGTrack',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.lightTheme(),
-      home: const HomePage(),
+      home: const AuthGate(),
     );
   }
 }

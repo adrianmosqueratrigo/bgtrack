@@ -5,6 +5,7 @@ import '../models/juego.dart';
 import '../models/jugador.dart';
 import '../models/participacion.dart';
 import '../models/partida.dart';
+import '../services/auth_service.dart';
 import '../services/partidas_service.dart';
 import '../utils/app_snackbar.dart';
 
@@ -193,10 +194,22 @@ class _FinalizarPartidaPageState extends State<FinalizarPartidaPage> {
     });
   }
 
-  Partida construirPartidaDesdeFormulario() {
+  Future<Partida?> construirPartidaDesdeFormulario() async {
+    
+    final idUsuario = await AuthService().obtenerIdUsuarioActual();
+
+    if (idUsuario == null) {
+      AppSnackbar.mostrarError(
+        context,
+        'No hay usuario iniciado',
+      );
+
+      return null;
+    }
+
     return Partida(
       idJuego: widget.juego.id!,
-      idUsuario: 1,
+      idUsuario: idUsuario,
       fechaHora: widget.fechaHora,
       duracionMinutos: duracionEnMinutos(),
       estado: estado,
@@ -204,6 +217,7 @@ class _FinalizarPartidaPageState extends State<FinalizarPartidaPage> {
           ? null
           : notasController.text.trim(),
     );
+
   }
 
   List<Participacion> construirParticipacionesDesdeFormulario() {
@@ -233,7 +247,12 @@ class _FinalizarPartidaPageState extends State<FinalizarPartidaPage> {
       return;
     }
 
-    final partida = construirPartidaDesdeFormulario();
+    final partida = await construirPartidaDesdeFormulario();
+
+    if (partida == null) {
+      return;
+    }
+
     final participaciones = construirParticipacionesDesdeFormulario();
 
     try {
@@ -262,6 +281,7 @@ class _FinalizarPartidaPageState extends State<FinalizarPartidaPage> {
         'Error al guardar la partida',
       );
     }
+    
   }
 
   Widget construirCabeceraDesplegable({

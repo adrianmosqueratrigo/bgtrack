@@ -4,7 +4,7 @@ SET NAMES utf8mb4;
 SET CHARACTER SET utf8mb4;
 
 INSERT INTO usuarios 
-(rol, username, email, password, activo)
+(rol, username, email, password_hash, activo)
 VALUES
 ('admin', 'admin', 'admin@aulanosa.es', '1234abc.', TRUE),
 ('usuario', 'adrian', 'adrian@aulanosa.es', '1234abc.', TRUE);

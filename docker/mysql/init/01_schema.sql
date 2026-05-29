@@ -12,7 +12,7 @@ CREATE TABLE usuarios (
     rol ENUM('admin', 'usuario') NOT NULL DEFAULT 'usuario',
     username VARCHAR(50) NOT NULL UNIQUE,
     email VARCHAR(100) NOT NULL UNIQUE,
-    password VARCHAR(255) NOT NULL,
+    password_hash VARCHAR(255) NOT NULL,
     activo BOOLEAN NOT NULL DEFAULT TRUE,
     ultimo_login DATETIME NULL,
     fecha_registro DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
