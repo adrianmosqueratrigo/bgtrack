@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../theme/app_theme.dart';
 import '../widgets/app_background.dart';
+import 'estadisticas_page.dart';
 import 'juego_form_page.dart';
 import 'juegos_page.dart';
 import 'jugador_form_page.dart';
@@ -80,7 +81,7 @@ class _HomePageState extends State<HomePage> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => const _EstadisticasPage(),
+        builder: (context) => const EstadisticasPage(),
       ),
     );
   }
@@ -184,25 +185,6 @@ class _HomePageState extends State<HomePage> {
               label: 'Mi cuena',
             ),
           ],
-        ),
-      ),
-    );
-  }
-}
-
-class _EstadisticasPage extends StatelessWidget {
-  const _EstadisticasPage();
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Estadísticas'),
-      ),
-      body: Center(
-        child: Text(
-          'Estadísticas',
-          style: Theme.of(context).textTheme.titleLarge,
         ),
       ),
     );
