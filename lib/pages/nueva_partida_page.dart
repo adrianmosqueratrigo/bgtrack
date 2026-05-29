@@ -214,32 +214,84 @@ class _NuevaPartidaPageState extends State<NuevaPartidaPage> {
     return ids.toSet().length != ids.length;
   }
 
-  Future<void> finalizarPartida() async {
-    if (!formKey.currentState!.validate()) {
+  void confirmarDatosPartida() {
+    final datosValidos = validarDatosPartida();
+
+    if (!datosValidos) {
       setState(() {
         datosPartidaDesplegados = true;
       });
       return;
     }
 
+    setState(() {
+      datosPartidaDesplegados = false;
+    });
+  }
+
+
+  bool validarDatosPartida() {
+    if (juegoSeleccionado == null) {
+      AppSnackbar.mostrarError(
+        context,
+        'Selecciona un juego',
+      );
+      return false;
+    }
+
+    if (numeroParticipantes == null) {
+      AppSnackbar.mostrarError(
+        context,
+        'Selecciona el número de jugadores',
+      );
+      return false;
+    }
+
+    if (jugadoresSeleccionados.any((jugador) => jugador == null)) {
+      AppSnackbar.mostrarError(
+        context,
+        'Selecciona todos los jugadores de la partida',
+      );
+      return false;
+    }
+
     if (hayJugadoresRepetidos()) {
+      AppSnackbar.mostrarError(
+        context,
+        'No puede haber jugadores repetidos',
+      );
+      return false;
+    }
+
+    if (!formKey.currentState!.validate()) {
+      return false;
+    }
+
+    return true;
+  }
+
+
+  Future<void> finalizarPartida() async {
+
+    final datosValidos = validarDatosPartida();
+    
+    if (!datosValidos) {
       setState(() {
         datosPartidaDesplegados = true;
       });
-
-      AppSnackbar.mostrar(context, 'No puede haber jugadores repetidos');
-
       return;
     }
 
     pausarReloj();
+
+    final jugadoresConfirmados = jugadoresSeleccionados.whereType<Jugador>().toList();
 
     final resultado = await Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => FinalizarPartidaPage(
           juego: juegoSeleccionado!,
-          jugadoresIniciales: jugadoresSeleccionados.cast<Jugador>(),
+          jugadoresIniciales: jugadoresConfirmados,
           todosJugadores: jugadores,
           duracion: Duration(seconds: segundos),
           fechaHora: fechaHoraInicio ?? DateTime.now(),
@@ -507,12 +559,8 @@ class _NuevaPartidaPageState extends State<NuevaPartidaPage> {
                 SizedBox(
                   width: double.infinity,
                   child: FilledButton.icon(
-                    onPressed: () {
-                      setState(() {
-                        datosPartidaDesplegados = false;
-                      });
-                    },
-                    label: const Text(
+                    onPressed: confirmarDatosPartida,
+                      label: const Text(
                       'Confirmar',
                       style: TextStyle(
                         fontSize: 16,
