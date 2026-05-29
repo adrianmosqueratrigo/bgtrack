@@ -16,6 +16,7 @@ class EstadisticasPage extends StatefulWidget {
 }
 
 class _EstadisticasPageState extends State<EstadisticasPage> {
+  
   late Future<EstadisticasGenerales> futureEstadisticas;
   late Future<List<Jugador>> futureJugadores;
   late Future<List<Juego>> futureJuegos;
@@ -53,8 +54,8 @@ class _EstadisticasPageState extends State<EstadisticasPage> {
       if (jugador == null) {
         futureEstadisticasJugador = null;
       } else {
-        futureEstadisticasJugador = EstadisticasService()
-            .obtenerEstadisticasJugador(jugador.id!);
+        futureEstadisticasJugador =
+            EstadisticasService().obtenerEstadisticasJugador(jugador.id!);
       }
     });
   }
@@ -66,8 +67,8 @@ class _EstadisticasPageState extends State<EstadisticasPage> {
       if (juego == null) {
         futureEstadisticasJuego = null;
       } else {
-        futureEstadisticasJuego = EstadisticasService()
-            .obtenerEstadisticasJuego(juego.id!);
+        futureEstadisticasJuego =
+            EstadisticasService().obtenerEstadisticasJuego(juego.id!);
       }
     });
   }
@@ -86,9 +87,9 @@ class _EstadisticasPageState extends State<EstadisticasPage> {
             child: Text(
               titulo,
               textAlign: TextAlign.center,
-              style: Theme.of(
-                context,
-              ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
             ),
           ),
           Icon(
@@ -99,20 +100,71 @@ class _EstadisticasPageState extends State<EstadisticasPage> {
     );
   }
 
-  TableRow construirFilaTablaEstadistica(String titulo, String valor) {
+  Widget construirCardEstadisticas({
+    required String titulo,
+    required bool desplegada,
+    required VoidCallback onTap,
+    required Widget contenido,
+  }) {
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(
+          horizontal: 20,
+          vertical: 20,
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            construirCabeceraDesplegable(
+              titulo: titulo,
+              desplegado: desplegada,
+              onTap: onTap,
+            ),
+            // Desempaquetar/desplegar el contenido del card.
+            if (desplegada) ...[
+              const SizedBox(height: 20),
+              contenido,
+            ],
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget construirTabla({
+    required List<TableRow> filas,
+  }) {
+    return Table(
+      columnWidths: const {
+        0: IntrinsicColumnWidth(),
+        1: FlexColumnWidth(),
+      },
+      defaultVerticalAlignment: TableCellVerticalAlignment.top,
+      children: filas,
+    );
+  }
+
+  TableRow construirFilaTablaEstadisticas(String titulo, String valor) {
     return TableRow(
       children: [
+        // Texto de la izq.
         Padding(
-          padding: const EdgeInsets.only(right: 12, bottom: 10),
+          padding: const EdgeInsets.only(
+            right: 20,
+            bottom: 5,
+          ),
           child: Text(
             titulo,
-            style: Theme.of(
-              context,
-            ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold),
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
           ),
         ),
+        // Texto de la dcha.
         Padding(
-          padding: const EdgeInsets.only(bottom: 10),
+          padding: const EdgeInsets.only(
+            //bottom: 10,
+          ),
           child: Text(
             valor,
             textAlign: TextAlign.left,
@@ -123,247 +175,190 @@ class _EstadisticasPageState extends State<EstadisticasPage> {
     );
   }
 
-  Widget construirCardEstadisticas(EstadisticasGenerales estadisticas) {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            construirCabeceraDesplegable(
-              titulo: 'ESTADÍSTICAS GENERALES',
-              desplegado: estadisticasGeneralesDesplegadas,
-              onTap: () {
-                setState(() {
-                  estadisticasGeneralesDesplegadas =
-                      !estadisticasGeneralesDesplegadas;
-                });
-              },
-            ),
-            if (estadisticasGeneralesDesplegadas) ...[
-              const SizedBox(height: 10),
-              Table(
-                columnWidths: const {
-                  0: IntrinsicColumnWidth(),
-                  1: FlexColumnWidth(),
-                },
-                defaultVerticalAlignment: TableCellVerticalAlignment.top,
-                children: [
-                  construirFilaTablaEstadistica(
-                    'Partidas totales',
-                    estadisticas.totalPartidas.toString(),
-                  ),
-                  construirFilaTablaEstadistica(
-                    'Partidas cancel.',
-                    estadisticas.partidasCanceladas.toString(),
-                  ),
-                  construirFilaTablaEstadistica(
-                    'Juego más jugado',
-                    estadisticas.juegoMasJugado,
-                  ),
-                  construirFilaTablaEstadistica(
-                    'Jug. más victorias',
-                    '${estadisticas.jugadorMasVictorias} '
-                        '(${estadisticas.victoriasJugadorMasVictorias} de '
-                        '${estadisticas.partidasJugadorMasVictorias})',
-                  ),
-                  construirFilaTablaEstadistica(
-                    'Mejor ratio vict.',
-                    '${estadisticas.jugadorMejorRatio} '
-                        '(${formatearPorcentaje(estadisticas.mejorRatioVictorias)})',
-                  ),
-                  construirFilaTablaEstadistica(
-                    'Avg. part. jugador',
-                    formatearDecimal(estadisticas.partidasMediasPorJugador),
-                  ),
-                  construirFilaTablaEstadistica(
-                    'Avg. duración',
-                    '${formatearDecimal(estadisticas.duracionMediaMinutos)} min',
-                  ),
-                ],
-              ),
-            ],
-          ],
-        ),
-      ),
+  Widget construirSeccionEstadisticasGenerales(
+    EstadisticasGenerales estadisticas,
+  ) {
+    return construirCardEstadisticas(
+      titulo: 'ESTADÍSTICAS GENERALES',
+      desplegada: estadisticasGeneralesDesplegadas,
+      onTap: () {
+        setState(() {
+          estadisticasGeneralesDesplegadas =
+              !estadisticasGeneralesDesplegadas;
+        });
+      },
+      contenido: construirTablaEstadisticasGenerales(estadisticas),
     );
   }
 
-  Widget construirCardSelectorJugador(List<Jugador> jugadores) {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            construirCabeceraDesplegable(
-              titulo: 'ESTADÍSTICAS POR JUGADOR',
-              desplegado: estadisticasJugadorDesplegadas,
-              onTap: () {
-                setState(() {
-                  estadisticasJugadorDesplegadas =
-                      !estadisticasJugadorDesplegadas;
-                });
-              },
-            ),
-            if (estadisticasJugadorDesplegadas) ...[
-              const SizedBox(height: 20),
-              DropdownButtonFormField<Jugador>(
-                initialValue: jugadorSeleccionado,
-                isExpanded: true,
-                decoration: const InputDecoration(
-                  labelText: 'Jugador',
-                  prefixIcon: Icon(Icons.person),
-                ),
-                items: jugadores.map((jugador) {
-                  return DropdownMenuItem(
-                    value: jugador,
-                    child: Text(
-                      jugador.nombre,
-                      overflow: TextOverflow.ellipsis,
-                      maxLines: 1,
-                    ),
-                  );
-                }).toList(),
-                onChanged: cambiarJugadorSeleccionado,
-              ),
-              if (futureEstadisticasJugador != null) ...[
-                const SizedBox(height: 20),
-                FutureBuilder<EstadisticasJugador>(
-                  future: futureEstadisticasJugador,
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return const Center(child: CircularProgressIndicator());
-                    }
-
-                    if (snapshot.hasError) {
-                      return Text(
-                        'Error al cargar estadísticas del jugador:\n${snapshot.error}',
-                        style: TextStyle(
-                          color: Theme.of(context).colorScheme.error,
-                        ),
-                      );
-                    }
-
-                    final estadisticasJugador = snapshot.data;
-
-                    if (estadisticasJugador == null) {
-                      return const Text('No hay datos para este jugador.');
-                    }
-
-                    return construirTablaEstadisticasJugador(
-                      estadisticasJugador,
-                    );
-                  },
-                ),
-              ],
-            ],
-          ],
+  Widget construirTablaEstadisticasGenerales(
+    EstadisticasGenerales estadisticas,
+  ) {
+    return construirTabla(
+      filas: [
+        construirFilaTablaEstadisticas(
+          'Partidas totales',
+          estadisticas.totalPartidas.toString(),
         ),
-      ),
+        construirFilaTablaEstadisticas(
+          'Partidas cancel.',
+          estadisticas.partidasCanceladas.toString(),
+        ),
+        construirFilaTablaEstadisticas(
+          'Juego más jugado',
+          estadisticas.juegoMasJugado,
+        ),
+        construirFilaTablaEstadisticas(
+          'Jug. más victorias',
+          '${estadisticas.jugadorMasVictorias} '
+              '(${estadisticas.victoriasJugadorMasVictorias} de '
+              '${estadisticas.partidasJugadorMasVictorias})',
+        ),
+        construirFilaTablaEstadisticas(
+          'Mejor ratio vict.',
+          '${estadisticas.jugadorMejorRatio} '
+              '(${formatearPorcentaje(estadisticas.mejorRatioVictorias)})',
+        ),
+        construirFilaTablaEstadisticas(
+          'Avg. part. jugador',
+          formatearDecimal(estadisticas.partidasMediasPorJugador),
+        ),
+        construirFilaTablaEstadisticas(
+          'Avg. duración',
+          '${formatearDecimal(estadisticas.duracionMediaMinutos)} min',
+        ),
+      ],
     );
   }
 
-  Widget construirCardSelectorJuego(List<Juego> juegos) {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            construirCabeceraDesplegable(
-              titulo: 'ESTADÍSTICAS POR JUEGO',
-              desplegado: estadisticasJuegoDesplegadas,
-              onTap: () {
-                setState(() {
-                  estadisticasJuegoDesplegadas = !estadisticasJuegoDesplegadas;
-                });
-              },
-            ),
-            if (estadisticasJuegoDesplegadas) ...[
-              const SizedBox(height: 20),
-              DropdownButtonFormField<Juego>(
-                initialValue: juegoSeleccionado,
-                isExpanded: true,
-                decoration: const InputDecoration(
-                  labelText: 'Juego',
-                  prefixIcon: Icon(Icons.extension),
-                ),
-                items: juegos.map((juego) {
-                  return DropdownMenuItem(
-                    value: juego,
-                    child: Text(
-                      juego.nombre,
-                      overflow: TextOverflow.ellipsis,
-                      maxLines: 1,
-                    ),
-                  );
-                }).toList(),
-                onChanged: cambiarJuegoSeleccionado,
-              ),
-              if (futureEstadisticasJuego != null) ...[
-                const SizedBox(height: 20),
-                FutureBuilder<EstadisticasJuego>(
-                  future: futureEstadisticasJuego,
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return const Center(child: CircularProgressIndicator());
-                    }
+  Widget construirSeccionEstadisticasJugador() {
+    return FutureBuilder<List<Jugador>>(
+      future: futureJugadores,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return construirCardCarga();
+        }
 
-                    if (snapshot.hasError) {
-                      return Text(
-                        'Error al cargar estadísticas del juego:\n${snapshot.error}',
-                        style: TextStyle(
-                          color: Theme.of(context).colorScheme.error,
-                        ),
-                      );
-                    }
+        if (snapshot.hasError) {
+          return construirCardError(
+            'Error al cargar jugadores:\n${snapshot.error}',
+          );
+        }
 
-                    final estadisticasJuego = snapshot.data;
+        final jugadores = snapshot.data ?? [];
 
-                    if (estadisticasJuego == null) {
-                      return const Text('No hay datos para este juego.');
-                    }
+        if (jugadores.isEmpty) {
+          return construirCardMensaje(
+            'No hay jugadores con partidas registradas.',
+          );
+        }
 
-                    return construirTablaEstadisticasJuego(estadisticasJuego);
-                  },
-                ),
-              ],
-            ],
-          ],
-        ),
+        return construirCardEstadisticas(
+          titulo: 'ESTADÍSTICAS POR JUGADOR',
+          desplegada: estadisticasJugadorDesplegadas,
+          onTap: () {
+            setState(() {
+              estadisticasJugadorDesplegadas =
+                  !estadisticasJugadorDesplegadas;
+            });
+          },
+          contenido: construirContenidoEstadisticasJugador(jugadores),
+        );
+      },
+    );
+  }
+
+  Widget construirContenidoEstadisticasJugador(List<Jugador> jugadores) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        construirDropdownJugador(jugadores),
+        if (futureEstadisticasJugador != null) ...[
+          const SizedBox(height: 20),
+          construirFutureEstadisticasJugador(),
+        ],
+      ],
+    );
+  }
+
+  Widget construirDropdownJugador(List<Jugador> jugadores) {
+    return DropdownButtonFormField<Jugador>(
+      initialValue: jugadorSeleccionado,
+      isExpanded: true,
+      decoration: const InputDecoration(
+        labelText: 'Jugador',
+        prefixIcon: Icon(Icons.person),
       ),
+      items: jugadores.map((jugador) {
+        return DropdownMenuItem(
+          value: jugador,
+          child: Text(
+            jugador.nombre,
+            overflow: TextOverflow.ellipsis,
+            maxLines: 1,
+          ),
+        );
+      }).toList(),
+      onChanged: cambiarJugadorSeleccionado,
+    );
+  }
+
+  Widget construirFutureEstadisticasJugador() {
+    return FutureBuilder<EstadisticasJugador>(
+      future: futureEstadisticasJugador,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        }
+
+        if (snapshot.hasError) {
+          return Text(
+            'Error al cargar estadísticas del jugador:\n${snapshot.error}',
+            style: TextStyle(
+              color: Theme.of(context).colorScheme.error,
+            ),
+          );
+        }
+
+        final estadisticasJugador = snapshot.data;
+
+        if (estadisticasJugador == null) {
+          return const Text('No hay datos para este jugador.');
+        }
+
+        return construirTablaEstadisticasJugador(estadisticasJugador);
+      },
     );
   }
 
   Widget construirTablaEstadisticasJugador(
     EstadisticasJugador estadisticasJugador,
   ) {
-    return Table(
-      columnWidths: const {0: IntrinsicColumnWidth(), 1: FlexColumnWidth()},
-      defaultVerticalAlignment: TableCellVerticalAlignment.top,
-      children: [
-        construirFilaTablaEstadistica(
+    return construirTabla(
+      filas: [
+        construirFilaTablaEstadisticas(
           'Partidas totales',
           estadisticasJugador.totalPartidas.toString(),
         ),
-        construirFilaTablaEstadistica(
+        construirFilaTablaEstadisticas(
           'Partidas cancel.',
           estadisticasJugador.partidasCanceladas.toString(),
         ),
-        construirFilaTablaEstadistica(
+        construirFilaTablaEstadisticas(
           'Juego más jugado',
           estadisticasJugador.juegoMasJugado,
         ),
-        construirFilaTablaEstadistica(
+        construirFilaTablaEstadisticas(
           'Victorias totales',
           estadisticasJugador.totalVictorias.toString(),
         ),
-        construirFilaTablaEstadistica(
+        construirFilaTablaEstadisticas(
           'Ratio victorias',
           formatearPorcentaje(estadisticasJugador.ratioVictorias),
         ),
-        construirFilaTablaEstadistica(
+        construirFilaTablaEstadisticas(
           'Avg. duración',
           '${formatearDecimal(estadisticasJugador.duracionMediaMinutos)} min',
         ),
@@ -371,16 +366,117 @@ class _EstadisticasPageState extends State<EstadisticasPage> {
     );
   }
 
-  Widget construirTablaEstadisticasJuego(EstadisticasJuego estadisticasJuego) {
-    return Table(
-      columnWidths: const {0: IntrinsicColumnWidth(), 1: FlexColumnWidth()},
-      defaultVerticalAlignment: TableCellVerticalAlignment.top,
+  Widget construirSeccionEstadisticasJuego() {
+    return FutureBuilder<List<Juego>>(
+      future: futureJuegos,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return construirCardCarga();
+        }
+
+        if (snapshot.hasError) {
+          return construirCardError(
+            'Error al cargar juegos:\n${snapshot.error}',
+          );
+        }
+
+        final juegos = snapshot.data ?? [];
+
+        if (juegos.isEmpty) {
+          return construirCardMensaje(
+            'No hay juegos con partidas registradas.',
+          );
+        }
+
+        return construirCardEstadisticas(
+          titulo: 'ESTADÍSTICAS POR JUEGO',
+          desplegada: estadisticasJuegoDesplegadas,
+          onTap: () {
+            setState(() {
+              estadisticasJuegoDesplegadas = !estadisticasJuegoDesplegadas;
+            });
+          },
+          contenido: construirContenidoEstadisticasJuego(juegos),
+        );
+      },
+    );
+  }
+
+  Widget construirContenidoEstadisticasJuego(List<Juego> juegos) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        construirFilaTablaEstadistica(
+        construirDropdownJuego(juegos),
+        if (futureEstadisticasJuego != null) ...[
+          const SizedBox(height: 20),
+          construirFutureEstadisticasJuego(),
+        ],
+      ],
+    );
+  }
+
+  Widget construirDropdownJuego(List<Juego> juegos) {
+    return DropdownButtonFormField<Juego>(
+      initialValue: juegoSeleccionado,
+      isExpanded: true,
+      decoration: const InputDecoration(
+        labelText: 'Juego',
+        prefixIcon: Icon(Icons.extension),
+      ),
+      items: juegos.map((juego) {
+        return DropdownMenuItem(
+          value: juego,
+          child: Text(
+            juego.nombre,
+            overflow: TextOverflow.ellipsis,
+            maxLines: 1,
+          ),
+        );
+      }).toList(),
+      onChanged: cambiarJuegoSeleccionado,
+    );
+  }
+
+  Widget construirFutureEstadisticasJuego() {
+    return FutureBuilder<EstadisticasJuego>(
+      future: futureEstadisticasJuego,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        }
+
+        if (snapshot.hasError) {
+          return Text(
+            'Error al cargar estadísticas del juego:\n${snapshot.error}',
+            style: TextStyle(
+              color: Theme.of(context).colorScheme.error,
+            ),
+          );
+        }
+
+        final estadisticasJuego = snapshot.data;
+
+        if (estadisticasJuego == null) {
+          return const Text('No hay datos para este juego.');
+        }
+
+        return construirTablaEstadisticasJuego(estadisticasJuego);
+      },
+    );
+  }
+
+  Widget construirTablaEstadisticasJuego(
+    EstadisticasJuego estadisticasJuego,
+  ) {
+    return construirTabla(
+      filas: [
+        construirFilaTablaEstadisticas(
           'Partidas totales',
           estadisticasJuego.totalPartidas.toString(),
         ),
-        construirFilaTablaEstadistica(
+        construirFilaTablaEstadisticas(
           'Jug. más victorias',
           estadisticasJuego.jugadorMasVictorias == 'Sin datos'
               ? 'Sin datos'
@@ -388,7 +484,7 @@ class _EstadisticasPageState extends State<EstadisticasPage> {
                     '(${estadisticasJuego.victoriasJugadorMasVictorias} de '
                     '${estadisticasJuego.partidasJugadorMasVictorias})',
         ),
-        construirFilaTablaEstadistica(
+        construirFilaTablaEstadisticas(
           'Avg. duración',
           '${formatearDecimal(estadisticasJuego.duracionMediaMinutos)} min',
         ),
@@ -396,141 +492,104 @@ class _EstadisticasPageState extends State<EstadisticasPage> {
     );
   }
 
+  Widget construirCardCarga() {
+    return const Card(
+      child: Padding(
+        padding: EdgeInsets.all(20),
+        child: Center(
+          child: CircularProgressIndicator(),
+        ),
+      ),
+    );
+  }
+
+  Widget construirCardError(String mensaje) {
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(20),
+        child: Text(
+          mensaje,
+          style: TextStyle(
+            color: Theme.of(context).colorScheme.error,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget construirCardMensaje(String mensaje) {
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(20),
+        child: Text(
+          mensaje,
+          textAlign: TextAlign.center,
+        ),
+      ),
+    );
+  }
+
+  Widget construirContenido(
+    EstadisticasGenerales estadisticas,
+  ) {
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(15),
+      child: Column(
+        children: [
+          construirSeccionEstadisticasGenerales(estadisticas),
+          const SizedBox(height: 10),
+          construirSeccionEstadisticasJugador(),
+          const SizedBox(height: 10),
+          construirSeccionEstadisticasJuego(),
+        ],
+      ),
+    );
+  }
+
+  Widget construirBody() {
+    return AppBackground(
+      child: FutureBuilder<EstadisticasGenerales>(
+        future: futureEstadisticas,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+
+          if (snapshot.hasError) {
+            return Padding(
+              padding: const EdgeInsets.all(16),
+              child: Text(
+                'Error al cargar estadísticas:\n${snapshot.error}',
+                style: TextStyle(
+                  color: Theme.of(context).colorScheme.error,
+                ),
+              ),
+            );
+          }
+
+          final estadisticas = snapshot.data;
+
+          if (estadisticas == null) {
+            return const Center(
+              child: Text('No hay estadísticas disponibles.'),
+            );
+          }
+
+          return construirContenido(estadisticas);
+        },
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Estadísticas')),
-      body: AppBackground(
-        child: FutureBuilder<EstadisticasGenerales>(
-          future: futureEstadisticas,
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(child: CircularProgressIndicator());
-            }
-
-            if (snapshot.hasError) {
-              return Padding(
-                padding: const EdgeInsets.all(16),
-                child: Text(
-                  'Error al cargar estadísticas:\n${snapshot.error}',
-                  style: TextStyle(color: Theme.of(context).colorScheme.error),
-                ),
-              );
-            }
-
-            final estadisticas = snapshot.data;
-
-            if (estadisticas == null) {
-              return const Center(
-                child: Text('No hay estadísticas disponibles.'),
-              );
-            }
-
-            return SingleChildScrollView(
-              padding: const EdgeInsets.all(15),
-              child: Column(
-                children: [
-                  construirCardEstadisticas(estadisticas),
-
-                  const SizedBox(height: 10),
-
-                  FutureBuilder<List<Jugador>>(
-                    future: futureJugadores,
-                    builder: (context, jugadoresSnapshot) {
-                      if (jugadoresSnapshot.connectionState ==
-                          ConnectionState.waiting) {
-                        return const Card(
-                          child: Padding(
-                            padding: EdgeInsets.all(20),
-                            child: Center(child: CircularProgressIndicator()),
-                          ),
-                        );
-                      }
-
-                      if (jugadoresSnapshot.hasError) {
-                        return Card(
-                          child: Padding(
-                            padding: const EdgeInsets.all(20),
-                            child: Text(
-                              'Error al cargar jugadores:\n${jugadoresSnapshot.error}',
-                              style: TextStyle(
-                                color: Theme.of(context).colorScheme.error,
-                              ),
-                            ),
-                          ),
-                        );
-                      }
-
-                      final jugadores = jugadoresSnapshot.data ?? [];
-
-                      if (jugadores.isEmpty) {
-                        return const Card(
-                          child: Padding(
-                            padding: EdgeInsets.all(20),
-                            child: Text(
-                              'No hay jugadores con partidas registradas.',
-                              textAlign: TextAlign.center,
-                            ),
-                          ),
-                        );
-                      }
-
-                      return construirCardSelectorJugador(jugadores);
-                    },
-                  ),
-
-                  const SizedBox(height: 10),
-
-                  FutureBuilder<List<Juego>>(
-                    future: futureJuegos,
-                    builder: (context, juegosSnapshot) {
-                      if (juegosSnapshot.connectionState ==
-                          ConnectionState.waiting) {
-                        return const Card(
-                          child: Padding(
-                            padding: EdgeInsets.all(20),
-                            child: Center(child: CircularProgressIndicator()),
-                          ),
-                        );
-                      }
-
-                      if (juegosSnapshot.hasError) {
-                        return Card(
-                          child: Padding(
-                            padding: const EdgeInsets.all(20),
-                            child: Text(
-                              'Error al cargar juegos:\n${juegosSnapshot.error}',
-                              style: TextStyle(
-                                color: Theme.of(context).colorScheme.error,
-                              ),
-                            ),
-                          ),
-                        );
-                      }
-
-                      final juegos = juegosSnapshot.data ?? [];
-
-                      if (juegos.isEmpty) {
-                        return const Card(
-                          child: Padding(
-                            padding: EdgeInsets.all(20),
-                            child: Text(
-                              'No hay juegos con partidas registradas.',
-                              textAlign: TextAlign.center,
-                            ),
-                          ),
-                        );
-                      }
-
-                      return construirCardSelectorJuego(juegos);
-                    },
-                  ),
-                ],
-              ),
-            );
-          },
-        ),
+      appBar: AppBar(
+        title: const Text('Estadísticas'),
       ),
+      body: construirBody(),
     );
   }
 }
