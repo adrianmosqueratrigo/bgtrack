@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
 
+import '../services/auth_service.dart';
 import '../utils/app_snackbar.dart';
+import 'login_page.dart';
 
 class MiCuentaPage extends StatelessWidget {
   const MiCuentaPage({super.key});
 
   void editarMisDatos(BuildContext context) {
-    AppSnackbar.mostrar(
-      context,
-      'Editar mis datos pendiente de implementar',
-    );
+    AppSnackbar.mostrar(context, 'Editar mis datos pendiente de implementar');
   }
 
   void gestionarUsuarios(BuildContext context) {
@@ -19,12 +18,21 @@ class MiCuentaPage extends StatelessWidget {
     );
   }
 
-  void cerrarSesion(BuildContext context) {
-    AppSnackbar.mostrar(
-      context,
-      'Cerrar sesión pendiente de implementar',
-    );
+Future<void> cerrarSesion(BuildContext context) async {
+  await AuthService().cerrarSesion();
+
+  if (!context.mounted) {
+    return;
   }
+
+  Navigator.pushAndRemoveUntil(
+    context,
+    MaterialPageRoute(
+      builder: (context) => const LoginPage(),
+    ),
+    (route) => false,
+  );
+}
 
   @override
   Widget build(BuildContext context) {
@@ -42,21 +50,12 @@ class MiCuentaPage extends StatelessWidget {
                   radius: 36,
                   backgroundColor: Theme.of(context).colorScheme.primary,
                   foregroundColor: Colors.white,
-                  child: const Icon(
-                    Icons.person,
-                    size: 40,
-                  ),
+                  child: const Icon(Icons.person, size: 40),
                 ),
                 const SizedBox(height: 12),
-                Text(
-                  'Adrián',
-                  style: Theme.of(context).textTheme.titleLarge,
-                ),
+                Text('Adrián', style: Theme.of(context).textTheme.titleLarge),
                 const SizedBox(height: 4),
-                Text(
-                  'admin',
-                  style: Theme.of(context).textTheme.bodySmall,
-                ),
+                Text('admin', style: Theme.of(context).textTheme.bodySmall),
                 const SizedBox(height: 4),
                 Text(
                   'usuario@email.com',

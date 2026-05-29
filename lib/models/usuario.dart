@@ -3,7 +3,7 @@ class Usuario {
   String rol;
   String username;
   String email;
-  String password;
+  String passwordHash;
   bool activo;
   DateTime? ultimoLogin;
   DateTime? fechaRegistro;
@@ -13,7 +13,7 @@ class Usuario {
     required this.rol,
     required this.username,
     required this.email,
-    required this.password,
+    required this.passwordHash,
     this.activo = true,
     this.ultimoLogin,
     this.fechaRegistro,
@@ -25,14 +25,14 @@ class Usuario {
       rol: map['rol'],
       username: map['username'],
       email: map['email'],
-      password: map['password'],
+      passwordHash: map['password_hash'],
       activo: map['activo'] == 1 || map['activo'] == true,
-      ultimoLogin: map['ultimo_login'] == null
-          ? null
-          : DateTime.parse(map['ultimo_login'].toString()),
-      fechaRegistro: map['fecha_registro'] == null
-          ? null
-          : DateTime.parse(map['fecha_registro'].toString()),
+      ultimoLogin: map['ultimo_login'] != null
+          ? DateTime.parse(map['ultimo_login'].toString())
+          : null,
+      fechaRegistro: map['fecha_registro'] != null
+          ? DateTime.parse(map['fecha_registro'].toString())
+          : null,
     );
   }
 
@@ -42,10 +42,10 @@ class Usuario {
       'rol': rol,
       'username': username,
       'email': email,
-      'password': password,
+      'password_hash': passwordHash,
       'activo': activo ? 1 : 0,
-      'ultimo_login': ultimoLogin,
-      'fecha_registro': fechaRegistro,
+      'ultimo_login': ultimoLogin?.toIso8601String(),
+      'fecha_registro': fechaRegistro?.toIso8601String(),
     };
   }
 }
