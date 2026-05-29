@@ -408,7 +408,7 @@ class _NuevaPartidaPageState extends State<NuevaPartidaPage> {
         child: Column(
           children: [
             construirCabeceraDesplegable(
-              titulo: 'DATOS DE LA PARTIDA',
+              titulo: 'Datos de la partida',
               desplegado: datosPartidaDesplegados,
               onTap: () {
                 setState(() {
@@ -472,6 +472,7 @@ class _NuevaPartidaPageState extends State<NuevaPartidaPage> {
                     return null;
                   },
                 ),
+              
               if (numeroParticipantes != null) ...[
                 const SizedBox(height: 10),
                 ...List.generate(numeroParticipantes!, (index) {
@@ -510,26 +511,26 @@ class _NuevaPartidaPageState extends State<NuevaPartidaPage> {
                     ),
                   );
                 }),
-              ],
 
-              //const SizedBox(height: 2),
-              SizedBox(
-                width: double.infinity,
-                child: FilledButton.icon(
-                  onPressed: () {
-                    setState(() {
-                      datosPartidaDesplegados = false;
-                    });
-                  },
-                  label: const Text(
-                    'OK',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
+                //const SizedBox(height: 2),
+                SizedBox(
+                  width: double.infinity,
+                  child: FilledButton.icon(
+                    onPressed: () {
+                      setState(() {
+                        datosPartidaDesplegados = false;
+                      });
+                    },
+                    label: const Text(
+                      'Confirmar',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                 ),
-              ),
+              ],
 
             ],
           ],
