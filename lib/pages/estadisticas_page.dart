@@ -109,7 +109,7 @@ class _EstadisticasPageState extends State<EstadisticasPage> {
     return Card(
       child: Padding(
         padding: const EdgeInsets.symmetric(
-          horizontal: 20,
+          horizontal: 30,
           vertical: 20,
         ),
         child: Column(
@@ -220,8 +220,8 @@ class _EstadisticasPageState extends State<EstadisticasPage> {
               '(${formatearPorcentaje(estadisticas.mejorRatioVictorias)})',
         ),
         construirFilaTablaEstadisticas(
-          'Avg. part. jugador',
-          formatearDecimal(estadisticas.partidasMediasPorJugador),
+          'Avg. partidas',
+          '${formatearDecimal(estadisticas.partidasMediasPorJugador)} part/jug',
         ),
         construirFilaTablaEstadisticas(
           'Avg. duración',
@@ -559,7 +559,7 @@ class _EstadisticasPageState extends State<EstadisticasPage> {
 
           if (snapshot.hasError) {
             return Padding(
-              padding: const EdgeInsets.all(16),
+              padding: const EdgeInsets.all(20),
               child: Text(
                 'Error al cargar estadísticas:\n${snapshot.error}',
                 style: TextStyle(
