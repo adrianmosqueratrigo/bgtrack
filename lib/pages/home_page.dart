@@ -173,7 +173,7 @@ class _HomePageState extends State<HomePage> {
             ),
             NavigationDestination(
               icon: Icon(Icons.add_circle_outline),
-              label: 'Nueva',
+              label: 'Jugar',
             ),
             NavigationDestination(
               icon: Icon(Icons.history_rounded),
@@ -181,7 +181,7 @@ class _HomePageState extends State<HomePage> {
             ),
             NavigationDestination(
               icon: Icon(Icons.person_2_rounded),
-              label: 'Mi cuenta',
+              label: 'Mi cuena',
             ),
           ],
         ),

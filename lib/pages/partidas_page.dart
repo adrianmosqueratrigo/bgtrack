@@ -390,12 +390,16 @@ class _PartidasPageState extends State<PartidasPage> {
                     size: 24,
                   ),
                   const SizedBox(height: 6),
-                  IconButton(
-                    padding: EdgeInsets.zero,
-                    constraints: const BoxConstraints(),
-                    tooltip: 'Editar partida',
-                    icon: const Icon(Icons.edit, size: 24),
-                    onPressed: () => editarPartida(partida),
+                  InkWell(
+                    borderRadius: BorderRadius.circular(20),
+                    onTap: () => editarPartida(partida),
+                    child: const Padding(
+                      padding: EdgeInsets.all(2),
+                      child: Icon(
+                        Icons.edit,
+                        size: 24,
+                      ),
+                    ),
                   ),
                 ],
               ),

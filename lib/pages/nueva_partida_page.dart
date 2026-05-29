@@ -51,8 +51,8 @@ class _NuevaPartidaPageState extends State<NuevaPartidaPage> {
 
   Future<void> cargarDatos() async {
     final juegosObtenidos = await JuegosService().obtenerJuegosActivos();
-    final jugadoresObtenidos =
-        await JugadoresService().obtenerJugadoresActivos();
+    final jugadoresObtenidos = await JugadoresService()
+        .obtenerJugadoresActivos();
 
     juegos = juegosObtenidos;
     jugadores = jugadoresObtenidos;
@@ -145,37 +145,36 @@ class _NuevaPartidaPageState extends State<NuevaPartidaPage> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Center(
-            child: const Text(
-              '¿Reiniciar reloj?',
-              ),
-          ),
+          title: Center(child: const Text('¿Reiniciar reloj?')),
           actionsAlignment: MainAxisAlignment.center,
           actions: [
-            TextButton(
+
+            FilledButton.tonal(
               onPressed: () {
                 Navigator.pop(context, false);
               },
               child: const Text(
                 'Cancelar',
                 style: TextStyle(
-                  fontSize: 16,
+                  fontSize: 14,
                   fontWeight: FontWeight.bold,
-              ),
+                ),
               ),
             ),
-            TextButton(
+
+            FilledButton(
               onPressed: () {
                 Navigator.pop(context, true);
               },
               child: const Text(
                 'Reiniciar',
                 style: TextStyle(
-                  fontSize: 16,
+                  fontSize: 14,
                   fontWeight: FontWeight.bold,
-              ),
+                ),
               ),
             ),
+            
           ],
         );
       },
@@ -228,10 +227,7 @@ class _NuevaPartidaPageState extends State<NuevaPartidaPage> {
         datosPartidaDesplegados = true;
       });
 
-    AppSnackbar.mostrar(
-      context,
-      'No puede haber jugadores repetidos',
-    );
+      AppSnackbar.mostrar(context, 'No puede haber jugadores repetidos');
 
       return;
     }
@@ -270,6 +266,20 @@ class _NuevaPartidaPageState extends State<NuevaPartidaPage> {
     });
   }
 
+  List<Jugador> jugadoresDisponiblesParaDropdown(int indexActual) {
+    final idsSeleccionados = jugadoresSeleccionados
+        .asMap()
+        .entries
+        .where((entry) => entry.key != indexActual)
+        .where((entry) => entry.value != null)
+        .map((entry) => entry.value!.id)
+        .toList();
+
+    return jugadores.where((jugador) {
+      return !idsSeleccionados.contains(jugador.id);
+    }).toList();
+  }
+
   List<DropdownMenuItem<int>> opcionesNumeroParticipantes() {
     if (juegoSeleccionado == null) {
       return [];
@@ -302,15 +312,13 @@ class _NuevaPartidaPageState extends State<NuevaPartidaPage> {
             child: Text(
               titulo,
               textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
+              style: Theme.of(
+                context,
+              ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
             ),
           ),
           Icon(
-            desplegado
-                ? Icons.keyboard_arrow_up
-                : Icons.keyboard_arrow_down,
+            desplegado ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
           ),
         ],
       ),
@@ -320,20 +328,16 @@ class _NuevaPartidaPageState extends State<NuevaPartidaPage> {
   Widget construirSeccionReloj() {
     return Card(
       child: Padding(
-        padding: const EdgeInsets.symmetric(
-          horizontal: 20,
-          vertical: 10,
-        ),
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
         child: Column(
           children: [
-            
             // RELOJ.
             Text(
               textoReloj(),
               style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 60,
-                  ),
+                fontWeight: FontWeight.bold,
+                fontSize: 60,
+              ),
             ),
             const SizedBox(height: 5),
 
@@ -357,14 +361,10 @@ class _NuevaPartidaPageState extends State<NuevaPartidaPage> {
                   iconSize: 42,
                   color: Theme.of(context).colorScheme.primary,
                   onPressed: confirmarReinicioReloj,
-                  icon: const Icon(
-                    Icons.restart_alt_rounded,
-                  ),
+                  icon: const Icon(Icons.restart_alt_rounded),
                 ),
               ],
             ),
-
-
           ],
         ),
       ),
@@ -373,38 +373,25 @@ class _NuevaPartidaPageState extends State<NuevaPartidaPage> {
 
   Widget construirSeccionFinalizarPartida() {
     return Padding(
-      padding: const EdgeInsets.symmetric(
-        horizontal: 20,
-        vertical: 10,
-      ),
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
       child: SizedBox(
         width: double.infinity,
         child: FilledButton.icon(
           onPressed: finalizarPartida,
-          icon: const Icon(
-            Icons.flag,
-            size: 22,
-          ),
+          icon: const Icon(Icons.flag, size: 22),
           label: const Text(
             'Finalizar partida',
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-            ),
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           ),
         ),
       ),
     );
   }
 
-
   Widget construirSeccionDatosPartida() {
     return Card(
       child: Padding(
-        padding: const EdgeInsets.symmetric(
-          horizontal: 20,
-          vertical: 20,
-        ),
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
         child: Column(
           children: [
             construirCabeceraDesplegable(
@@ -472,7 +459,7 @@ class _NuevaPartidaPageState extends State<NuevaPartidaPage> {
                     return null;
                   },
                 ),
-              
+
               if (numeroParticipantes != null) ...[
                 const SizedBox(height: 10),
                 ...List.generate(numeroParticipantes!, (index) {
@@ -485,7 +472,9 @@ class _NuevaPartidaPageState extends State<NuevaPartidaPage> {
                         labelText: 'Jugador ${index + 1}',
                         prefixIcon: const Icon(Icons.person),
                       ),
-                      items: jugadores.map((jugador) {
+                      items: jugadoresDisponiblesParaDropdown(index).map((
+                        jugador,
+                      ) {
                         return DropdownMenuItem(
                           value: jugador,
                           child: Text(
@@ -496,7 +485,9 @@ class _NuevaPartidaPageState extends State<NuevaPartidaPage> {
                         );
                       }).toList(),
                       selectedItemBuilder: (context) {
-                        return jugadores.map((jugador) {
+                        return jugadoresDisponiblesParaDropdown(index).map((
+                          jugador,
+                        ) {
                           return Text(
                             jugador.nombre,
                             overflow: TextOverflow.ellipsis,
@@ -531,7 +522,6 @@ class _NuevaPartidaPageState extends State<NuevaPartidaPage> {
                   ),
                 ),
               ],
-
             ],
           ],
         ),
@@ -545,9 +535,7 @@ class _NuevaPartidaPageState extends State<NuevaPartidaPage> {
       future: futureDatos,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(
-            child: CircularProgressIndicator(),
-          );
+          return const Center(child: CircularProgressIndicator());
         }
 
         if (snapshot.hasError) {
@@ -555,9 +543,7 @@ class _NuevaPartidaPageState extends State<NuevaPartidaPage> {
             padding: const EdgeInsets.all(10),
             child: Text(
               'Error al cargar datos:\n${snapshot.error}',
-              style: TextStyle(
-                color: Theme.of(context).colorScheme.error,
-              ),
+              style: TextStyle(color: Theme.of(context).colorScheme.error),
             ),
           );
         }
