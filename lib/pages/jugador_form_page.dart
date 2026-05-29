@@ -1,12 +1,11 @@
-import 'package:bgtrack/widgets/app_background.dart';
 import 'package:flutter/material.dart';
 
 import '../models/jugador.dart';
 import '../services/jugadores_service.dart';
 import '../utils/app_snackbar.dart';
+import '../widgets/app_background.dart';
 
 class JugadorFormPage extends StatefulWidget {
-
   final Jugador? jugador;
 
   const JugadorFormPage({
@@ -34,13 +33,7 @@ class _JugadorFormPageState extends State<JugadorFormPage> {
   @override
   void initState() {
     super.initState();
-
-    if (esEdicion) {
-      nombreController.text = widget.jugador!.nombre;
-      residenciaController.text = widget.jugador!.residencia ?? '';
-      fechaNacimiento = widget.jugador!.fechaNacimiento;
-      activo = widget.jugador!.activo;
-    }
+    cargarDatosJugador();
   }
 
   @override
@@ -48,6 +41,69 @@ class _JugadorFormPageState extends State<JugadorFormPage> {
     nombreController.dispose();
     residenciaController.dispose();
     super.dispose();
+  }
+
+  void cargarDatosJugador() {
+    if (!esEdicion) {
+      return;
+    }
+
+    final jugador = widget.jugador!;
+
+    nombreController.text = jugador.nombre;
+    residenciaController.text = jugador.residencia ?? '';
+    fechaNacimiento = jugador.fechaNacimiento;
+    activo = jugador.activo;
+  }
+
+  Jugador construirJugadorDesdeFormulario() {
+    return Jugador(
+      id: widget.jugador?.id,
+      nombre: nombreController.text.trim(),
+      fechaNacimiento: fechaNacimiento,
+      residencia: residenciaController.text.trim().isEmpty
+          ? null
+          : residenciaController.text.trim(),
+      activo: activo,
+    );
+  }
+
+  Future<void> guardarJugador() async {
+    if (!formKey.currentState!.validate()) {
+      return;
+    }
+
+    final jugador = construirJugadorDesdeFormulario();
+
+    try {
+      if (esEdicion) {
+        await JugadoresService().actualizarJugador(jugador);
+      } else {
+        await JugadoresService().insertarJugador(jugador);
+      }
+
+      if (!mounted) {
+        return;
+      }
+
+      AppSnackbar.mostrar(
+        context,
+        esEdicion
+            ? 'Jugador actualizado correctamente'
+            : 'Jugador guardado correctamente',
+      );
+
+      Navigator.pop(context, true);
+    } catch (e) {
+      if (!mounted) {
+        return;
+      }
+
+      AppSnackbar.mostrarError(
+        context,
+        'Error al guardar el jugador',
+      );
+    }
   }
 
   String? validarObligatorio(String? value, String mensaje) {
@@ -73,67 +129,130 @@ class _JugadorFormPageState extends State<JugadorFormPage> {
   Future<void> seleccionarFechaNacimiento() async {
     final fechaSeleccionada = await showDatePicker(
       context: context,
-      initialDate: DateTime(2000),
+      initialDate: fechaNacimiento ?? DateTime(2000),
       firstDate: DateTime(1900),
       lastDate: DateTime.now(),
     );
 
-    if (fechaSeleccionada != null) {
-      setState(() {
-        fechaNacimiento = fechaSeleccionada;
-      });
-    }
-  }
-
-  Future<void> guardarJugador() async {
-    if (!formKey.currentState!.validate()) {
+    if (fechaSeleccionada == null) {
       return;
     }
 
-    final jugador = Jugador(
-      id: widget.jugador?.id,
-      nombre: nombreController.text.trim(),
-      fechaNacimiento: fechaNacimiento,
-      residencia: residenciaController.text.trim().isEmpty
-          ? null
-          : residenciaController.text.trim(),
-      activo: activo,
+    setState(() {
+      fechaNacimiento = fechaSeleccionada;
+    });
+  }
+
+  Widget construirCampoNombre() {
+    return TextFormField(
+      controller: nombreController,
+      decoration: const InputDecoration(
+        labelText: 'Nombre',
+        prefixIcon: Icon(Icons.person),
+      ),
+      validator: (value) {
+        return validarObligatorio(
+          value,
+          'Introduce el nombre del jugador',
+        );
+      },
     );
+  }
 
+  Widget construirCampoFechaNacimiento() {
+    return InkWell(
+      borderRadius: BorderRadius.circular(12),
+      onTap: seleccionarFechaNacimiento,
+      child: InputDecorator(
+        decoration: const InputDecoration(
+          labelText: 'Fecha de nacimiento',
+          prefixIcon: Icon(Icons.calendar_month),
+        ),
+        child: Text(
+          textoFechaNacimiento(),
+        ),
+      ),
+    );
+  }
 
+  Widget construirCampoResidencia() {
+    return TextFormField(
+      controller: residenciaController,
+      decoration: const InputDecoration(
+        labelText: 'Residencia',
+        prefixIcon: Icon(Icons.location_on),
+        hintText: 'Opcional',
+      ),
+    );
+  }
 
-    try {
-      if (esEdicion) {
-        await JugadoresService().actualizarJugador(jugador);
-      } else {
-        await JugadoresService().insertarJugador(jugador);
-      }
+  Widget construirSwitchActivo() {
+    return SwitchListTile(
+      title: const Text('Jugador activo'),
+      subtitle: const Text(
+        'Disponible para registrar nuevas partidas',
+      ),
+      value: activo,
+      onChanged: (value) {
+        setState(() {
+          activo = value;
+        });
+      },
+    );
+  }
 
-      if (!mounted) {
-        return;
-      }
+  Widget construirBotonGuardar() {
+    return SizedBox(
+      width: double.infinity,
+      child: FilledButton.icon(
+        onPressed: guardarJugador,
+        icon: const Icon(
+          Icons.save,
+          size: 20,
+        ),
+        label: const Text(
+          'Guardar',
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ),
+    );
+  }
 
-      AppSnackbar.mostrar(
-        context,
-        esEdicion
-            ? 'Jugador actualizado correctamente'
-            : 'Jugador guardado correctamente',
-      );
+  Widget construirCardFormulario() {
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(20),
+        child: Form(
+          key: formKey,
+          child: Column(
+            children: [
+              construirCampoNombre(),
+              const SizedBox(height: 16),
+              construirCampoFechaNacimiento(),
+              const SizedBox(height: 16),
+              construirCampoResidencia(),
+              const SizedBox(height: 8),
+              construirSwitchActivo(),
+              const SizedBox(height: 16),
+              construirBotonGuardar(),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
 
-      Navigator.pop(context, true);
-
-    } catch (e) {
-      if (!mounted) {
-        return;
-      }
-
-      AppSnackbar.mostrarError(
-        context,
-        'Error al guardar el jugador',
-      );
-
-    }
-
+  Widget construirContenido() {
+    return SingleChildScrollView(
+      padding: const EdgeInsets.symmetric(
+        horizontal: 20,
+        vertical: 20,
+      ),
+      child: construirCardFormulario(),
+    );
   }
 
   @override
@@ -143,89 +262,7 @@ class _JugadorFormPageState extends State<JugadorFormPage> {
         title: Text(esEdicion ? 'Editar jugador' : 'Nuevo jugador'),
       ),
       body: AppBackground(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(16),
-          child: Card(
-            child: Padding(
-              padding: const EdgeInsets.all(16),
-              child: Form(
-                key: formKey,
-                child: Column(
-                  children: [
-                    TextFormField(
-                      controller: nombreController,
-                      decoration: const InputDecoration(
-                        labelText: 'Nombre',
-                        prefixIcon: Icon(Icons.person),
-                      ),
-                      validator: (value) {
-                        return validarObligatorio(
-                          value,
-                          'Introduce el nombre del jugador',
-                        );
-                      },
-                    ),
-                    const SizedBox(height: 16),
-                    InkWell(
-                      borderRadius: BorderRadius.circular(12),
-                      onTap: seleccionarFechaNacimiento,
-                      child: InputDecorator(
-                        decoration: const InputDecoration(
-                          labelText: 'Fecha de nacimiento',
-                          prefixIcon: Icon(Icons.calendar_month),
-                        ),
-                        child: Text(
-                          textoFechaNacimiento(),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-                    TextFormField(
-                      controller: residenciaController,
-                      decoration: const InputDecoration(
-                        labelText: 'Residencia',
-                        prefixIcon: Icon(Icons.location_on),
-                        hintText: 'Opcional',
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    SwitchListTile(
-                      title: const Text('Jugador activo'),
-                      subtitle: const Text(
-                        'Disponible para registrar nuevas partidas',
-                      ),
-                      value: activo,
-                      onChanged: (value) {
-                        setState(() {
-                          activo = value;
-                        });
-                      },
-                    ),
-                    const SizedBox(height: 16),
-                    SizedBox(
-                      width: double.infinity,
-                      height: 52,
-                      child: FilledButton.icon(
-                        onPressed: guardarJugador,
-                        icon: const Icon(
-                          Icons.save,
-                          size: 20,
-                        ),
-                        label: const Text(
-                          'Guardar',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-        ),
+        child: construirContenido(),
       ),
     );
   }

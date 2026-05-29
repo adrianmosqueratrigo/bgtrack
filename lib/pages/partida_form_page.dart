@@ -1,15 +1,18 @@
-import 'package:bgtrack/widgets/app_background.dart';
 import 'package:flutter/material.dart';
 
 import '../models/partida_detalle.dart';
 import '../models/partida_resumen.dart';
 import '../services/partidas_service.dart';
 import '../utils/app_snackbar.dart';
+import '../widgets/app_background.dart';
 
 class PartidaFormPage extends StatefulWidget {
   final PartidaResumen partida;
 
-  const PartidaFormPage({super.key, required this.partida});
+  const PartidaFormPage({
+    super.key,
+    required this.partida,
+  });
 
   @override
   State<PartidaFormPage> createState() => _PartidaFormPageState();
@@ -23,18 +26,28 @@ class _PartidaFormPageState extends State<PartidaFormPage> {
 
   late DateTime fechaHora;
   late String estado;
+
   bool cargandoDetalle = true;
   PartidaDetalle? detalle;
 
   @override
   void initState() {
     super.initState();
+    cargarDatosPartida();
+    cargarDetallePartida();
+  }
 
+  @override
+  void dispose() {
+    duracionController.dispose();
+    observacionesController.dispose();
+    super.dispose();
+  }
+
+  void cargarDatosPartida() {
     fechaHora = widget.partida.fechaHora;
     estado = widget.partida.estado;
     duracionController.text = widget.partida.duracionMinutos?.toString() ?? '';
-
-    cargarDetallePartida();
   }
 
   Future<void> cargarDetallePartida() async {
@@ -63,78 +76,9 @@ class _PartidaFormPageState extends State<PartidaFormPage> {
 
       AppSnackbar.mostrarError(
         context,
-        'Error al cargar detalle de partida',
+        'Error al cargar detalle de partida: $e',
       );
-
     }
-
-  }
-
-  @override
-  void dispose() {
-    duracionController.dispose();
-    observacionesController.dispose();
-    super.dispose();
-  }
-
-  String textoFechaHora() {
-    final dia = fechaHora.day.toString().padLeft(2, '0');
-    final mes = fechaHora.month.toString().padLeft(2, '0');
-    final anio = fechaHora.year.toString();
-    final hora = fechaHora.hour.toString().padLeft(2, '0');
-    final minuto = fechaHora.minute.toString().padLeft(2, '0');
-
-    return '$dia/$mes/$anio $hora:$minuto';
-  }
-
-  String? validarEnteroPositivoOpcional(String? value) {
-    if (value == null || value.trim().isEmpty) {
-      return null;
-    }
-
-    final numero = int.tryParse(value);
-
-    if (numero == null || numero <= 0) {
-      return 'Introduce un número mayor que 0';
-    }
-
-    return null;
-  }
-
-  Future<void> seleccionarFechaHora() async {
-    final fechaSeleccionada = await showDatePicker(
-      context: context,
-      initialDate: fechaHora,
-      firstDate: DateTime(2020),
-      lastDate: DateTime.now(),
-    );
-
-    if (fechaSeleccionada == null) {
-      return;
-    }
-
-    if (!mounted) {
-      return;
-    }
-
-    final horaSeleccionada = await showTimePicker(
-      context: context,
-      initialTime: TimeOfDay(hour: fechaHora.hour, minute: fechaHora.minute),
-    );
-
-    if (horaSeleccionada == null) {
-      return;
-    }
-
-    setState(() {
-      fechaHora = DateTime(
-        fechaSeleccionada.year,
-        fechaSeleccionada.month,
-        fechaSeleccionada.day,
-        horaSeleccionada.hour,
-        horaSeleccionada.minute,
-      );
-    });
   }
 
   Future<void> guardarPartida() async {
@@ -172,117 +116,233 @@ class _PartidaFormPageState extends State<PartidaFormPage> {
 
       AppSnackbar.mostrarError(
         context,
-        'Error al actualizar la partida',
+        'Error al actualizar la partida: $e',
       );
-
     }
+  }
+
+  String textoFechaHora() {
+    final dia = fechaHora.day.toString().padLeft(2, '0');
+    final mes = fechaHora.month.toString().padLeft(2, '0');
+    final anio = fechaHora.year.toString();
+    final hora = fechaHora.hour.toString().padLeft(2, '0');
+    final minuto = fechaHora.minute.toString().padLeft(2, '0');
+
+    return '$dia/$mes/$anio · $hora:$minuto';
+  }
+
+  String? validarEnteroPositivoOpcional(String? value) {
+    if (value == null || value.trim().isEmpty) {
+      return null;
+    }
+
+    final numero = int.tryParse(value);
+
+    if (numero == null || numero <= 0) {
+      return 'Introduce un número mayor que 0';
+    }
+
+    return null;
+  }
+
+  Future<void> seleccionarFechaHora() async {
+    final fechaSeleccionada = await showDatePicker(
+      context: context,
+      initialDate: fechaHora,
+      firstDate: DateTime(2020),
+      lastDate: DateTime.now(),
+    );
+
+    if (fechaSeleccionada == null) {
+      return;
+    }
+
+    if (!mounted) {
+      return;
+    }
+
+    final horaSeleccionada = await showTimePicker(
+      context: context,
+      initialTime: TimeOfDay(
+        hour: fechaHora.hour,
+        minute: fechaHora.minute,
+      ),
+    );
+
+    if (horaSeleccionada == null) {
+      return;
+    }
+
+    setState(() {
+      fechaHora = DateTime(
+        fechaSeleccionada.year,
+        fechaSeleccionada.month,
+        fechaSeleccionada.day,
+        horaSeleccionada.hour,
+        horaSeleccionada.minute,
+      );
+    });
+  }
+
+  Widget construirCampoJuego() {
+    return TextFormField(
+      initialValue: widget.partida.nombreJuego,
+      enabled: false,
+      decoration: const InputDecoration(
+        labelText: 'Juego',
+        prefixIcon: Icon(Icons.extension),
+      ),
+    );
+  }
+
+  Widget construirCampoFechaHora() {
+    return InkWell(
+      borderRadius: BorderRadius.circular(12),
+      onTap: seleccionarFechaHora,
+      child: InputDecorator(
+        decoration: const InputDecoration(
+          labelText: 'Fecha y hora',
+          prefixIcon: Icon(Icons.calendar_month),
+        ),
+        child: Text(
+          textoFechaHora(),
+        ),
+      ),
+    );
+  }
+
+  Widget construirCampoDuracion() {
+    return TextFormField(
+      controller: duracionController,
+      keyboardType: TextInputType.number,
+      decoration: const InputDecoration(
+        labelText: 'Duración en minutos',
+        prefixIcon: Icon(Icons.timer),
+        hintText: 'Opcional',
+      ),
+      validator: validarEnteroPositivoOpcional,
+    );
+  }
+
+  Widget construirCampoEstado() {
+    return DropdownButtonFormField<String>(
+      initialValue: estado,
+      isExpanded: true,
+      decoration: const InputDecoration(
+        labelText: 'Estado',
+        prefixIcon: Icon(Icons.flag),
+      ),
+      items: const [
+        DropdownMenuItem(
+          value: 'finalizada',
+          child: Text('Finalizada'),
+        ),
+        DropdownMenuItem(
+          value: 'cancelada',
+          child: Text('Cancelada'),
+        ),
+      ],
+      onChanged: (value) {
+        if (value != null) {
+          setState(() {
+            estado = value;
+          });
+        }
+      },
+    );
+  }
+
+  Widget construirCampoObservaciones() {
+    return TextFormField(
+      controller: observacionesController,
+      minLines: 1,
+      maxLines: 3,
+      decoration: const InputDecoration(
+        labelText: 'Observaciones',
+        prefixIcon: Icon(Icons.notes),
+        hintText: 'Opcional',
+      ),
+    );
+  }
+
+  Widget construirBotonGuardar() {
+    return SizedBox(
+      width: double.infinity,
+      child: FilledButton.icon(
+        onPressed: guardarPartida,
+        icon: const Icon(
+          Icons.save,
+          size: 20,
+        ),
+        label: const Text(
+          'Guardar cambios',
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget construirCardFormulario() {
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          children: [
+            construirCampoJuego(),
+            const SizedBox(height: 16),
+            construirCampoFechaHora(),
+            const SizedBox(height: 16),
+            construirCampoDuracion(),
+            const SizedBox(height: 16),
+            construirCampoEstado(),
+            const SizedBox(height: 16),
+            construirCampoObservaciones(),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget construirContenidoFormulario() {
+    return SingleChildScrollView(
+      padding: const EdgeInsets.symmetric(
+        horizontal: 20,
+        vertical: 20,
+      ),
+      child: Form(
+        key: formKey,
+        child: Column(
+          children: [
+            construirCardFormulario(),
+            const SizedBox(height: 16),
+            construirBotonGuardar(),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget construirContenido() {
+    if (cargandoDetalle) {
+      return const Center(
+        child: CircularProgressIndicator(),
+      );
+    }
+
+    return construirContenidoFormulario();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Editar partida')),
+      appBar: AppBar(
+        title: const Text('Editar partida'),
+      ),
       body: AppBackground(
-        child: cargandoDetalle
-            ? const Center(child: CircularProgressIndicator())
-            : SingleChildScrollView(
-                padding: const EdgeInsets.all(16),
-                child: Card(
-                  child: Padding(
-                    padding: const EdgeInsets.all(16),
-                    child: Form(
-                      key: formKey,
-                      child: Column(
-                        children: [
-                          TextFormField(
-                            initialValue: widget.partida.nombreJuego,
-                            enabled: false,
-                            decoration: const InputDecoration(
-                              labelText: 'Juego',
-                              prefixIcon: Icon(Icons.extension),
-                            ),
-                          ),
-                          const SizedBox(height: 16),
-                          InkWell(
-                            borderRadius: BorderRadius.circular(12),
-                            onTap: seleccionarFechaHora,
-                            child: InputDecorator(
-                              decoration: const InputDecoration(
-                                labelText: 'Fecha y hora',
-                                prefixIcon: Icon(Icons.calendar_month),
-                              ),
-                              child: Text(textoFechaHora()),
-                            ),
-                          ),
-                          const SizedBox(height: 16),
-                          TextFormField(
-                            controller: duracionController,
-                            keyboardType: TextInputType.number,
-                            decoration: const InputDecoration(
-                              labelText: 'Duración en minutos',
-                              prefixIcon: Icon(Icons.timer),
-                              hintText: 'Opcional',
-                            ),
-                            validator: validarEnteroPositivoOpcional,
-                          ),
-                          const SizedBox(height: 16),
-                          DropdownButtonFormField<String>(
-                            value: estado,
-                            decoration: const InputDecoration(
-                              labelText: 'Estado',
-                              prefixIcon: Icon(Icons.flag),
-                            ),
-                            items: const [
-                              DropdownMenuItem(
-                                value: 'finalizada',
-                                child: Text('Finalizada'),
-                              ),
-                              DropdownMenuItem(
-                                value: 'cancelada',
-                                child: Text('Cancelada'),
-                              ),
-                            ],
-                            onChanged: (value) {
-                              if (value != null) {
-                                setState(() {
-                                  estado = value;
-                                });
-                              }
-                            },
-                          ),
-                          const SizedBox(height: 16),
-                          TextFormField(
-                            controller: observacionesController,
-                            minLines: 1,
-                            maxLines: 3,
-                            decoration: const InputDecoration(
-                              labelText: 'Observaciones',
-                              prefixIcon: Icon(Icons.notes),
-                              hintText: 'Opcional',
-                            ),
-                          ),
-                          const SizedBox(height: 24),
-                          SizedBox(
-                            width: double.infinity,
-                            height: 52,
-                            child: FilledButton.icon(
-                              onPressed: guardarPartida,
-                              icon: const Icon(Icons.save, size: 20),
-                              label: const Text(
-                                'Guardar cambios',
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-              ),
+        child: construirContenido(),
       ),
     );
   }
