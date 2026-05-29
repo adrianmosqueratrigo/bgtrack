@@ -1,12 +1,11 @@
-import 'package:bgtrack/widgets/app_background.dart';
 import 'package:flutter/material.dart';
 
 import '../models/juego.dart';
 import '../services/juegos_service.dart';
 import '../utils/app_snackbar.dart';
+import '../widgets/app_background.dart';
 
 class JuegoFormPage extends StatefulWidget {
-
   final Juego? juego;
 
   const JuegoFormPage({
@@ -36,16 +35,7 @@ class _JuegoFormPageState extends State<JuegoFormPage> {
   @override
   void initState() {
     super.initState();
-
-    if (esEdicion) {
-      nombreController.text = widget.juego!.nombre;
-      tipoController.text = widget.juego!.tipo ?? '';
-      duracionController.text =
-          widget.juego!.duracionEstimadaMinutos?.toString() ?? '';
-      jugadoresMinController.text = widget.juego!.jugadoresMin.toString();
-      jugadoresMaxController.text = widget.juego!.jugadoresMax.toString();
-      activo = widget.juego!.activo;
-    }
+    cargarDatosJuego();
   }
 
   @override
@@ -58,28 +48,45 @@ class _JuegoFormPageState extends State<JuegoFormPage> {
     super.dispose();
   }
 
-  Future<void> guardarJuego() async {
-    
-    if (!formKey.currentState!.validate()) {
+  void cargarDatosJuego() {
+    if (!esEdicion) {
       return;
     }
 
-    final juego = Juego(
+    final juego = widget.juego!;
+
+    nombreController.text = juego.nombre;
+    tipoController.text = juego.tipo ?? '';
+    duracionController.text = juego.duracionEstimadaMinutos?.toString() ?? '';
+    jugadoresMinController.text = juego.jugadoresMin.toString();
+    jugadoresMaxController.text = juego.jugadoresMax.toString();
+    activo = juego.activo;
+  }
+
+  Juego construirJuegoDesdeFormulario() {
+    return Juego(
       id: widget.juego?.id,
       nombre: nombreController.text.trim(),
       tipo: tipoController.text.trim().isEmpty
           ? null
           : tipoController.text.trim(),
       duracionEstimadaMinutos: duracionController.text.trim().isEmpty
-        ? null
-        : int.parse(duracionController.text.trim()),
+          ? null
+          : int.parse(duracionController.text.trim()),
       jugadoresMin: int.parse(jugadoresMinController.text.trim()),
       jugadoresMax: int.parse(jugadoresMaxController.text.trim()),
       activo: activo,
     );
+  }
+
+  Future<void> guardarJuego() async {
+    if (!formKey.currentState!.validate()) {
+      return;
+    }
+
+    final juego = construirJuegoDesdeFormulario();
 
     try {
-
       if (esEdicion) {
         await JuegosService().actualizarJuego(juego);
       } else {
@@ -98,7 +105,6 @@ class _JuegoFormPageState extends State<JuegoFormPage> {
       );
 
       Navigator.pop(context, true);
-      
     } catch (e) {
       if (!mounted) {
         return;
@@ -108,10 +114,8 @@ class _JuegoFormPageState extends State<JuegoFormPage> {
         context,
         'Error al guardar el juego',
       );
-
     }
   }
-
 
   String? validarObligatorio(String? value, String mensaje) {
     if (value == null || value.trim().isEmpty) {
@@ -149,6 +153,13 @@ class _JuegoFormPageState extends State<JuegoFormPage> {
     return null;
   }
 
+  String? validarJugadoresMin(String? value) {
+    return validarEnteroPositivo(
+      value,
+      'Introduce el mínimo de jugadores',
+    );
+  }
+
   String? validarJugadoresMax(String? value) {
     final errorBasico = validarEnteroPositivo(
       value,
@@ -169,6 +180,141 @@ class _JuegoFormPageState extends State<JuegoFormPage> {
     return null;
   }
 
+  Widget construirCampoNombre() {
+    return TextFormField(
+      controller: nombreController,
+      decoration: const InputDecoration(
+        labelText: 'Nombre del juego',
+        prefixIcon: Icon(Icons.extension),
+      ),
+      validator: (value) {
+        return validarObligatorio(
+          value,
+          'Introduce el nombre del juego',
+        );
+      },
+    );
+  }
+
+  Widget construirCampoTipo() {
+    return TextFormField(
+      controller: tipoController,
+      decoration: const InputDecoration(
+        labelText: 'Tipo/categoría (opcional)',
+        prefixIcon: Icon(Icons.category),
+      ),
+    );
+  }
+
+  Widget construirCampoDuracion() {
+    return TextFormField(
+      controller: duracionController,
+      keyboardType: TextInputType.number,
+      decoration: const InputDecoration(
+        labelText: 'Duración aprox. (opcional)',
+        prefixIcon: Icon(Icons.timer),
+      ),
+      validator: validarEnteroPositivoOpcional,
+    );
+  }
+
+  Widget construirCampoJugadoresMin() {
+    return TextFormField(
+      controller: jugadoresMinController,
+      keyboardType: TextInputType.number,
+      decoration: const InputDecoration(
+        labelText: 'Jugadores mínimos',
+        prefixIcon: Icon(Icons.person),
+      ),
+      validator: validarJugadoresMin,
+    );
+  }
+
+  Widget construirCampoJugadoresMax() {
+    return TextFormField(
+      controller: jugadoresMaxController,
+      keyboardType: TextInputType.number,
+      decoration: const InputDecoration(
+        labelText: 'Jugadores máximos',
+        prefixIcon: Icon(Icons.groups),
+      ),
+      validator: validarJugadoresMax,
+    );
+  }
+
+  Widget construirSwitchActivo() {
+    return SwitchListTile(
+      title: const Text('Juego activo'),
+      subtitle: const Text(
+        'Disponible en la ludoteca',
+      ),
+      value: activo,
+      onChanged: (value) {
+        setState(() {
+          activo = value;
+        });
+      },
+    );
+  }
+
+  Widget construirBotonGuardar() {
+    return SizedBox(
+      width: double.infinity,
+      child: FilledButton.icon(
+        onPressed: guardarJuego,
+        icon: const Icon(
+          Icons.save,
+          size: 20,
+        ),
+        label: const Text(
+          'Guardar',
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget construirCardFormulario() {
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(20),
+        child: Form(
+          key: formKey,
+          child: Column(
+            children: [
+              construirCampoNombre(),
+              const SizedBox(height: 16),
+              construirCampoTipo(),
+              const SizedBox(height: 16),
+              construirCampoDuracion(),
+              const SizedBox(height: 16),
+              construirCampoJugadoresMin(),
+              const SizedBox(height: 16),
+              construirCampoJugadoresMax(),
+              const SizedBox(height: 8),
+              construirSwitchActivo(),
+              const SizedBox(height: 16),
+              construirBotonGuardar(),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget construirContenido() {
+    return SingleChildScrollView(
+      padding: const EdgeInsets.symmetric(
+        horizontal: 20,
+        vertical: 20,
+      ),
+      child: construirCardFormulario(),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -176,111 +322,7 @@ class _JuegoFormPageState extends State<JuegoFormPage> {
         title: Text(esEdicion ? 'Editar juego' : 'Nuevo juego'),
       ),
       body: AppBackground(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(
-            horizontal: 20,
-            vertical: 20,
-          ),
-          child: Card(
-            child: Padding(
-              padding: const EdgeInsets.all(20),
-              child: Form(
-                key: formKey,
-                child: Column(
-                  children: [
-                    TextFormField(
-                      controller: nombreController,
-                      decoration: const InputDecoration(
-                        labelText: 'Nombre del juego',
-                        prefixIcon: Icon(Icons.extension),
-                      ),
-                      validator: (value) {
-                        return validarObligatorio(
-                          value,
-                          'Introduce el nombre del juego',
-                        );
-                      },
-                    ),
-                    const SizedBox(height: 16),
-                    TextFormField(
-                      controller: tipoController,
-                      decoration: const InputDecoration(
-                        labelText: 'Tipo/categoría (opcional)',
-                        prefixIcon: Icon(Icons.category),
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-                    TextFormField(
-                      controller: duracionController,
-                      keyboardType: TextInputType.number,
-                      decoration: const InputDecoration(
-                        labelText: 'Duración aprox. (opcional)',
-                        prefixIcon: Icon(Icons.timer),
-                      ),
-                      validator: validarEnteroPositivoOpcional,
-                    ),
-                    const SizedBox(height: 16),
-                    TextFormField(
-                      controller: jugadoresMinController,
-                      keyboardType: TextInputType.number,
-                      decoration: const InputDecoration(
-                        labelText: 'Jugadores mínimos',
-                        prefixIcon: Icon(Icons.person),
-                      ),
-                      validator: (value) {
-                        return validarEnteroPositivo(
-                          value,
-                          'Introduce el mínimo de jugadores',
-                        );
-                      },
-                    ),
-                    const SizedBox(height: 16),
-                    TextFormField(
-                      controller: jugadoresMaxController,
-                      keyboardType: TextInputType.number,
-                      decoration: const InputDecoration(
-                        labelText: 'Jugadores máximos',
-                        prefixIcon: Icon(Icons.groups),
-                      ),
-                      validator: validarJugadoresMax,
-                    ),
-                    const SizedBox(height: 8),
-                    SwitchListTile(
-                      title: const Text('Juego activo'),
-                      subtitle: const Text(
-                        'Disponible en la ludoteca',
-                      ),
-                      value: activo,
-                      onChanged: (value) {
-                        setState(() {
-                          activo = value;
-                        });
-                      },
-                    ),
-                    const SizedBox(height: 16),
-                    SizedBox(
-                      width: double.infinity,
-                      child: FilledButton.icon(
-                        onPressed: guardarJuego,
-                        icon: const Icon(
-                          Icons.save,
-                          size: 20,
-                        ),
-                        label: const Text(
-                          'Guardar',
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-        ),
+        child: construirContenido(),
       ),
     );
   }
