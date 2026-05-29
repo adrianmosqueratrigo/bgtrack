@@ -27,12 +27,12 @@ class Usuario {
       email: map['email'],
       password: map['password'],
       activo: map['activo'] == 1 || map['activo'] == true,
-      ultimoLogin: map['ultimo_login'] != null
-          ? DateTime.parse(map['ultimo_login'].toString())
-          : null,
-      fechaRegistro: map['fecha_registro'] != null
-          ? DateTime.parse(map['fecha_registro'].toString())
-          : null,
+      ultimoLogin: map['ultimo_login'] == null
+          ? null
+          : DateTime.parse(map['ultimo_login'].toString()),
+      fechaRegistro: map['fecha_registro'] == null
+          ? null
+          : DateTime.parse(map['fecha_registro'].toString()),
     );
   }
 
@@ -44,8 +44,8 @@ class Usuario {
       'email': email,
       'password': password,
       'activo': activo ? 1 : 0,
-      'ultimo_login': ultimoLogin?.toIso8601String(),
-      'fecha_registro': fechaRegistro?.toIso8601String(),
+      'ultimo_login': ultimoLogin,
+      'fecha_registro': fechaRegistro,
     };
   }
 }
