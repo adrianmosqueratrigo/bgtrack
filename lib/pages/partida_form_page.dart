@@ -1,8 +1,10 @@
+import 'package:bgtrack/widgets/app_background.dart';
 import 'package:flutter/material.dart';
 
 import '../models/partida_detalle.dart';
 import '../models/partida_resumen.dart';
 import '../services/partidas_service.dart';
+import '../utils/app_snackbar.dart';
 
 class PartidaFormPage extends StatefulWidget {
   final PartidaResumen partida;
@@ -59,10 +61,13 @@ class _PartidaFormPageState extends State<PartidaFormPage> {
         cargandoDetalle = false;
       });
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error al cargar detalle de partida: $e')),
+      AppSnackbar.mostrarError(
+        context,
+        'Error al cargar detalle de partida',
       );
+
     }
+
   }
 
   @override
@@ -79,7 +84,7 @@ class _PartidaFormPageState extends State<PartidaFormPage> {
     final hora = fechaHora.hour.toString().padLeft(2, '0');
     final minuto = fechaHora.minute.toString().padLeft(2, '0');
 
-    return '$dia/$mes/$anio · $hora:$minuto';
+    return '$dia/$mes/$anio $hora:$minuto';
   }
 
   String? validarEnteroPositivoOpcional(String? value) {
@@ -154,8 +159,9 @@ class _PartidaFormPageState extends State<PartidaFormPage> {
         return;
       }
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Partida actualizada correctamente')),
+      AppSnackbar.mostrar(
+        context,
+        'Partida actualizada correctamente',
       );
 
       Navigator.pop(context, true);
@@ -164,9 +170,11 @@ class _PartidaFormPageState extends State<PartidaFormPage> {
         return;
       }
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error al actualizar la partida: $e')),
+      AppSnackbar.mostrarError(
+        context,
+        'Error al actualizar la partida',
       );
+
     }
   }
 
@@ -174,105 +182,108 @@ class _PartidaFormPageState extends State<PartidaFormPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Editar partida')),
-      body: cargandoDetalle
-          ? const Center(child: CircularProgressIndicator())
-          : SingleChildScrollView(
-              padding: const EdgeInsets.all(16),
-              child: Card(
-                child: Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Form(
-                    key: formKey,
-                    child: Column(
-                      children: [
-                        TextFormField(
-                          initialValue: widget.partida.nombreJuego,
-                          enabled: false,
-                          decoration: const InputDecoration(
-                            labelText: 'Juego',
-                            prefixIcon: Icon(Icons.extension),
-                          ),
-                        ),
-                        const SizedBox(height: 16),
-                        InkWell(
-                          borderRadius: BorderRadius.circular(12),
-                          onTap: seleccionarFechaHora,
-                          child: InputDecorator(
+      body: AppBackground(
+        child: cargandoDetalle
+            ? const Center(child: CircularProgressIndicator())
+            : SingleChildScrollView(
+                padding: const EdgeInsets.all(16),
+                child: Card(
+                  child: Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Form(
+                      key: formKey,
+                      child: Column(
+                        children: [
+                          TextFormField(
+                            initialValue: widget.partida.nombreJuego,
+                            enabled: false,
                             decoration: const InputDecoration(
-                              labelText: 'Fecha y hora',
-                              prefixIcon: Icon(Icons.calendar_month),
+                              labelText: 'Juego',
+                              prefixIcon: Icon(Icons.extension),
                             ),
-                            child: Text(textoFechaHora()),
                           ),
-                        ),
-                        const SizedBox(height: 16),
-                        TextFormField(
-                          controller: duracionController,
-                          keyboardType: TextInputType.number,
-                          decoration: const InputDecoration(
-                            labelText: 'Duración en minutos',
-                            prefixIcon: Icon(Icons.timer),
-                            hintText: 'Opcional',
-                          ),
-                          validator: validarEnteroPositivoOpcional,
-                        ),
-                        const SizedBox(height: 16),
-                        DropdownButtonFormField<String>(
-                          value: estado,
-                          decoration: const InputDecoration(
-                            labelText: 'Estado',
-                            prefixIcon: Icon(Icons.flag),
-                          ),
-                          items: const [
-                            DropdownMenuItem(
-                              value: 'finalizada',
-                              child: Text('Finalizada'),
+                          const SizedBox(height: 16),
+                          InkWell(
+                            borderRadius: BorderRadius.circular(12),
+                            onTap: seleccionarFechaHora,
+                            child: InputDecorator(
+                              decoration: const InputDecoration(
+                                labelText: 'Fecha y hora',
+                                prefixIcon: Icon(Icons.calendar_month),
+                              ),
+                              child: Text(textoFechaHora()),
                             ),
-                            DropdownMenuItem(
-                              value: 'cancelada',
-                              child: Text('Cancelada'),
-                            ),
-                          ],
-                          onChanged: (value) {
-                            if (value != null) {
-                              setState(() {
-                                estado = value;
-                              });
-                            }
-                          },
-                        ),
-                        const SizedBox(height: 16),
-                        TextFormField(
-                          controller: observacionesController,
-                          maxLines: 4,
-                          decoration: const InputDecoration(
-                            labelText: 'Observaciones',
-                            prefixIcon: Icon(Icons.notes),
-                            hintText: 'Opcional',
                           ),
-                        ),
-                        const SizedBox(height: 24),
-                        SizedBox(
-                          width: double.infinity,
-                          height: 52,
-                          child: FilledButton.icon(
-                            onPressed: guardarPartida,
-                            icon: const Icon(Icons.save, size: 20),
-                            label: const Text(
-                              'Guardar cambios',
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
+                          const SizedBox(height: 16),
+                          TextFormField(
+                            controller: duracionController,
+                            keyboardType: TextInputType.number,
+                            decoration: const InputDecoration(
+                              labelText: 'Duración en minutos',
+                              prefixIcon: Icon(Icons.timer),
+                              hintText: 'Opcional',
+                            ),
+                            validator: validarEnteroPositivoOpcional,
+                          ),
+                          const SizedBox(height: 16),
+                          DropdownButtonFormField<String>(
+                            value: estado,
+                            decoration: const InputDecoration(
+                              labelText: 'Estado',
+                              prefixIcon: Icon(Icons.flag),
+                            ),
+                            items: const [
+                              DropdownMenuItem(
+                                value: 'finalizada',
+                                child: Text('Finalizada'),
+                              ),
+                              DropdownMenuItem(
+                                value: 'cancelada',
+                                child: Text('Cancelada'),
+                              ),
+                            ],
+                            onChanged: (value) {
+                              if (value != null) {
+                                setState(() {
+                                  estado = value;
+                                });
+                              }
+                            },
+                          ),
+                          const SizedBox(height: 16),
+                          TextFormField(
+                            controller: observacionesController,
+                            minLines: 1,
+                            maxLines: 3,
+                            decoration: const InputDecoration(
+                              labelText: 'Observaciones',
+                              prefixIcon: Icon(Icons.notes),
+                              hintText: 'Opcional',
+                            ),
+                          ),
+                          const SizedBox(height: 24),
+                          SizedBox(
+                            width: double.infinity,
+                            height: 52,
+                            child: FilledButton.icon(
+                              onPressed: guardarPartida,
+                              icon: const Icon(Icons.save, size: 20),
+                              label: const Text(
+                                'Guardar cambios',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                 ),
               ),
-            ),
+      ),
     );
   }
 }

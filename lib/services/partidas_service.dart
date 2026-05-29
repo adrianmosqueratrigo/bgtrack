@@ -1,5 +1,7 @@
 import '../database/connection.dart';
+import '../models/participacion.dart';
 import '../models/participante_partida.dart';
+import '../models/partida.dart';
 import '../models/partida_detalle.dart';
 import '../models/partida_resumen.dart';
 
@@ -142,5 +144,62 @@ class PartidasService {
       await conexion.close();
     }
   }
+
+  Future<void> insertarPartidaCompleta(
+    Partida partida,
+    List<Participacion> participaciones,
+  ) async {
+    final conexion = await DatabaseConnection.getConnection();
+
+    try {
+      await conexion.query('START TRANSACTION');
+
+      final resultadoPartida = await conexion.query(
+        '''
+        INSERT INTO partidas
+        (id_juego, id_usuario, fecha_hora, duracion_minutos, estado, notas)
+        VALUES (?, ?, ?, ?, ?, ?)
+        ''',
+        [
+          partida.idJuego,
+          partida.idUsuario,
+          partida.fechaHora.toIso8601String().replaceFirst('T', ' ').substring(0, 19),
+          partida.duracionMinutos,
+          partida.estado,
+          partida.notas,
+        ],
+      );
+
+      final idPartida = resultadoPartida.insertId;
+
+      if (idPartida == null) {
+        throw Exception('No se pudo obtener el id de la partida creada');
+      }
+
+      for (var participacion in participaciones) {
+        await conexion.query(
+          '''
+          INSERT INTO participaciones
+          (id_partida, id_jugador, puntuacion, es_ganador)
+          VALUES (?, ?, ?, ?)
+          ''',
+          [
+            idPartida,
+            participacion.idJugador,
+            participacion.puntuacion,
+            participacion.esGanador ? 1 : 0,
+          ],
+        );
+      }
+
+      await conexion.query('COMMIT');
+    } catch (e) {
+      await conexion.query('ROLLBACK');
+      rethrow;
+    } finally {
+      await conexion.close();
+    }
+  }
+
 
 }

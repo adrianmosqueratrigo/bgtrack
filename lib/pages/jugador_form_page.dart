@@ -1,7 +1,9 @@
+import 'package:bgtrack/widgets/app_background.dart';
 import 'package:flutter/material.dart';
 
 import '../models/jugador.dart';
 import '../services/jugadores_service.dart';
+import '../utils/app_snackbar.dart';
 
 class JugadorFormPage extends StatefulWidget {
 
@@ -111,28 +113,27 @@ class _JugadorFormPageState extends State<JugadorFormPage> {
         return;
       }
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            esEdicion
-              ? 'Jugador actualizado correctamente'
-              : 'Jugador guardado correctamente',
-          ),
-        ),
+      AppSnackbar.mostrar(
+        context,
+        esEdicion
+            ? 'Jugador actualizado correctamente'
+            : 'Jugador guardado correctamente',
       );
 
       Navigator.pop(context, true);
+
     } catch (e) {
       if (!mounted) {
         return;
       }
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Error al guardar el jugador: $e'),
-        ),
+      AppSnackbar.mostrarError(
+        context,
+        'Error al guardar el jugador',
       );
+
     }
+
   }
 
   @override
@@ -141,84 +142,86 @@ class _JugadorFormPageState extends State<JugadorFormPage> {
       appBar: AppBar(
         title: Text(esEdicion ? 'Editar jugador' : 'Nuevo jugador'),
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
-        child: Card(
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: Form(
-              key: formKey,
-              child: Column(
-                children: [
-                  TextFormField(
-                    controller: nombreController,
-                    decoration: const InputDecoration(
-                      labelText: 'Nombre',
-                      prefixIcon: Icon(Icons.person),
-                    ),
-                    validator: (value) {
-                      return validarObligatorio(
-                        value,
-                        'Introduce el nombre del jugador',
-                      );
-                    },
-                  ),
-                  const SizedBox(height: 16),
-                  InkWell(
-                    borderRadius: BorderRadius.circular(12),
-                    onTap: seleccionarFechaNacimiento,
-                    child: InputDecorator(
+      body: AppBackground(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(16),
+          child: Card(
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Form(
+                key: formKey,
+                child: Column(
+                  children: [
+                    TextFormField(
+                      controller: nombreController,
                       decoration: const InputDecoration(
-                        labelText: 'Fecha de nacimiento',
-                        prefixIcon: Icon(Icons.calendar_month),
+                        labelText: 'Nombre',
+                        prefixIcon: Icon(Icons.person),
                       ),
-                      child: Text(
-                        textoFechaNacimiento(),
-                      ),
+                      validator: (value) {
+                        return validarObligatorio(
+                          value,
+                          'Introduce el nombre del jugador',
+                        );
+                      },
                     ),
-                  ),
-                  const SizedBox(height: 16),
-                  TextFormField(
-                    controller: residenciaController,
-                    decoration: const InputDecoration(
-                      labelText: 'Residencia',
-                      prefixIcon: Icon(Icons.location_on),
-                      hintText: 'Opcional',
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  SwitchListTile(
-                    title: const Text('Jugador activo'),
-                    subtitle: const Text(
-                      'Disponible para registrar nuevas partidas',
-                    ),
-                    value: activo,
-                    onChanged: (value) {
-                      setState(() {
-                        activo = value;
-                      });
-                    },
-                  ),
-                  const SizedBox(height: 16),
-                  SizedBox(
-                    width: double.infinity,
-                    height: 52,
-                    child: FilledButton.icon(
-                      onPressed: guardarJugador,
-                      icon: const Icon(
-                        Icons.save,
-                        size: 20,
-                      ),
-                      label: const Text(
-                        'Guardar',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
+                    const SizedBox(height: 16),
+                    InkWell(
+                      borderRadius: BorderRadius.circular(12),
+                      onTap: seleccionarFechaNacimiento,
+                      child: InputDecorator(
+                        decoration: const InputDecoration(
+                          labelText: 'Fecha de nacimiento',
+                          prefixIcon: Icon(Icons.calendar_month),
+                        ),
+                        child: Text(
+                          textoFechaNacimiento(),
                         ),
                       ),
                     ),
-                  ),
-                ],
+                    const SizedBox(height: 16),
+                    TextFormField(
+                      controller: residenciaController,
+                      decoration: const InputDecoration(
+                        labelText: 'Residencia',
+                        prefixIcon: Icon(Icons.location_on),
+                        hintText: 'Opcional',
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    SwitchListTile(
+                      title: const Text('Jugador activo'),
+                      subtitle: const Text(
+                        'Disponible para registrar nuevas partidas',
+                      ),
+                      value: activo,
+                      onChanged: (value) {
+                        setState(() {
+                          activo = value;
+                        });
+                      },
+                    ),
+                    const SizedBox(height: 16),
+                    SizedBox(
+                      width: double.infinity,
+                      height: 52,
+                      child: FilledButton.icon(
+                        onPressed: guardarJugador,
+                        icon: const Icon(
+                          Icons.save,
+                          size: 20,
+                        ),
+                        label: const Text(
+                          'Guardar',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),

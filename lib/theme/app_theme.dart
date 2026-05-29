@@ -5,12 +5,12 @@ class AppTheme {
   static const Color primaryDarkColor = Color(0xFF00897B);
 
   static const Color backgroundColor = Color(0xFFD5EBDC);
-  static const Color cardColor = Color(0xFFFFE9DF);
-  static const Color cardBorderColor = Color(0xFFFFCEBE);
+  static const Color cardColor = Color.fromARGB(255, 254, 243, 238);
+  static const Color cardBorderColor = Color.fromARGB(255, 251, 221, 211);
 
   static const Color accentColor = Color(0xFFFF8A65);
   static const Color textColor = Color(0xFF263238);
-  static const Color secondaryTextColor = Color(0xFF607D8B);
+  static const Color secondaryTextColor = Color.fromARGB(255, 116, 160, 182);
 
   static ThemeData lightTheme() {
     return ThemeData(
@@ -36,7 +36,7 @@ class AppTheme {
           color: Colors.white,
           fontSize: 20,
           fontWeight: FontWeight.w600,
-          letterSpacing: 1,
+          letterSpacing: 0.4,
         ),
         shape: Border(
           bottom: BorderSide(
@@ -72,16 +72,33 @@ class AppTheme {
         }),
       ),
 
+      snackBarTheme: SnackBarThemeData(
+        backgroundColor: primaryDarkColor,
+        contentTextStyle: const TextStyle(
+          color: Colors.white,
+          fontSize: 17,
+          fontWeight: FontWeight.w500,
+        ),
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(15),
+        ),
+        insetPadding: const EdgeInsets.symmetric(
+          horizontal: 16,
+          vertical: 12,
+        ),
+      ),
+
       cardTheme: CardThemeData(
         color: cardColor,
-        elevation: 4,
-        shadowColor: Colors.black.withValues(alpha: 0.75),
+        elevation: 6,
+        shadowColor: Colors.black.withValues(alpha: 0.8),
         margin: const EdgeInsets.symmetric(
           horizontal: 18,
           vertical: 6,
         ),
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(14),
+          borderRadius: BorderRadius.circular(20),
           side: const BorderSide(
             color: cardBorderColor,
             width: 1,
@@ -99,12 +116,14 @@ class AppTheme {
           backgroundColor: primaryColor,
           foregroundColor: Colors.white,
           padding: const EdgeInsets.symmetric(
-            horizontal: 20,
-            vertical: 14,
+            horizontal: 15,
+            vertical: 10,
           ),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(20),
           ),
+          elevation: 6,
+          shadowColor: Colors.black.withValues(alpha: 0.8),
         ),
       ),
 

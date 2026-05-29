@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 
 import '../theme/app_theme.dart';
+import '../widgets/app_background.dart';
 import 'juego_form_page.dart';
 import 'juegos_page.dart';
 import 'jugador_form_page.dart';
 import 'jugadores_page.dart';
 import 'mi_cuenta_page.dart';
+import 'nueva_partida_page.dart';
 import 'partidas_page.dart';
 
 class HomePage extends StatefulWidget {
@@ -16,7 +18,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  int paginaSeleccionada = 0;
+  int paginaSeleccionada = 2;
   int juegosKey = 0;
   int jugadoresKey = 0;
 
@@ -32,7 +34,7 @@ class _HomePageState extends State<HomePage> {
     return [
       JugadoresPage(key: ValueKey(jugadoresKey)),
       JuegosPage(key: ValueKey(juegosKey)),
-      const _PaginaPendiente(titulo: 'Nueva partida'),
+      const NuevaPartidaPage(),
       const PartidasPage(),
       const MiCuentaPage(),
     ];
@@ -145,7 +147,9 @@ class _HomePageState extends State<HomePage> {
         title: Text(titulos[paginaSeleccionada]),
         actions: accionesAppBar(),
       ),
-      body: paginas[paginaSeleccionada],
+      body: AppBackground(
+        child: paginas[paginaSeleccionada],
+      ),
       bottomNavigationBar: Container(
         decoration: const BoxDecoration(
           border: Border(
@@ -169,7 +173,7 @@ class _HomePageState extends State<HomePage> {
             ),
             NavigationDestination(
               icon: Icon(Icons.add_circle_outline),
-              label: 'Nueva',
+              label: 'Jugar',
             ),
             NavigationDestination(
               icon: Icon(Icons.history_rounded),
@@ -177,28 +181,10 @@ class _HomePageState extends State<HomePage> {
             ),
             NavigationDestination(
               icon: Icon(Icons.person_2_rounded),
-              label: 'Mi cuenta',
+              label: 'Mi cuena',
             ),
           ],
         ),
-      ),
-    );
-  }
-}
-
-class _PaginaPendiente extends StatelessWidget {
-  final String titulo;
-
-  const _PaginaPendiente({
-    required this.titulo,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Text(
-        titulo,
-        style: Theme.of(context).textTheme.titleLarge,
       ),
     );
   }

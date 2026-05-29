@@ -4,6 +4,7 @@ import '../models/participante_partida.dart';
 import '../models/partida_detalle.dart';
 import '../models/partida_resumen.dart';
 import '../services/partidas_service.dart';
+import '../utils/app_snackbar.dart';
 import 'partida_form_page.dart';
 
 class PartidasPage extends StatefulWidget {
@@ -38,7 +39,7 @@ class _PartidasPageState extends State<PartidasPage> {
 
   String textoDuracion(int? duracion) {
     if (duracion == null) {
-      return 'Duración desconocida';
+      return 'n/a';
     }
     return '$duracion min';
   }
@@ -129,10 +130,9 @@ class _PartidasPageState extends State<PartidasPage> {
       Navigator.pop(context);
 
       if (detalle == null) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('No se encontró el detalle de la partida'),
-          ),
+        AppSnackbar.mostrarError(
+          context,
+          'No se encontró el detalle de la partida',
         );
         return;
       }
@@ -150,10 +150,13 @@ class _PartidasPageState extends State<PartidasPage> {
 
       Navigator.pop(context);
 
-      ScaffoldMessenger.of(
+      AppSnackbar.mostrarError(
         context,
-      ).showSnackBar(SnackBar(content: Text('Error al cargar el detalle: $e')));
+        'Error al cargar el detalle',
+      );
+
     }
+    
   }
 
   Widget construirDialogDetalle(
@@ -164,7 +167,7 @@ class _PartidasPageState extends State<PartidasPage> {
       insetPadding: const EdgeInsets.symmetric(horizontal: 40, vertical: 40),
       title: Center(
         child: Text(
-          'Partida nº ${detalle.id}',
+          'Partida #${detalle.id}',
           textAlign: TextAlign.center,
           style: Theme.of(
             context,
@@ -337,11 +340,11 @@ class _PartidasPageState extends State<PartidasPage> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               CircleAvatar(
-                radius: 20,
+                radius: 22,
                 backgroundColor: primaryColor,
                 foregroundColor: Colors.white,
                 child: Text(
-                  partida.id.toString(),
+                  '#' + partida.id.toString(),
                   style: const TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.bold,
@@ -387,12 +390,16 @@ class _PartidasPageState extends State<PartidasPage> {
                     size: 24,
                   ),
                   const SizedBox(height: 6),
-                  IconButton(
-                    padding: EdgeInsets.zero,
-                    constraints: const BoxConstraints(),
-                    tooltip: 'Editar partida',
-                    icon: const Icon(Icons.edit, size: 24),
-                    onPressed: () => editarPartida(partida),
+                  InkWell(
+                    borderRadius: BorderRadius.circular(20),
+                    onTap: () => editarPartida(partida),
+                    child: const Padding(
+                      padding: EdgeInsets.all(2),
+                      child: Icon(
+                        Icons.edit,
+                        size: 24,
+                      ),
+                    ),
                   ),
                 ],
               ),

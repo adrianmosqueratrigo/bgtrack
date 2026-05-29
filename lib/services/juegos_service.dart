@@ -84,4 +84,24 @@ class JuegosService {
 
   }
 
+  Future<List<Juego>> obtenerJuegosActivos() async {
+    final conexion = await DatabaseConnection.getConnection();
+
+    try {
+      final resultados = await conexion.query(
+        'SELECT * FROM juegos WHERE activo = 1 ORDER BY nombre',
+      );
+
+      List<Juego> juegos = [];
+
+      for (var row in resultados) {
+        juegos.add(Juego.fromMap(row.fields));
+      }
+
+      return juegos;
+    } finally {
+      await conexion.close();
+    }
+  }
+
 }
