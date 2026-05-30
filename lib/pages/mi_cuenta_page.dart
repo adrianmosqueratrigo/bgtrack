@@ -19,10 +19,14 @@ class _MiCuentaPageState extends State<MiCuentaPage> {
   @override
   void initState() {
     super.initState();
-    futureUsuario = cargarUsuario();
+    cargarUsuario();
   }
 
-  Future<Usuario?> cargarUsuario() async {
+  void cargarUsuario() {
+    futureUsuario = obtenerUsuarioActual();
+  }
+
+  Future<Usuario?> obtenerUsuarioActual() async {
     final idUsuario = await AuthService().obtenerIdUsuarioActual();
 
     if (idUsuario == null) {
@@ -42,40 +46,6 @@ class _MiCuentaPageState extends State<MiCuentaPage> {
     }
 
     return '${usuario.nombre} ${usuario.apellidos}';
-  }
-
-  String textoApellidos(String? apellidos) {
-    if (apellidos == null || apellidos.trim().isEmpty) {
-      return 'Sin apellidos';
-    }
-
-    return apellidos;
-  }
-
-  String textoRol(String rol) {
-    if (rol == 'admin') {
-      return 'Administrador';
-    }
-
-    return 'Usuario';
-  }
-
-  String textoEstado(bool activo) {
-    return activo ? 'Activo' : 'Inactivo';
-  }
-
-  String textoFecha(DateTime? fecha) {
-    if (fecha == null) {
-      return 'Sin datos';
-    }
-
-    final dia = fecha.day.toString().padLeft(2, '0');
-    final mes = fecha.month.toString().padLeft(2, '0');
-    final anio = fecha.year.toString();
-    final hora = fecha.hour.toString().padLeft(2, '0');
-    final minuto = fecha.minute.toString().padLeft(2, '0');
-
-    return '$dia/$mes/$anio · $hora:$minuto';
   }
 
   void editarMisDatos() {
@@ -116,7 +86,9 @@ class _MiCuentaPageState extends State<MiCuentaPage> {
     );
   }
 
-  Widget construirAvatar(Color primaryColor) {
+  Widget construirAvatar(
+    Color primaryColor,
+  ) {
     return CircleAvatar(
       radius: 36,
       backgroundColor: primaryColor,
@@ -124,6 +96,32 @@ class _MiCuentaPageState extends State<MiCuentaPage> {
       child: const Icon(
         Icons.person_2_rounded,
         size: 40,
+      ),
+    );
+  }
+
+  Widget construirNombreUsuario(
+    Usuario usuario,
+  ) {
+    return Text(
+      textoNombreCompleto(usuario),
+      textAlign: TextAlign.center,
+      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+          ),
+    );
+  }
+
+  Widget construirRolUsuario(
+    Usuario usuario,
+    Color secondaryTextColor,
+  ) {
+    return Text(
+      'Rol de ${usuario.rol}',
+      textAlign: TextAlign.center,
+      style: TextStyle(
+        color: secondaryTextColor,
       ),
     );
   }
@@ -143,111 +141,17 @@ class _MiCuentaPageState extends State<MiCuentaPage> {
           children: [
             construirAvatar(primaryColor),
             const SizedBox(height: 15),
-            Text(
-              textoNombreCompleto(usuario),
-              textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  ),
-            ),
+            construirNombreUsuario(usuario),
             const SizedBox(height: 5),
-            Text(
-              'Rol de ${usuario.rol}',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                color: secondaryTextColor,
-              ),
+            construirRolUsuario(
+              usuario,
+              secondaryTextColor,
             ),
           ],
         ),
       ),
     );
   }
-
-/*
-  Widget construirCardDetalleUsuario(Usuario usuario) {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(
-          horizontal: 20,
-          vertical: 20,
-        ),
-        child: Table(
-          columnWidths: const {
-            0: IntrinsicColumnWidth(),
-            1: FlexColumnWidth(),
-          },
-          defaultVerticalAlignment: TableCellVerticalAlignment.top,
-          children: [
-            construirFilaDetalle(
-              'Nombre',
-              usuario.nombre,
-            ),
-            construirFilaDetalle(
-              'Apellidos',
-              textoApellidos(usuario.apellidos),
-            ),
-            construirFilaDetalle(
-              'Usuario',
-              usuario.username,
-            ),
-            construirFilaDetalle(
-              'Email',
-              usuario.email,
-            ),
-            construirFilaDetalle(
-              'Rol',
-              textoRol(usuario.rol),
-            ),
-            construirFilaDetalle(
-              'Estado',
-              textoEstado(usuario.activo),
-            ),
-            construirFilaDetalle(
-              'Último login',
-              textoFecha(usuario.ultimoLogin),
-            ),
-            construirFilaDetalle(
-              'Registro',
-              textoFecha(usuario.fechaRegistro),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-*/
-/*
-  TableRow construirFilaDetalle(String titulo, String valor) {
-    return TableRow(
-      children: [
-        Padding(
-          padding: const EdgeInsets.only(
-            right: 10,
-            bottom: 10,
-          ),
-          child: Text(
-            titulo,
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.only(
-            bottom: 10,
-          ),
-          child: Text(
-            valor,
-            textAlign: TextAlign.left,
-            style: Theme.of(context).textTheme.bodyMedium,
-          ),
-        ),
-      ],
-    );
-  }
-*/
 
   Widget construirOpcionEditar() {
     return ListTile(
@@ -259,7 +163,9 @@ class _MiCuentaPageState extends State<MiCuentaPage> {
     );
   }
 
-  Widget construirOpcionGestionUsuarios(Usuario usuario) {
+  Widget construirOpcionGestionUsuarios(
+    Usuario usuario,
+  ) {
     return ListTile(
       leading: const Icon(Icons.admin_panel_settings_rounded),
       title: const Text('Gestionar usuarios'),
@@ -281,7 +187,9 @@ class _MiCuentaPageState extends State<MiCuentaPage> {
     );
   }
 
-  Widget construirCardOpciones(Usuario usuario) {
+  Widget construirCardOpciones(
+    Usuario usuario,
+  ) {
     return Card(
       child: Column(
         children: [
@@ -301,7 +209,9 @@ class _MiCuentaPageState extends State<MiCuentaPage> {
     );
   }
 
-  Widget construirError(Object error) {
+  Widget construirError(
+    Object error,
+  ) {
     return Padding(
       padding: const EdgeInsets.all(20),
       child: Text(
@@ -319,21 +229,22 @@ class _MiCuentaPageState extends State<MiCuentaPage> {
     );
   }
 
-  Widget construirContenidoUsuario(
+  Widget construirListaCuenta(
     Usuario usuario,
     Color primaryColor,
     Color secondaryTextColor,
   ) {
     return ListView(
-      padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+      padding: const EdgeInsets.symmetric(
+        horizontal: 15,
+        vertical: 10,
+      ),
       children: [
         construirCardUsuario(
           usuario,
           primaryColor,
           secondaryTextColor,
         ),
-        //const SizedBox(height: 10),
-        //construirCardDetalleUsuario(usuario),
         const SizedBox(height: 10),
         construirCardOpciones(usuario),
       ],
@@ -359,7 +270,7 @@ class _MiCuentaPageState extends State<MiCuentaPage> {
       return construirSinUsuario();
     }
 
-    return construirContenidoUsuario(
+    return construirListaCuenta(
       usuario,
       primaryColor,
       secondaryTextColor,
