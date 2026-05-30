@@ -248,6 +248,7 @@ class _MiCuentaPageState extends State<MiCuentaPage> {
     );
   }
 */
+
   Widget construirOpcionEditar() {
     return ListTile(
       leading: const Icon(Icons.edit),
