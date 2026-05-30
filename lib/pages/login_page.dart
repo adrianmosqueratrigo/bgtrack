@@ -93,20 +93,17 @@ class _LoginPageState extends State<LoginPage> {
   Widget construirTitulo() {
     return Column(
       children: [
-        Icon(
-          Icons.casino,
-          size: 56,
-          color: Theme.of(context).colorScheme.primary,
-        ),
-        const SizedBox(height: 10),
         Text(
           'BGTrack',
           textAlign: TextAlign.center,
           style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                fontWeight: FontWeight.bold,
+                fontWeight: FontWeight.w800,
+                fontFamily: 'monospace',
+                fontSize: 46,
+                letterSpacing: 2
               ),
         ),
-        const SizedBox(height: 4),
+        const SizedBox(height: 20),
         Text(
           'Iniciar sesión',
           textAlign: TextAlign.center,
@@ -163,27 +160,32 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Widget construirBotonLogin() {
-    return SizedBox(
-      width: double.infinity,
-      child: FilledButton.icon(
-        onPressed: cargando ? null : iniciarSesion,
-        icon: cargando
-            ? const SizedBox(
-                width: 22,
-                height: 22,
-                child: CircularProgressIndicator(
-                  strokeWidth: 2,
+    return Padding(
+      padding: EdgeInsetsGeometry.symmetric(
+        horizontal: 25,
+      ),
+      child: SizedBox(
+        width: double.infinity,
+        child: FilledButton.icon(
+          onPressed: cargando ? null : iniciarSesion,
+          icon: cargando
+              ? const SizedBox(
+                  width: 20,
+                  height: 20,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 3,
+                  ),
+                )
+              : const Icon(
+                  Icons.login_rounded,
+                  size: 22,
                 ),
-              )
-            : const Icon(
-                Icons.login,
-                size: 22,
-              ),
-        label: Text(
-          cargando ? 'Iniciando...' : 'Entrar',
-          style: const TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
+          label: Text(
+            cargando ? 'Iniciando...' : 'Entrar',
+            style: const TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+            ),
           ),
         ),
       ),
@@ -193,16 +195,13 @@ class _LoginPageState extends State<LoginPage> {
   Widget construirCardFormulario() {
     return Card(
       child: Padding(
-        padding: const EdgeInsets.symmetric(
-          horizontal: 20,
-          vertical: 20,
-        ),
+        padding: const EdgeInsets.fromLTRB(25,30,25,20),
         child: Column(
           children: [
             construirTitulo(),
-            const SizedBox(height: 24),
+            const SizedBox(height: 15),
             construirCampoUsername(),
-            const SizedBox(height: 16),
+            const SizedBox(height: 15),
             construirCampoPassword(),
           ],
         ),
@@ -213,16 +212,16 @@ class _LoginPageState extends State<LoginPage> {
   Widget construirContenidoFormulario() {
     return SingleChildScrollView(
       padding: const EdgeInsets.symmetric(
-        horizontal: 20,
-        vertical: 20,
+        horizontal: 30,
+        vertical: 30,
       ),
       child: Form(
         key: formKey,
         child: Column(
           children: [
-            const SizedBox(height: 40),
+            const SizedBox(height: 150),
             construirCardFormulario(),
-            const SizedBox(height: 16),
+            const SizedBox(height: 15),
             construirBotonLogin(),
           ],
         ),
