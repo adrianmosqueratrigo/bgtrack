@@ -142,7 +142,7 @@ class _MiCuentaPageState extends State<MiCuentaPage> {
         child: Column(
           children: [
             construirAvatar(primaryColor),
-            const SizedBox(height: 10),
+            const SizedBox(height: 15),
             Text(
               textoNombreCompleto(usuario),
               textAlign: TextAlign.center,
@@ -151,9 +151,9 @@ class _MiCuentaPageState extends State<MiCuentaPage> {
                     fontWeight: FontWeight.bold,
                   ),
             ),
-            const SizedBox(height: 2),
+            const SizedBox(height: 5),
             Text(
-              'Permisos de: ${usuario.rol}',
+              'Rol de ${usuario.rol}',
               textAlign: TextAlign.center,
               style: TextStyle(
                 color: secondaryTextColor,
@@ -252,18 +252,18 @@ class _MiCuentaPageState extends State<MiCuentaPage> {
     return ListTile(
       leading: const Icon(Icons.edit),
       title: const Text('Editar mis datos'),
-      subtitle: const Text('Modificar email o contraseña'),
-      trailing: const Icon(Icons.chevron_right),
+      subtitle: const Text('Datos o contraseña'),
+      trailing: const Icon(Icons.chevron_right_rounded),
       onTap: editarMisDatos,
     );
   }
 
   Widget construirOpcionGestionUsuarios(Usuario usuario) {
     return ListTile(
-      leading: const Icon(Icons.admin_panel_settings),
+      leading: const Icon(Icons.admin_panel_settings_rounded),
       title: const Text('Gestionar usuarios'),
       subtitle: const Text('Alta, edición y baja de usuarios'),
-      trailing: const Icon(Icons.chevron_right),
+      trailing: const Icon(Icons.chevron_right_rounded),
       onTap: () {
         gestionarUsuarios(usuario);
       },
@@ -275,7 +275,7 @@ class _MiCuentaPageState extends State<MiCuentaPage> {
       leading: const Icon(Icons.logout),
       title: const Text('Cerrar sesión'),
       subtitle: const Text('Salir de la aplicación'),
-      trailing: const Icon(Icons.chevron_right),
+      trailing: const Icon(Icons.chevron_right_rounded),
       onTap: cerrarSesion,
     );
   }
@@ -285,9 +285,9 @@ class _MiCuentaPageState extends State<MiCuentaPage> {
       child: Column(
         children: [
           construirOpcionEditar(),
-          if (esAdmin(usuario)) const Divider(height: 1),
+          if (esAdmin(usuario)) const Divider(height: 5),
           if (esAdmin(usuario)) construirOpcionGestionUsuarios(usuario),
-          const Divider(height: 1),
+          const Divider(height: 5),
           construirOpcionCerrarSesion(),
         ],
       ),

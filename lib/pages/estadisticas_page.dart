@@ -120,7 +120,6 @@ class _EstadisticasPageState extends State<EstadisticasPage> {
               desplegado: desplegada,
               onTap: onTap,
             ),
-            // Desempaquetar/desplegar el contenido del card.
             if (desplegada) ...[
               const SizedBox(height: 20),
               contenido,
@@ -147,7 +146,6 @@ class _EstadisticasPageState extends State<EstadisticasPage> {
   TableRow construirFilaTablaEstadisticas(String titulo, String valor) {
     return TableRow(
       children: [
-        // Texto de la izq.
         Padding(
           padding: const EdgeInsets.only(
             right: 20,
@@ -160,7 +158,6 @@ class _EstadisticasPageState extends State<EstadisticasPage> {
                 ),
           ),
         ),
-        // Texto de la dcha.
         Padding(
           padding: const EdgeInsets.only(
             //bottom: 10,
