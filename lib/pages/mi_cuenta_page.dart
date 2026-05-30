@@ -37,7 +37,7 @@ class _MiCuentaPageState extends State<MiCuentaPage> {
   }
 
   String textoNombreCompleto(Usuario usuario) {
-    if (usuario.apellidos == null || usuario.apellidos!.trim().isEmpty) {
+    if (usuario.apellidos.isEmpty || usuario.apellidos!.trim().isEmpty) {
       return usuario.nombre;
     }
 
