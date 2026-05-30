@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
+import '../models/usuario.dart';
 import '../services/auth_service.dart';
+import '../services/usuarios_service.dart';
 import '../utils/app_snackbar.dart';
 import 'login_page.dart';
 
@@ -12,38 +14,79 @@ class MiCuentaPage extends StatefulWidget {
 }
 
 class _MiCuentaPageState extends State<MiCuentaPage> {
-  late Future<void> futureDatosUsuario;
-
-  String username = '';
-  String rol = '';
-
-  bool get esAdmin {
-    return rol == 'admin';
-  }
+  late Future<Usuario?> futureUsuario;
 
   @override
   void initState() {
     super.initState();
-    futureDatosUsuario = cargarDatosUsuario();
+    futureUsuario = cargarUsuario();
   }
 
-  Future<void> cargarDatosUsuario() async {
-    final usernameSesion = await AuthService().obtenerUsernameActual();
-    final rolSesion = await AuthService().obtenerRolActual();
+  Future<Usuario?> cargarUsuario() async {
+    final idUsuario = await AuthService().obtenerIdUsuarioActual();
 
-    username = usernameSesion ?? 'Usuario desconocido';
-    rol = rolSesion ?? 'Sin rol';
+    if (idUsuario == null) {
+      throw Exception('No hay usuario iniciado');
+    }
+
+    return UsuariosService().obtenerUsuarioPorId(idUsuario);
   }
 
-  void editarMisDatos(BuildContext context) {
+  bool esAdmin(Usuario usuario) {
+    return usuario.rol == 'admin';
+  }
+
+  String textoNombreCompleto(Usuario usuario) {
+    if (usuario.apellidos == null || usuario.apellidos!.trim().isEmpty) {
+      return usuario.nombre;
+    }
+
+    return '${usuario.nombre} ${usuario.apellidos}';
+  }
+
+  String textoApellidos(String? apellidos) {
+    if (apellidos == null || apellidos.trim().isEmpty) {
+      return 'Sin apellidos';
+    }
+
+    return apellidos;
+  }
+
+  String textoRol(String rol) {
+    if (rol == 'admin') {
+      return 'Administrador';
+    }
+
+    return 'Usuario';
+  }
+
+  String textoEstado(bool activo) {
+    return activo ? 'Activo' : 'Inactivo';
+  }
+
+  String textoFecha(DateTime? fecha) {
+    if (fecha == null) {
+      return 'Sin datos';
+    }
+
+    final dia = fecha.day.toString().padLeft(2, '0');
+    final mes = fecha.month.toString().padLeft(2, '0');
+    final anio = fecha.year.toString();
+    final hora = fecha.hour.toString().padLeft(2, '0');
+    final minuto = fecha.minute.toString().padLeft(2, '0');
+
+    return '$dia/$mes/$anio · $hora:$minuto';
+  }
+
+  void editarMisDatos() {
     AppSnackbar.mostrar(
       context,
       'Editar mis datos pendiente de implementar',
     );
   }
 
-  void gestionarUsuarios(BuildContext context) {
-    if (!esAdmin) {
+  void gestionarUsuarios(Usuario usuario) {
+    if (!esAdmin(usuario)) {
       AppSnackbar.mostrarError(
         context,
         'No tienes permisos para gestionar usuarios',
@@ -57,10 +100,10 @@ class _MiCuentaPageState extends State<MiCuentaPage> {
     );
   }
 
-  Future<void> cerrarSesion(BuildContext context) async {
+  Future<void> cerrarSesion() async {
     await AuthService().cerrarSesion();
 
-    if (!context.mounted) {
+    if (!mounted) {
       return;
     }
 
@@ -73,10 +116,10 @@ class _MiCuentaPageState extends State<MiCuentaPage> {
     );
   }
 
-  Widget construirAvatar() {
+  Widget construirAvatar(Color primaryColor) {
     return CircleAvatar(
       radius: 36,
-      backgroundColor: Theme.of(context).colorScheme.primary,
+      backgroundColor: primaryColor,
       foregroundColor: Colors.white,
       child: const Icon(
         Icons.person,
@@ -85,26 +128,123 @@ class _MiCuentaPageState extends State<MiCuentaPage> {
     );
   }
 
-  Widget construirCardUsuario() {
+  Widget construirCardUsuario(
+    Usuario usuario,
+    Color primaryColor,
+    Color secondaryTextColor,
+  ) {
     return Card(
       child: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.symmetric(
+          horizontal: 20,
+          vertical: 20,
+        ),
         child: Column(
           children: [
-            construirAvatar(),
-            const SizedBox(height: 12),
+            construirAvatar(primaryColor),
+            const SizedBox(height: 10),
             Text(
-              username,
-              style: Theme.of(context).textTheme.titleLarge,
+              textoNombreCompleto(usuario),
+              textAlign: TextAlign.center,
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
             ),
-            const SizedBox(height: 4),
+            const SizedBox(height: 2),
             Text(
-              rol,
-              style: Theme.of(context).textTheme.bodySmall,
+              'Permisos de: ${usuario.rol}',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: secondaryTextColor,
+              ),
             ),
           ],
         ),
       ),
+    );
+  }
+
+/*
+  Widget construirCardDetalleUsuario(Usuario usuario) {
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(
+          horizontal: 20,
+          vertical: 20,
+        ),
+        child: Table(
+          columnWidths: const {
+            0: IntrinsicColumnWidth(),
+            1: FlexColumnWidth(),
+          },
+          defaultVerticalAlignment: TableCellVerticalAlignment.top,
+          children: [
+            construirFilaDetalle(
+              'Nombre',
+              usuario.nombre,
+            ),
+            construirFilaDetalle(
+              'Apellidos',
+              textoApellidos(usuario.apellidos),
+            ),
+            construirFilaDetalle(
+              'Usuario',
+              usuario.username,
+            ),
+            construirFilaDetalle(
+              'Email',
+              usuario.email,
+            ),
+            construirFilaDetalle(
+              'Rol',
+              textoRol(usuario.rol),
+            ),
+            construirFilaDetalle(
+              'Estado',
+              textoEstado(usuario.activo),
+            ),
+            construirFilaDetalle(
+              'Último login',
+              textoFecha(usuario.ultimoLogin),
+            ),
+            construirFilaDetalle(
+              'Registro',
+              textoFecha(usuario.fechaRegistro),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+*/
+
+  TableRow construirFilaDetalle(String titulo, String valor) {
+    return TableRow(
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(
+            right: 12,
+            bottom: 10,
+          ),
+          child: Text(
+            titulo,
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(
+            bottom: 10,
+          ),
+          child: Text(
+            valor,
+            textAlign: TextAlign.left,
+            style: Theme.of(context).textTheme.bodyMedium,
+          ),
+        ),
+      ],
     );
   }
 
@@ -114,17 +254,19 @@ class _MiCuentaPageState extends State<MiCuentaPage> {
       title: const Text('Editar mis datos'),
       subtitle: const Text('Modificar email o contraseña'),
       trailing: const Icon(Icons.chevron_right),
-      onTap: () => editarMisDatos(context),
+      onTap: editarMisDatos,
     );
   }
 
-  Widget construirOpcionGestionUsuarios() {
+  Widget construirOpcionGestionUsuarios(Usuario usuario) {
     return ListTile(
       leading: const Icon(Icons.admin_panel_settings),
       title: const Text('Gestionar usuarios'),
       subtitle: const Text('Alta, edición y baja de usuarios'),
       trailing: const Icon(Icons.chevron_right),
-      onTap: () => gestionarUsuarios(context),
+      onTap: () {
+        gestionarUsuarios(usuario);
+      },
     );
   }
 
@@ -134,17 +276,17 @@ class _MiCuentaPageState extends State<MiCuentaPage> {
       title: const Text('Cerrar sesión'),
       subtitle: const Text('Salir de la aplicación'),
       trailing: const Icon(Icons.chevron_right),
-      onTap: () => cerrarSesion(context),
+      onTap: cerrarSesion,
     );
   }
 
-  Widget construirCardOpciones() {
+  Widget construirCardOpciones(Usuario usuario) {
     return Card(
       child: Column(
         children: [
           construirOpcionEditar(),
-          if (esAdmin) const Divider(height: 1),
-          if (esAdmin) construirOpcionGestionUsuarios(),
+          if (esAdmin(usuario)) const Divider(height: 1),
+          if (esAdmin(usuario)) construirOpcionGestionUsuarios(usuario),
           const Divider(height: 1),
           construirOpcionCerrarSesion(),
         ],
@@ -170,18 +312,38 @@ class _MiCuentaPageState extends State<MiCuentaPage> {
     );
   }
 
-  Widget construirContenidoUsuario() {
+  Widget construirSinUsuario() {
+    return const Center(
+      child: Text('No se encontró el usuario.'),
+    );
+  }
+
+  Widget construirContenidoUsuario(
+    Usuario usuario,
+    Color primaryColor,
+    Color secondaryTextColor,
+  ) {
     return ListView(
       padding: const EdgeInsets.all(16),
       children: [
-        construirCardUsuario(),
-        const SizedBox(height: 12),
-        construirCardOpciones(),
+        construirCardUsuario(
+          usuario,
+          primaryColor,
+          secondaryTextColor,
+        ),
+        //const SizedBox(height: 10),
+        //construirCardDetalleUsuario(usuario),
+        const SizedBox(height: 10),
+        construirCardOpciones(usuario),
       ],
     );
   }
 
-  Widget construirContenido(AsyncSnapshot<void> snapshot) {
+  Widget construirContenido(
+    AsyncSnapshot<Usuario?> snapshot,
+    Color primaryColor,
+    Color secondaryTextColor,
+  ) {
     if (snapshot.connectionState == ConnectionState.waiting) {
       return construirCarga();
     }
@@ -190,15 +352,34 @@ class _MiCuentaPageState extends State<MiCuentaPage> {
       return construirError(snapshot.error!);
     }
 
-    return construirContenidoUsuario();
+    final usuario = snapshot.data;
+
+    if (usuario == null) {
+      return construirSinUsuario();
+    }
+
+    return construirContenidoUsuario(
+      usuario,
+      primaryColor,
+      secondaryTextColor,
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<void>(
-      future: futureDatosUsuario,
+    final Color primaryColor = Theme.of(context).colorScheme.primary;
+
+    final Color secondaryTextColor =
+        Theme.of(context).textTheme.bodySmall?.color ?? Colors.grey;
+
+    return FutureBuilder<Usuario?>(
+      future: futureUsuario,
       builder: (context, snapshot) {
-        return construirContenido(snapshot);
+        return construirContenido(
+          snapshot,
+          primaryColor,
+          secondaryTextColor,
+        );
       },
     );
   }

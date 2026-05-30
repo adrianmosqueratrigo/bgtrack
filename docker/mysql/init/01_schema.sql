@@ -10,6 +10,8 @@ SET CHARACTER SET utf8mb4;
 CREATE TABLE usuarios (
     id INT AUTO_INCREMENT PRIMARY KEY,
     rol ENUM('admin', 'usuario') NOT NULL DEFAULT 'usuario',
+    nombre VARCHAR(50) NOT NULL,
+    apellidos VARCHAR(100) NULL,
     username VARCHAR(50) NOT NULL UNIQUE,
     email VARCHAR(100) NOT NULL UNIQUE,
     password_hash VARCHAR(255) NOT NULL,

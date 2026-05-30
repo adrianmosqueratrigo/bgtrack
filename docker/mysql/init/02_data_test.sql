@@ -4,10 +4,11 @@ SET NAMES utf8mb4;
 SET CHARACTER SET utf8mb4;
 
 INSERT INTO usuarios 
-(rol, username, email, password_hash, activo)
+(rol, nombre, apellidos, username, email, password_hash, activo)
 VALUES
-('admin', 'admin', 'admin@aulanosa.es', '1234abc.', TRUE),
-('usuario', 'adrian', 'adrian@aulanosa.es', '1234abc.', TRUE);
+('admin', 'Gandalf', 'The White', 'gandalf', 'admin@aulanosa.es', '1234', TRUE),
+('usuario', 'Aragorn', 'Son of Arathorn', 'aragorn', 'aragorn@aulanosa.es', '1234', TRUE),
+('usuario', 'Frodo', 'Bolsón', 'frodo', 'frodo@aulanosa.es', '1234', FALSE);
 
 INSERT INTO juegos 
 (nombre, tipo, duracion_estimada_minutos, jugadores_min, jugadores_max)
