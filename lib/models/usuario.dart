@@ -2,7 +2,7 @@ class Usuario {
   int? id;
   String rol;
   String nombre;
-  String apellidos;
+  String? apellidos;
   String username;
   String email;
   String passwordHash;
