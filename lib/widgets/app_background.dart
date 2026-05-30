@@ -15,7 +15,7 @@ class AppBackground extends StatelessWidget {
         children: [
           Positioned.fill(
             child: Opacity(
-              opacity: 0.04,
+              opacity: 0.06,
               child: Image.asset(
                 'assets/images/fondo.png',
                 fit: BoxFit.cover,

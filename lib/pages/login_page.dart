@@ -49,7 +49,7 @@ class _LoginPageState extends State<LoginPage> {
 
       AppSnackbar.mostrar(
         context,
-        'Sesión iniciada correctamente',
+        'Sesión iniciada',
       );
 
       Navigator.pushReplacement(
@@ -93,20 +93,9 @@ class _LoginPageState extends State<LoginPage> {
   Widget construirTitulo() {
     return Column(
       children: [
-        Container(
-          decoration: BoxDecoration(
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withValues(alpha: 0.15),
-                blurRadius: 15,
-                offset: const Offset(0, 6),
-              ),
-            ],
-          ),
-          child: Image.asset(
-            'assets/images/logo_.png',
-            fit: BoxFit.contain,
-          ),
+        Image.asset(
+          'assets/images/logo_.png',
+          fit: BoxFit.contain,
         ),
         const SizedBox(height: 20),
         Text(

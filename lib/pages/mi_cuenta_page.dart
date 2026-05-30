@@ -77,6 +77,11 @@ class _MiCuentaPageState extends State<MiCuentaPage> {
       return;
     }
 
+    AppSnackbar.mostrar(
+      context,
+      'Sesión cerrada',
+    );
+
     Navigator.pushAndRemoveUntil(
       context,
       MaterialPageRoute(

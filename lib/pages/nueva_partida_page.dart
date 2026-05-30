@@ -217,7 +217,7 @@ class _NuevaPartidaPageState extends State<NuevaPartidaPage> {
     if (juegoSeleccionado == null) {
       AppSnackbar.mostrarError(
         context,
-        'Selecciona un juego',
+        'Selecciona juego',
       );
       return false;
     }
@@ -225,7 +225,7 @@ class _NuevaPartidaPageState extends State<NuevaPartidaPage> {
     if (numeroParticipantes == null) {
       AppSnackbar.mostrarError(
         context,
-        'Selecciona el número de jugadores',
+        'Selecciona nº de jugadores',
       );
       return false;
     }
@@ -233,7 +233,7 @@ class _NuevaPartidaPageState extends State<NuevaPartidaPage> {
     if (jugadoresSeleccionados.any((jugador) => jugador == null)) {
       AppSnackbar.mostrarError(
         context,
-        'Selecciona todos los jugadores de la partida',
+        'Selecciona jugadores',
       );
       return false;
     }

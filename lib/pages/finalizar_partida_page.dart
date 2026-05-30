@@ -267,7 +267,7 @@ class _FinalizarPartidaPageState extends State<FinalizarPartidaPage> {
 
       AppSnackbar.mostrar(
         context,
-        'Partida guardada correctamente',
+        'Partida guardada',
       );
 
       Navigator.pop(context, true);
