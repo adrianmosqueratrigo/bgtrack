@@ -80,10 +80,7 @@ class _JugadoresPageState extends State<JugadoresPage> {
       radius: 22,
       backgroundColor: primaryColor,
       foregroundColor: Colors.white,
-      child: const Icon(
-        Icons.person_2_rounded,
-        size: 28,
-      ),
+      child: const Icon(Icons.person_2_rounded, size: 28),
     );
   }
 
@@ -99,17 +96,15 @@ class _JugadoresPageState extends State<JugadoresPage> {
           Text(
             jugador.nombre,
             style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+            ),
           ),
           const SizedBox(height: 2),
           Text(
             '${textoEdad(jugador.fechaNacimiento)} · '
             '${textoResidencia(jugador.residencia)}',
-            style: TextStyle(
-              color: secondaryTextColor,
-            ),
+            style: TextStyle(color: secondaryTextColor),
           ),
         ],
       ),
@@ -132,10 +127,7 @@ class _JugadoresPageState extends State<JugadoresPage> {
           onTap: () => editarJugador(jugador),
           child: const Padding(
             padding: EdgeInsets.all(2),
-            child: Icon(
-              Icons.edit,
-              size: 24,
-            ),
+            child: Icon(Icons.edit, size: 24),
           ),
         ),
       ],
@@ -149,19 +141,13 @@ class _JugadoresPageState extends State<JugadoresPage> {
   ) {
     return Card(
       child: Padding(
-        padding: const EdgeInsets.symmetric(
-          horizontal: 20,
-          vertical: 10,
-        ),
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             construirAvatarJugador(primaryColor),
             const SizedBox(width: 20),
-            construirInformacionJugador(
-              jugador,
-              secondaryTextColor,
-            ),
+            construirInformacionJugador(jugador, secondaryTextColor),
             const SizedBox(width: 20),
             construirAccionesJugador(jugador),
           ],
@@ -181,19 +167,13 @@ class _JugadoresPageState extends State<JugadoresPage> {
       itemBuilder: (context, index) {
         final jugador = jugadores[index];
 
-        return construirCardJugador(
-          jugador,
-          primaryColor,
-          secondaryTextColor,
-        );
+        return construirCardJugador(jugador, primaryColor, secondaryTextColor);
       },
     );
   }
 
   Widget construirCarga() {
-    return const Center(
-      child: CircularProgressIndicator(),
-    );
+    return const Center(child: CircularProgressIndicator());
   }
 
   Widget construirError(Object error) {
@@ -201,17 +181,13 @@ class _JugadoresPageState extends State<JugadoresPage> {
       padding: const EdgeInsets.all(20),
       child: Text(
         'Error al cargar jugadores:\n$error',
-        style: TextStyle(
-          color: Theme.of(context).colorScheme.error,
-        ),
+        style: TextStyle(color: Theme.of(context).colorScheme.error),
       ),
     );
   }
 
   Widget construirSinJugadores() {
-    return const Center(
-      child: Text('No hay jugadores registrados.'),
-    );
+    return const Center(child: Text('No hay jugadores registrados.'));
   }
 
   Widget construirContenido(
@@ -233,11 +209,7 @@ class _JugadoresPageState extends State<JugadoresPage> {
       return construirSinJugadores();
     }
 
-    return construirListaJugadores(
-      jugadores,
-      primaryColor,
-      secondaryTextColor,
-    );
+    return construirListaJugadores(jugadores, primaryColor, secondaryTextColor);
   }
 
   @override
@@ -250,11 +222,7 @@ class _JugadoresPageState extends State<JugadoresPage> {
     return FutureBuilder<List<Jugador>>(
       future: futureJugadores,
       builder: (context, snapshot) {
-        return construirContenido(
-          snapshot,
-          primaryColor,
-          secondaryTextColor,
-        );
+        return construirContenido(snapshot, primaryColor, secondaryTextColor);
       },
     );
   }

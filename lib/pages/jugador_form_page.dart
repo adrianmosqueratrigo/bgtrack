@@ -237,7 +237,7 @@ class _JugadorFormPageState extends State<JugadorFormPage> {
               construirCampoResidencia(),
               const SizedBox(height: 5),
               construirSwitchActivo(),
-              const SizedBox(height: 5),
+              const SizedBox(height: 20),
               construirBotonGuardar(),
             ],
           ),

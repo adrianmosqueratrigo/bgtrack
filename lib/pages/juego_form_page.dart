@@ -297,7 +297,7 @@ class _JuegoFormPageState extends State<JuegoFormPage> {
               construirCampoJugadoresMax(),
               const SizedBox(height: 5),
               construirSwitchActivo(),
-              const SizedBox(height: 5),
+              const SizedBox(height: 20),
               construirBotonGuardar(),
             ],
           ),
