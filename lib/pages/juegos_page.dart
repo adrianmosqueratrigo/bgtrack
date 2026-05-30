@@ -84,7 +84,7 @@ class _JuegosPageState extends State<JuegosPage> {
           ),
           const SizedBox(height: 2),
           Text(
-            '${juego.jugadoresMin}-${juego.jugadoresMax} jugs. ~ '
+            '${juego.jugadoresMin}-${juego.jugadoresMax} jugs ~ '
             '${juego.duracionEstimadaMinutos ?? 0} min',
             style: TextStyle(
               color: secondaryTextColor,
@@ -177,7 +177,7 @@ class _JuegosPageState extends State<JuegosPage> {
 
   Widget construirError(Object error) {
     return Padding(
-      padding: const EdgeInsets.all(15),
+      padding: const EdgeInsets.all(20),
       child: Text(
         'Error al cargar juegos:\n$error',
         style: TextStyle(

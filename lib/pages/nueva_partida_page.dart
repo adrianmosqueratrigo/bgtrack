@@ -639,6 +639,7 @@ class _NuevaPartidaPageState extends State<NuevaPartidaPage> {
               construirSeccionReloj(),
               const SizedBox(height: 10),
               construirSeccionFinalizarPartida(),
+              const SizedBox(height: 20)
             ],
           ),
         ),

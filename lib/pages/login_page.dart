@@ -93,21 +93,31 @@ class _LoginPageState extends State<LoginPage> {
   Widget construirTitulo() {
     return Column(
       children: [
-        Text(
-          'BGTrack',
-          textAlign: TextAlign.center,
-          style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                fontWeight: FontWeight.w800,
-                fontFamily: 'monospace',
-                fontSize: 46,
-                letterSpacing: 2
+        Container(
+          decoration: BoxDecoration(
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.15),
+                blurRadius: 15,
+                offset: const Offset(0, 6),
               ),
+            ],
+          ),
+          child: Image.asset(
+            'assets/images/logo_.png',
+            fit: BoxFit.contain,
+          ),
         ),
         const SizedBox(height: 20),
         Text(
           'Iniciar sesión',
           textAlign: TextAlign.center,
-          style: Theme.of(context).textTheme.titleMedium,
+          style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                fontWeight: FontWeight.bold,
+                fontFamily: 'monospace',
+                fontSize: 18,
+                //letterSpacing: 1
+          ),
         ),
       ],
     );
@@ -166,6 +176,7 @@ class _LoginPageState extends State<LoginPage> {
       ),
       child: SizedBox(
         width: double.infinity,
+        height: 60,
         child: FilledButton.icon(
           onPressed: cargando ? null : iniciarSesion,
           icon: cargando
@@ -199,9 +210,9 @@ class _LoginPageState extends State<LoginPage> {
         child: Column(
           children: [
             construirTitulo(),
-            const SizedBox(height: 15),
+            const SizedBox(height: 10),
             construirCampoUsername(),
-            const SizedBox(height: 15),
+            const SizedBox(height: 10),
             construirCampoPassword(),
           ],
         ),

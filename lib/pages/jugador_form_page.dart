@@ -89,8 +89,8 @@ class _JugadorFormPageState extends State<JugadorFormPage> {
       AppSnackbar.mostrar(
         context,
         esEdicion
-            ? 'Jugador actualizado correctamente'
-            : 'Jugador guardado correctamente',
+            ? 'Jugador actualizado'
+            : 'Jugador guardado',
       );
 
       Navigator.pop(context, true);
@@ -190,7 +190,7 @@ class _JugadorFormPageState extends State<JugadorFormPage> {
     return SwitchListTile(
       title: const Text('Jugador activo'),
       subtitle: const Text(
-        'Disponible para registrar nuevas partidas',
+        'Está en activo',
       ),
       value: activo,
       onChanged: (value) {
@@ -224,19 +224,20 @@ class _JugadorFormPageState extends State<JugadorFormPage> {
   Widget construirCardFormulario() {
     return Card(
       child: Padding(
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
         child: Form(
           key: formKey,
           child: Column(
             children: [
+              const SizedBox(height: 10),
               construirCampoNombre(),
-              const SizedBox(height: 16),
+              const SizedBox(height: 10),
               construirCampoFechaNacimiento(),
-              const SizedBox(height: 16),
+              const SizedBox(height: 10),
               construirCampoResidencia(),
-              const SizedBox(height: 8),
+              const SizedBox(height: 5),
               construirSwitchActivo(),
-              const SizedBox(height: 16),
+              const SizedBox(height: 5),
               construirBotonGuardar(),
             ],
           ),
@@ -259,7 +260,7 @@ class _JugadorFormPageState extends State<JugadorFormPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(esEdicion ? 'Editar jugador' : 'Nuevo jugador'),
+        title: Text(esEdicion ? 'Editar jugador' : 'Añadir jugador'),
       ),
       body: AppBackground(
         child: construirContenido(),

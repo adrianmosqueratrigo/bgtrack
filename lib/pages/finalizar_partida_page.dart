@@ -562,7 +562,7 @@ class _FinalizarPartidaPageState extends State<FinalizarPartidaPage> {
             construirSeccionResumenPartida(),
             construirSeccionJugadores(),
             construirSeccionGuardar(),
-            const SizedBox(height: 40),
+            const SizedBox(height: 20),
           ],
         ),
       ),

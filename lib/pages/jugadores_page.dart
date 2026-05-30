@@ -198,7 +198,7 @@ class _JugadoresPageState extends State<JugadoresPage> {
 
   Widget construirError(Object error) {
     return Padding(
-      padding: const EdgeInsets.all(15),
+      padding: const EdgeInsets.all(20),
       child: Text(
         'Error al cargar jugadores:\n$error',
         style: TextStyle(

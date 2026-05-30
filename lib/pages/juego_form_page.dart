@@ -100,8 +100,8 @@ class _JuegoFormPageState extends State<JuegoFormPage> {
       AppSnackbar.mostrar(
         context,
         esEdicion
-            ? 'Juego actualizado correctamente'
-            : 'Juego guardado correctamente',
+            ? 'Juego actualizado'
+            : 'Juego guardado',
       );
 
       Navigator.pop(context, true);
@@ -280,23 +280,24 @@ class _JuegoFormPageState extends State<JuegoFormPage> {
   Widget construirCardFormulario() {
     return Card(
       child: Padding(
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
         child: Form(
           key: formKey,
           child: Column(
             children: [
+              const SizedBox(height: 10),
               construirCampoNombre(),
-              const SizedBox(height: 16),
+              const SizedBox(height: 10),
               construirCampoTipo(),
-              const SizedBox(height: 16),
+              const SizedBox(height: 10),
               construirCampoDuracion(),
-              const SizedBox(height: 16),
+              const SizedBox(height: 10),
               construirCampoJugadoresMin(),
-              const SizedBox(height: 16),
+              const SizedBox(height: 10),
               construirCampoJugadoresMax(),
-              const SizedBox(height: 8),
+              const SizedBox(height: 5),
               construirSwitchActivo(),
-              const SizedBox(height: 16),
+              const SizedBox(height: 5),
               construirBotonGuardar(),
             ],
           ),
@@ -319,7 +320,7 @@ class _JuegoFormPageState extends State<JuegoFormPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(esEdicion ? 'Editar juego' : 'Nuevo juego'),
+        title: Text(esEdicion ? 'Editar juego' : 'Añadir juego'),
       ),
       body: AppBackground(
         child: construirContenido(),

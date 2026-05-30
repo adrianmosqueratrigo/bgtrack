@@ -530,14 +530,15 @@ class _EstadisticasPageState extends State<EstadisticasPage> {
     EstadisticasGenerales estadisticas,
   ) {
     return SingleChildScrollView(
-      padding: const EdgeInsets.all(15),
+      padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
       child: Column(
         children: [
           construirSeccionEstadisticasGenerales(estadisticas),
-          const SizedBox(height: 10),
+          const SizedBox(height: 5),
           construirSeccionEstadisticasJugador(),
-          const SizedBox(height: 10),
+          const SizedBox(height: 5),
           construirSeccionEstadisticasJuego(),
+          const SizedBox(height: 20),
         ],
       ),
     );

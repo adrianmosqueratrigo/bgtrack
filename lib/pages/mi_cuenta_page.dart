@@ -245,7 +245,7 @@ class _MiCuentaPageState extends State<MiCuentaPage> {
           primaryColor,
           secondaryTextColor,
         ),
-        const SizedBox(height: 10),
+        //const SizedBox(height: 10),
         construirCardOpciones(usuario),
       ],
     );
