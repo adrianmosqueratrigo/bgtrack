@@ -330,7 +330,7 @@ class _PartidasPageState extends State<PartidasPage> {
     List<ParticipantePartida> participantes,
   ) {
     return AlertDialog(
-      insetPadding: const EdgeInsets.symmetric(horizontal: 30, vertical: 30),
+      insetPadding: const EdgeInsets.symmetric(horizontal: 40, vertical: 30),
       title: Center(
         child: Text(
           'Partida nº ${detalle.id}',
@@ -344,12 +344,12 @@ class _PartidasPageState extends State<PartidasPage> {
         width: double.maxFinite,
         child: SingleChildScrollView(
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+            padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 construirTablaDetalle(detalle, participantes),
-                const SizedBox(height: 10),
+                const SizedBox(height: 15),
                 Text(
                   'Participantes',
                   textAlign: TextAlign.center,
@@ -410,7 +410,7 @@ class _PartidasPageState extends State<PartidasPage> {
     return TableRow(
       children: [
         Padding(
-          padding: const EdgeInsets.only(right: 20, bottom: 10),
+          padding: const EdgeInsets.only(right: 20, bottom: 5),
           child: Text(
             '$titulo',
             style: Theme.of(
@@ -419,7 +419,7 @@ class _PartidasPageState extends State<PartidasPage> {
           ),
         ),
         Padding(
-          padding: const EdgeInsets.only(bottom: 10),
+          padding: const EdgeInsets.only(bottom: 5),
           child: Text(
             valor,
             textAlign: TextAlign.left,
