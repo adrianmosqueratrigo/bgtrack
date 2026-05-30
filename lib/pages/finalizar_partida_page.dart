@@ -304,7 +304,7 @@ class _FinalizarPartidaPageState extends State<FinalizarPartidaPage> {
             ),
           ),
           Icon(
-            desplegado ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
+            desplegado ? Icons.keyboard_arrow_up_rounded : Icons.keyboard_arrow_down_rounded,
           ),
         ],
       ),
@@ -353,7 +353,7 @@ class _FinalizarPartidaPageState extends State<FinalizarPartidaPage> {
       enabled: false,
       decoration: const InputDecoration(
         labelText: 'Juego',
-        prefixIcon: Icon(Icons.extension),
+        prefixIcon: Icon(Icons.casino_rounded),
       ),
     );
   }
@@ -364,7 +364,7 @@ class _FinalizarPartidaPageState extends State<FinalizarPartidaPage> {
       enabled: false,
       decoration: const InputDecoration(
         labelText: 'Fecha y hora de inicio',
-        prefixIcon: Icon(Icons.calendar_month),
+        prefixIcon: Icon(Icons.calendar_month_rounded),
       ),
     );
   }
@@ -375,7 +375,7 @@ class _FinalizarPartidaPageState extends State<FinalizarPartidaPage> {
       enabled: false,
       decoration: const InputDecoration(
         labelText: 'Duración',
-        prefixIcon: Icon(Icons.timer),
+        prefixIcon: Icon(Icons.timer_rounded),
       ),
     );
   }
@@ -386,7 +386,7 @@ class _FinalizarPartidaPageState extends State<FinalizarPartidaPage> {
       isExpanded: true,
       decoration: const InputDecoration(
         labelText: 'Estado',
-        prefixIcon: Icon(Icons.flag),
+        prefixIcon: Icon(Icons.flag_rounded),
       ),
       items: const [
         DropdownMenuItem(
@@ -409,7 +409,7 @@ class _FinalizarPartidaPageState extends State<FinalizarPartidaPage> {
       maxLines: 3,
       decoration: const InputDecoration(
         labelText: 'Observaciones (opcional)',
-        prefixIcon: Icon(Icons.notes),
+        prefixIcon: Icon(Icons.notes_sharp),
       ),
     );
   }
@@ -474,7 +474,7 @@ class _FinalizarPartidaPageState extends State<FinalizarPartidaPage> {
       isExpanded: true,
       decoration: InputDecoration(
         labelText: 'Jugador ${index + 1}',
-        prefixIcon: const Icon(Icons.person),
+        prefixIcon: const Icon(Icons.person_2_rounded),
       ),
       items: jugadoresDisponiblesParaDropdown(index).map((jugador) {
         return DropdownMenuItem(
@@ -508,7 +508,7 @@ class _FinalizarPartidaPageState extends State<FinalizarPartidaPage> {
       keyboardType: TextInputType.number,
       decoration: const InputDecoration(
         labelText: 'Puntuación (opcional)',
-        prefixIcon: Icon(Icons.numbers),
+        prefixIcon: Icon(Icons.numbers_rounded),
       ),
       validator: validarPuntuacionOpcional,
     );
@@ -537,7 +537,7 @@ class _FinalizarPartidaPageState extends State<FinalizarPartidaPage> {
         child: FilledButton.icon(
           onPressed: guardarPartida,
           icon: const Icon(
-            Icons.save,
+            Icons.save_rounded,
             size: 22,
           ),
           label: const Text(

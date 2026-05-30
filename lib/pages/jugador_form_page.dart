@@ -148,7 +148,7 @@ class _JugadorFormPageState extends State<JugadorFormPage> {
       controller: nombreController,
       decoration: const InputDecoration(
         labelText: 'Nombre',
-        prefixIcon: Icon(Icons.person),
+        prefixIcon: Icon(Icons.person_2_rounded),
       ),
       validator: (value) {
         return validarObligatorio(
@@ -166,7 +166,7 @@ class _JugadorFormPageState extends State<JugadorFormPage> {
       child: InputDecorator(
         decoration: const InputDecoration(
           labelText: 'Fecha de nacimiento',
-          prefixIcon: Icon(Icons.calendar_month),
+          prefixIcon: Icon(Icons.calendar_month_rounded),
         ),
         child: Text(
           textoFechaNacimiento(),
@@ -180,7 +180,7 @@ class _JugadorFormPageState extends State<JugadorFormPage> {
       controller: residenciaController,
       decoration: const InputDecoration(
         labelText: 'Residencia',
-        prefixIcon: Icon(Icons.location_on),
+        prefixIcon: Icon(Icons.location_on_rounded),
         hintText: 'Opcional',
       ),
     );
@@ -207,7 +207,7 @@ class _JugadorFormPageState extends State<JugadorFormPage> {
       child: FilledButton.icon(
         onPressed: guardarJugador,
         icon: const Icon(
-          Icons.save,
+          Icons.save_rounded,
           size: 20,
         ),
         label: const Text(
@@ -248,8 +248,8 @@ class _JugadorFormPageState extends State<JugadorFormPage> {
   Widget construirContenido() {
     return SingleChildScrollView(
       padding: const EdgeInsets.symmetric(
-        horizontal: 20,
-        vertical: 20,
+        horizontal: 15,
+        vertical: 10,
       ),
       child: construirCardFormulario(),
     );

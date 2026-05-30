@@ -190,7 +190,7 @@ class _PartidaFormPageState extends State<PartidaFormPage> {
       enabled: false,
       decoration: const InputDecoration(
         labelText: 'Juego',
-        prefixIcon: Icon(Icons.extension),
+        prefixIcon: Icon(Icons.casino_rounded),
       ),
     );
   }
@@ -202,7 +202,7 @@ class _PartidaFormPageState extends State<PartidaFormPage> {
       child: InputDecorator(
         decoration: const InputDecoration(
           labelText: 'Fecha y hora',
-          prefixIcon: Icon(Icons.calendar_month),
+          prefixIcon: Icon(Icons.calendar_month_rounded),
         ),
         child: Text(
           textoFechaHora(),
@@ -217,7 +217,7 @@ class _PartidaFormPageState extends State<PartidaFormPage> {
       keyboardType: TextInputType.number,
       decoration: const InputDecoration(
         labelText: 'Duración en minutos',
-        prefixIcon: Icon(Icons.timer),
+        prefixIcon: Icon(Icons.timer_rounded),
         hintText: 'Opcional',
       ),
       validator: validarEnteroPositivoOpcional,
@@ -230,7 +230,7 @@ class _PartidaFormPageState extends State<PartidaFormPage> {
       isExpanded: true,
       decoration: const InputDecoration(
         labelText: 'Estado',
-        prefixIcon: Icon(Icons.flag),
+        prefixIcon: Icon(Icons.flag_rounded),
       ),
       items: const [
         DropdownMenuItem(
@@ -259,7 +259,7 @@ class _PartidaFormPageState extends State<PartidaFormPage> {
       maxLines: 3,
       decoration: const InputDecoration(
         labelText: 'Observaciones',
-        prefixIcon: Icon(Icons.notes),
+        prefixIcon: Icon(Icons.notes_sharp),
         hintText: 'Opcional',
       ),
     );
@@ -271,7 +271,7 @@ class _PartidaFormPageState extends State<PartidaFormPage> {
       child: FilledButton.icon(
         onPressed: guardarPartida,
         icon: const Icon(
-          Icons.save,
+          Icons.save_rounded,
           size: 20,
         ),
         label: const Text(

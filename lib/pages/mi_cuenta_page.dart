@@ -122,7 +122,7 @@ class _MiCuentaPageState extends State<MiCuentaPage> {
       backgroundColor: primaryColor,
       foregroundColor: Colors.white,
       child: const Icon(
-        Icons.person,
+        Icons.person_2_rounded,
         size: 40,
       ),
     );
@@ -218,13 +218,13 @@ class _MiCuentaPageState extends State<MiCuentaPage> {
     );
   }
 */
-
+/*
   TableRow construirFilaDetalle(String titulo, String valor) {
     return TableRow(
       children: [
         Padding(
           padding: const EdgeInsets.only(
-            right: 12,
+            right: 10,
             bottom: 10,
           ),
           child: Text(
@@ -247,7 +247,7 @@ class _MiCuentaPageState extends State<MiCuentaPage> {
       ],
     );
   }
-
+*/
   Widget construirOpcionEditar() {
     return ListTile(
       leading: const Icon(Icons.edit),
@@ -302,7 +302,7 @@ class _MiCuentaPageState extends State<MiCuentaPage> {
 
   Widget construirError(Object error) {
     return Padding(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(20),
       child: Text(
         'Error al cargar datos del usuario:\n$error',
         style: TextStyle(
@@ -324,7 +324,7 @@ class _MiCuentaPageState extends State<MiCuentaPage> {
     Color secondaryTextColor,
   ) {
     return ListView(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
       children: [
         construirCardUsuario(
           usuario,

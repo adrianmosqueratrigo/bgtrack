@@ -66,7 +66,7 @@ VALUES
 INSERT INTO jugadores 
 (nombre, fecha_nacimiento, residencia)
 VALUES
-('AEME', '1990-12-26', 'Razo'),
+('Adrián', '1990-12-26', 'Razo'),
 ('María', NULL, 'A Coruña'),
 ('Brian', '1992-03-19', 'Carballo'),
 ('Bertín', '1992-08-14', 'Carballo'),

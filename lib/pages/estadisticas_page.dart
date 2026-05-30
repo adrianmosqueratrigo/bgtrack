@@ -93,7 +93,7 @@ class _EstadisticasPageState extends State<EstadisticasPage> {
             ),
           ),
           Icon(
-            desplegado ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
+            desplegado ? Icons.keyboard_arrow_up_rounded : Icons.keyboard_arrow_down_rounded,
           ),
         ],
       ),
@@ -287,7 +287,7 @@ class _EstadisticasPageState extends State<EstadisticasPage> {
       isExpanded: true,
       decoration: const InputDecoration(
         labelText: 'Jugador',
-        prefixIcon: Icon(Icons.person),
+        prefixIcon: Icon(Icons.person_2_rounded),
       ),
       items: jugadores.map((jugador) {
         return DropdownMenuItem(
@@ -421,7 +421,7 @@ class _EstadisticasPageState extends State<EstadisticasPage> {
       isExpanded: true,
       decoration: const InputDecoration(
         labelText: 'Juego',
-        prefixIcon: Icon(Icons.extension),
+        prefixIcon: Icon(Icons.casino_rounded),
       ),
       items: juegos.map((juego) {
         return DropdownMenuItem(

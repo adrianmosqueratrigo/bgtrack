@@ -44,7 +44,7 @@ class _JugadoresPageState extends State<JugadoresPage> {
   }
 
   IconData iconoEstado(bool activo) {
-    return activo ? Icons.check_circle : Icons.cancel;
+    return activo ? Icons.check_circle_outline_rounded : Icons.cancel_outlined;
   }
 
   String textoEdad(DateTime? fechaNacimiento) {
@@ -81,8 +81,8 @@ class _JugadoresPageState extends State<JugadoresPage> {
       backgroundColor: primaryColor,
       foregroundColor: Colors.white,
       child: const Icon(
-        Icons.person,
-        size: 22,
+        Icons.person_2_rounded,
+        size: 28,
       ),
     );
   }
@@ -176,7 +176,7 @@ class _JugadoresPageState extends State<JugadoresPage> {
     Color secondaryTextColor,
   ) {
     return ListView.builder(
-      padding: const EdgeInsets.symmetric(vertical: 4),
+      padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
       itemCount: jugadores.length,
       itemBuilder: (context, index) {
         final jugador = jugadores[index];

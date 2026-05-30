@@ -91,7 +91,7 @@ class _HomePageState extends State<HomePage> {
     if (paginaSeleccionada == 0) {
       return [
         Padding(
-          padding: const EdgeInsets.only(right: 20),
+          padding: const EdgeInsets.only(right: 30),
           child: IconButton(
             tooltip: 'Añadir jugador',
             icon: const Icon(
@@ -107,7 +107,7 @@ class _HomePageState extends State<HomePage> {
     if (paginaSeleccionada == 1) {
       return [
         Padding(
-          padding: const EdgeInsets.only(right: 20),
+          padding: const EdgeInsets.only(right: 30),
           child: IconButton(
             tooltip: 'Añadir juego',
             icon: const Icon(
@@ -123,7 +123,7 @@ class _HomePageState extends State<HomePage> {
     if (paginaSeleccionada == 3) {
       return [
         Padding(
-          padding: const EdgeInsets.only(right: 20),
+          padding: const EdgeInsets.only(right: 30),
           child: IconButton(
             tooltip: 'Estadísticas',
             icon: const Icon(
@@ -165,11 +165,11 @@ class _HomePageState extends State<HomePage> {
           onDestinationSelected: cambiarPagina,
           destinations: const [
             NavigationDestination(
-              icon: Icon(Icons.groups_2_rounded),
+              icon: Icon(Icons.groups_2_outlined),
               label: 'Jugadores',
             ),
             NavigationDestination(
-              icon: Icon(Icons.extension),
+              icon: Icon(Icons.casino_outlined),
               label: 'Ludoteca',
             ),
             NavigationDestination(
@@ -177,11 +177,11 @@ class _HomePageState extends State<HomePage> {
               label: 'Jugar',
             ),
             NavigationDestination(
-              icon: Icon(Icons.history_rounded),
+              icon: Icon(Icons.history_outlined),
               label: 'Partidas',
             ),
             NavigationDestination(
-              icon: Icon(Icons.person_2_rounded),
+              icon: Icon(Icons.person_2_outlined),
               label: 'Mi cuena',
             ),
           ],

@@ -185,7 +185,7 @@ class _JuegoFormPageState extends State<JuegoFormPage> {
       controller: nombreController,
       decoration: const InputDecoration(
         labelText: 'Nombre del juego',
-        prefixIcon: Icon(Icons.extension),
+        prefixIcon: Icon(Icons.casino_rounded),
       ),
       validator: (value) {
         return validarObligatorio(
@@ -201,7 +201,7 @@ class _JuegoFormPageState extends State<JuegoFormPage> {
       controller: tipoController,
       decoration: const InputDecoration(
         labelText: 'Tipo/categoría (opcional)',
-        prefixIcon: Icon(Icons.category),
+        prefixIcon: Icon(Icons.category_rounded),
       ),
     );
   }
@@ -212,7 +212,7 @@ class _JuegoFormPageState extends State<JuegoFormPage> {
       keyboardType: TextInputType.number,
       decoration: const InputDecoration(
         labelText: 'Duración aprox. (opcional)',
-        prefixIcon: Icon(Icons.timer),
+        prefixIcon: Icon(Icons.timer_rounded),
       ),
       validator: validarEnteroPositivoOpcional,
     );
@@ -224,7 +224,7 @@ class _JuegoFormPageState extends State<JuegoFormPage> {
       keyboardType: TextInputType.number,
       decoration: const InputDecoration(
         labelText: 'Jugadores mínimos',
-        prefixIcon: Icon(Icons.person),
+        prefixIcon: Icon(Icons.person_2_rounded),
       ),
       validator: validarJugadoresMin,
     );
@@ -236,7 +236,7 @@ class _JuegoFormPageState extends State<JuegoFormPage> {
       keyboardType: TextInputType.number,
       decoration: const InputDecoration(
         labelText: 'Jugadores máximos',
-        prefixIcon: Icon(Icons.groups),
+        prefixIcon: Icon(Icons.groups_2_rounded),
       ),
       validator: validarJugadoresMax,
     );
@@ -263,7 +263,7 @@ class _JuegoFormPageState extends State<JuegoFormPage> {
       child: FilledButton.icon(
         onPressed: guardarJuego,
         icon: const Icon(
-          Icons.save,
+          Icons.save_rounded,
           size: 20,
         ),
         label: const Text(
@@ -308,8 +308,8 @@ class _JuegoFormPageState extends State<JuegoFormPage> {
   Widget construirContenido() {
     return SingleChildScrollView(
       padding: const EdgeInsets.symmetric(
-        horizontal: 20,
-        vertical: 20,
+        horizontal: 15,
+        vertical: 10,
       ),
       child: construirCardFormulario(),
     );
