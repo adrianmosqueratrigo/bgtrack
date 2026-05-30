@@ -43,15 +43,7 @@ class _PartidasPageState extends State<PartidasPage> {
   }
 
   Future<void> mostrarDetallePartida(PartidaResumen partida) async {
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (context) {
-        return const Center(
-          child: CircularProgressIndicator(),
-        );
-      },
-    );
+    mostrarCargaDetalle();
 
     try {
       final detalle = await PartidasService().obtenerDetallePartida(partida.id);
@@ -97,6 +89,71 @@ class _PartidasPageState extends State<PartidasPage> {
     }
   }
 
+  void mostrarCargaDetalle() {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) {
+        return const Center(
+          child: CircularProgressIndicator(),
+        );
+      },
+    );
+  }
+
+  String textoFechaHora(DateTime fecha) {
+    final dia = fecha.day.toString().padLeft(2, '0');
+    final mes = fecha.month.toString().padLeft(2, '0');
+    final anio = fecha.year.toString();
+    final hora = fecha.hour.toString().padLeft(2, '0');
+    final minuto = fecha.minute.toString().padLeft(2, '0');
+
+    return '$dia/$mes/$anio $hora:$minuto';
+  }
+
+  String textoDuracion(int? duracion) {
+    if (duracion == null) {
+      return 'Duración desconocida';
+    }
+
+    return '$duracion min';
+  }
+
+  String textoGanadoresParticipantes(
+    List<ParticipantePartida> participantes,
+  ) {
+    final ganadores = participantes
+        .where((participante) => participante.esGanador)
+        .map((participante) => participante.nombreJugador)
+        .toList();
+
+    if (ganadores.isEmpty) {
+      return 'Sin ganador';
+    }
+
+    return ganadores.join(', ');
+  }
+
+  String textoEstado(String estado) {
+    if (estado == 'finalizada') {
+      return 'Finalizada';
+    }
+
+    if (estado == 'cancelada') {
+      return 'Cancelada';
+    }
+
+    return estado;
+  }
+
+  String textoObservaciones(String? notas) {
+    if (notas == null || notas.trim().isEmpty) {
+      return 'Sin observaciones';
+    }
+
+    return notas;
+  }
+
   Color colorEstado(String estado) {
     if (estado == 'finalizada') {
       return Colors.green;
@@ -118,68 +175,7 @@ class _PartidasPageState extends State<PartidasPage> {
       return Icons.cancel;
     }
 
-    return Icons.pending;
-  }
-
-  String textoEstado(String estado) {
-    if (estado == 'finalizada') {
-      return 'Finalizada';
-    }
-
-    if (estado == 'cancelada') {
-      return 'Cancelada';
-    }
-
-    return estado;
-  }
-
-  String textoFechaHora(DateTime fechaHora) {
-    final dia = fechaHora.day.toString().padLeft(2, '0');
-    final mes = fechaHora.month.toString().padLeft(2, '0');
-    final anio = fechaHora.year.toString();
-    final hora = fechaHora.hour.toString().padLeft(2, '0');
-    final minuto = fechaHora.minute.toString().padLeft(2, '0');
-
-    return '$dia/$mes/$anio · $hora:$minuto';
-  }
-
-  String textoDuracion(int? duracionMinutos) {
-    if (duracionMinutos == null) {
-      return 'Sin duración';
-    }
-
-    return '$duracionMinutos min';
-  }
-
-  String textoGanadores(String? ganadores) {
-    if (ganadores == null || ganadores.trim().isEmpty) {
-      return 'Sin ganador';
-    }
-
-    return ganadores;
-  }
-
-  String textoGanadoresParticipantes(
-    List<ParticipantePartida> participantes,
-  ) {
-    final ganadores = participantes
-        .where((participante) => participante.esGanador)
-        .map((participante) => participante.nombreJugador)
-        .toList();
-
-    if (ganadores.isEmpty) {
-      return 'Sin ganador';
-    }
-
-    return ganadores.join(', ');
-  }
-
-  String textoObservaciones(String? notas) {
-    if (notas == null || notas.trim().isEmpty) {
-      return 'Sin observaciones';
-    }
-
-    return notas;
+    return Icons.info;
   }
 
   Widget construirAvatarPartida(
@@ -187,12 +183,13 @@ class _PartidasPageState extends State<PartidasPage> {
     Color primaryColor,
   ) {
     return CircleAvatar(
-      radius: 22,
+      radius: 20,
       backgroundColor: primaryColor,
       foregroundColor: Colors.white,
       child: Text(
         partida.id.toString(),
         style: const TextStyle(
+          fontSize: 14,
           fontWeight: FontWeight.bold,
         ),
       ),
@@ -217,24 +214,21 @@ class _PartidasPageState extends State<PartidasPage> {
           ),
           const SizedBox(height: 2),
           Text(
-            '${textoFechaHora(partida.fechaHora)} · '
-            '${partida.numeroJugadores} jugadores',
+            textoFechaHora(partida.fechaHora),
             style: TextStyle(
               color: secondaryTextColor,
             ),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
+          ),
+          Text(
+            '${partida.numeroJugadores} jugs ~ '
+            '${textoDuracion(partida.duracionMinutos)}',
+            style: TextStyle(
+              color: secondaryTextColor,
+            ),
           ),
           const SizedBox(height: 2),
-          Text(
-            '${textoDuracion(partida.duracionMinutos)} · '
-            'Ganador: ${textoGanadores(partida.ganadores)}',
-            style: TextStyle(
-              color: secondaryTextColor,
-            ),
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-          ),
         ],
       ),
     );
@@ -273,7 +267,7 @@ class _PartidasPageState extends State<PartidasPage> {
   ) {
     return Card(
       child: InkWell(
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(14),
         onTap: () => mostrarDetallePartida(partida),
         child: Padding(
           padding: const EdgeInsets.symmetric(
@@ -307,7 +301,7 @@ class _PartidasPageState extends State<PartidasPage> {
     Color secondaryTextColor,
   ) {
     return ListView.builder(
-      padding: const EdgeInsets.symmetric(vertical: 4),
+      padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
       itemCount: partidas.length,
       itemBuilder: (context, index) {
         final partida = partidas[index];
@@ -329,7 +323,7 @@ class _PartidasPageState extends State<PartidasPage> {
 
   Widget construirError(Object error) {
     return Padding(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(20),
       child: Text(
         'Error al cargar partidas:\n$error',
         style: TextStyle(
@@ -377,63 +371,72 @@ class _PartidasPageState extends State<PartidasPage> {
   ) {
     return AlertDialog(
       insetPadding: const EdgeInsets.symmetric(
-        horizontal: 12,
-        vertical: 24,
+        horizontal: 40,
+        vertical: 40,
       ),
-      title: Center(
-        child: Text(
-          'Partida nº ${detalle.id}',
-          textAlign: TextAlign.center,
-          style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
-        ),
-      ),
-      content: SizedBox(
-        width: double.maxFinite,
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 8,
-              vertical: 4,
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                construirTablaDetalle(
-                  detalle,
-                  participantes,
-                ),
-                const SizedBox(height: 18),
-                Text(
-                  'Participantes',
-                  textAlign: TextAlign.center,
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
-                ),
-                const SizedBox(height: 10),
-                construirTablaParticipantes(participantes),
-              ],
-            ),
-          ),
-        ),
+      title: construirTituloDialogDetalle(detalle),
+      content: construirContenidoDialogDetalle(
+        detalle,
+        participantes,
       ),
       actionsAlignment: MainAxisAlignment.center,
       actions: [
-        TextButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          child: const Text(
-            'Cerrar',
-            style: TextStyle(
-              fontSize: 17,
+        construirBotonCerrarDialog(),
+      ],
+    );
+  }
+
+  Widget construirTituloDialogDetalle(PartidaDetalle detalle) {
+    return Center(
+      child: Text(
+        'Partida nº ${detalle.id}',
+        textAlign: TextAlign.center,
+        style: Theme.of(context).textTheme.titleLarge?.copyWith(
               fontWeight: FontWeight.bold,
             ),
+      ),
+    );
+  }
+
+  Widget construirContenidoDialogDetalle(
+    PartidaDetalle detalle,
+    List<ParticipantePartida> participantes,
+  ) {
+    return SizedBox(
+      width: double.maxFinite,
+      child: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: 15,
+            vertical: 10,
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              construirTituloSeccionDialog('Datos generales'),
+              const SizedBox(height: 10),
+              construirTablaDetalle(
+                detalle,
+                participantes,
+              ),
+              const SizedBox(height: 30),
+              construirTituloSeccionDialog('Jugadores'),
+              const SizedBox(height: 10),
+              construirTablaParticipantes(participantes),
+            ],
           ),
         ),
-      ],
+      ),
+    );
+  }
+
+  Widget construirTituloSeccionDialog(String titulo) {
+    return Text(
+      titulo,
+      textAlign: TextAlign.center,
+      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+            fontWeight: FontWeight.bold,
+          ),
     );
   }
 
@@ -469,7 +472,7 @@ class _PartidasPageState extends State<PartidasPage> {
           textoGanadoresParticipantes(participantes),
         ),
         construirFilaTablaDetalle(
-          'Observaciones',
+          'Observ.',
           textoObservaciones(detalle.notas),
         ),
       ],
@@ -485,7 +488,7 @@ class _PartidasPageState extends State<PartidasPage> {
             bottom: 10,
           ),
           child: Text(
-            '$titulo:',
+            titulo,
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                   fontWeight: FontWeight.bold,
                 ),
@@ -510,7 +513,7 @@ class _PartidasPageState extends State<PartidasPage> {
   ) {
     if (participantes.isEmpty) {
       return Text(
-        'No hay participantes registrados.',
+        'No hay jugadores.',
         textAlign: TextAlign.center,
         style: Theme.of(context).textTheme.bodyMedium,
       );
@@ -551,7 +554,7 @@ class _PartidasPageState extends State<PartidasPage> {
           ),
           child: Text(
             participante.puntuacion == null
-                ? 'Sin puntuación'
+                ? 'n/a'
                 : '${participante.puntuacion} pts',
             textAlign: TextAlign.right,
             style: Theme.of(context).textTheme.bodyMedium,
@@ -571,6 +574,21 @@ class _PartidasPageState extends State<PartidasPage> {
               : const SizedBox(width: 18),
         ),
       ],
+    );
+  }
+
+  Widget construirBotonCerrarDialog() {
+    return TextButton(
+      onPressed: () {
+        Navigator.pop(context);
+      },
+      child: const Text(
+        'Cerrar',
+        style: TextStyle(
+          fontSize: 17,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
     );
   }
 

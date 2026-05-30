@@ -100,8 +100,8 @@ class _JuegoFormPageState extends State<JuegoFormPage> {
       AppSnackbar.mostrar(
         context,
         esEdicion
-            ? 'Juego actualizado correctamente'
-            : 'Juego guardado correctamente',
+            ? 'Juego actualizado'
+            : 'Juego guardado',
       );
 
       Navigator.pop(context, true);
@@ -185,7 +185,7 @@ class _JuegoFormPageState extends State<JuegoFormPage> {
       controller: nombreController,
       decoration: const InputDecoration(
         labelText: 'Nombre del juego',
-        prefixIcon: Icon(Icons.extension),
+        prefixIcon: Icon(Icons.casino_rounded),
       ),
       validator: (value) {
         return validarObligatorio(
@@ -201,7 +201,7 @@ class _JuegoFormPageState extends State<JuegoFormPage> {
       controller: tipoController,
       decoration: const InputDecoration(
         labelText: 'Tipo/categoría (opcional)',
-        prefixIcon: Icon(Icons.category),
+        prefixIcon: Icon(Icons.category_rounded),
       ),
     );
   }
@@ -212,7 +212,7 @@ class _JuegoFormPageState extends State<JuegoFormPage> {
       keyboardType: TextInputType.number,
       decoration: const InputDecoration(
         labelText: 'Duración aprox. (opcional)',
-        prefixIcon: Icon(Icons.timer),
+        prefixIcon: Icon(Icons.timer_rounded),
       ),
       validator: validarEnteroPositivoOpcional,
     );
@@ -224,7 +224,7 @@ class _JuegoFormPageState extends State<JuegoFormPage> {
       keyboardType: TextInputType.number,
       decoration: const InputDecoration(
         labelText: 'Jugadores mínimos',
-        prefixIcon: Icon(Icons.person),
+        prefixIcon: Icon(Icons.person_2_rounded),
       ),
       validator: validarJugadoresMin,
     );
@@ -236,7 +236,7 @@ class _JuegoFormPageState extends State<JuegoFormPage> {
       keyboardType: TextInputType.number,
       decoration: const InputDecoration(
         labelText: 'Jugadores máximos',
-        prefixIcon: Icon(Icons.groups),
+        prefixIcon: Icon(Icons.groups_2_rounded),
       ),
       validator: validarJugadoresMax,
     );
@@ -263,7 +263,7 @@ class _JuegoFormPageState extends State<JuegoFormPage> {
       child: FilledButton.icon(
         onPressed: guardarJuego,
         icon: const Icon(
-          Icons.save,
+          Icons.save_rounded,
           size: 20,
         ),
         label: const Text(
@@ -280,23 +280,24 @@ class _JuegoFormPageState extends State<JuegoFormPage> {
   Widget construirCardFormulario() {
     return Card(
       child: Padding(
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
         child: Form(
           key: formKey,
           child: Column(
             children: [
+              const SizedBox(height: 10),
               construirCampoNombre(),
-              const SizedBox(height: 16),
+              const SizedBox(height: 10),
               construirCampoTipo(),
-              const SizedBox(height: 16),
+              const SizedBox(height: 10),
               construirCampoDuracion(),
-              const SizedBox(height: 16),
+              const SizedBox(height: 10),
               construirCampoJugadoresMin(),
-              const SizedBox(height: 16),
+              const SizedBox(height: 10),
               construirCampoJugadoresMax(),
-              const SizedBox(height: 8),
+              const SizedBox(height: 5),
               construirSwitchActivo(),
-              const SizedBox(height: 16),
+              const SizedBox(height: 20),
               construirBotonGuardar(),
             ],
           ),
@@ -308,8 +309,8 @@ class _JuegoFormPageState extends State<JuegoFormPage> {
   Widget construirContenido() {
     return SingleChildScrollView(
       padding: const EdgeInsets.symmetric(
-        horizontal: 20,
-        vertical: 20,
+        horizontal: 15,
+        vertical: 10,
       ),
       child: construirCardFormulario(),
     );
@@ -319,7 +320,7 @@ class _JuegoFormPageState extends State<JuegoFormPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(esEdicion ? 'Editar juego' : 'Nuevo juego'),
+        title: Text(esEdicion ? 'Editar juego' : 'Añadir juego'),
       ),
       body: AppBackground(
         child: construirContenido(),

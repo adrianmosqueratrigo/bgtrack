@@ -93,7 +93,7 @@ class _EstadisticasPageState extends State<EstadisticasPage> {
             ),
           ),
           Icon(
-            desplegado ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
+            desplegado ? Icons.keyboard_arrow_up_rounded : Icons.keyboard_arrow_down_rounded,
           ),
         ],
       ),
@@ -120,7 +120,6 @@ class _EstadisticasPageState extends State<EstadisticasPage> {
               desplegado: desplegada,
               onTap: onTap,
             ),
-            // Desempaquetar/desplegar el contenido del card.
             if (desplegada) ...[
               const SizedBox(height: 20),
               contenido,
@@ -147,7 +146,6 @@ class _EstadisticasPageState extends State<EstadisticasPage> {
   TableRow construirFilaTablaEstadisticas(String titulo, String valor) {
     return TableRow(
       children: [
-        // Texto de la izq.
         Padding(
           padding: const EdgeInsets.only(
             right: 20,
@@ -160,7 +158,6 @@ class _EstadisticasPageState extends State<EstadisticasPage> {
                 ),
           ),
         ),
-        // Texto de la dcha.
         Padding(
           padding: const EdgeInsets.only(
             //bottom: 10,
@@ -287,7 +284,7 @@ class _EstadisticasPageState extends State<EstadisticasPage> {
       isExpanded: true,
       decoration: const InputDecoration(
         labelText: 'Jugador',
-        prefixIcon: Icon(Icons.person),
+        prefixIcon: Icon(Icons.person_2_rounded),
       ),
       items: jugadores.map((jugador) {
         return DropdownMenuItem(
@@ -421,7 +418,7 @@ class _EstadisticasPageState extends State<EstadisticasPage> {
       isExpanded: true,
       decoration: const InputDecoration(
         labelText: 'Juego',
-        prefixIcon: Icon(Icons.extension),
+        prefixIcon: Icon(Icons.casino_rounded),
       ),
       items: juegos.map((juego) {
         return DropdownMenuItem(
@@ -533,14 +530,15 @@ class _EstadisticasPageState extends State<EstadisticasPage> {
     EstadisticasGenerales estadisticas,
   ) {
     return SingleChildScrollView(
-      padding: const EdgeInsets.all(15),
+      padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
       child: Column(
         children: [
           construirSeccionEstadisticasGenerales(estadisticas),
-          const SizedBox(height: 10),
+          const SizedBox(height: 5),
           construirSeccionEstadisticasJugador(),
-          const SizedBox(height: 10),
+          const SizedBox(height: 5),
           construirSeccionEstadisticasJuego(),
+          const SizedBox(height: 20),
         ],
       ),
     );

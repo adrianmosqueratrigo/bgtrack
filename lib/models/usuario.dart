@@ -1,6 +1,8 @@
 class Usuario {
   int? id;
   String rol;
+  String nombre;
+  String? apellidos;
   String username;
   String email;
   String passwordHash;
@@ -11,6 +13,8 @@ class Usuario {
   Usuario({
     this.id,
     required this.rol,
+    required this.nombre,
+    required this.apellidos,
     required this.username,
     required this.email,
     required this.passwordHash,
@@ -23,6 +27,8 @@ class Usuario {
     return Usuario(
       id: map['id'],
       rol: map['rol'],
+      nombre: map['nombre'],
+      apellidos: map['apellidos'],
       username: map['username'],
       email: map['email'],
       passwordHash: map['password_hash'],
@@ -40,6 +46,8 @@ class Usuario {
     return {
       'id': id,
       'rol': rol,
+      'nombre': nombre,
+      'apellidos': apellidos,
       'username': username,
       'email': email,
       'password_hash': passwordHash,

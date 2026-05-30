@@ -217,7 +217,7 @@ class _NuevaPartidaPageState extends State<NuevaPartidaPage> {
     if (juegoSeleccionado == null) {
       AppSnackbar.mostrarError(
         context,
-        'Selecciona un juego',
+        'Selecciona juego',
       );
       return false;
     }
@@ -225,7 +225,7 @@ class _NuevaPartidaPageState extends State<NuevaPartidaPage> {
     if (numeroParticipantes == null) {
       AppSnackbar.mostrarError(
         context,
-        'Selecciona el número de jugadores',
+        'Selecciona nº de jugadores',
       );
       return false;
     }
@@ -233,7 +233,7 @@ class _NuevaPartidaPageState extends State<NuevaPartidaPage> {
     if (jugadoresSeleccionados.any((jugador) => jugador == null)) {
       AppSnackbar.mostrarError(
         context,
-        'Selecciona todos los jugadores de la partida',
+        'Selecciona jugadores',
       );
       return false;
     }
@@ -363,7 +363,7 @@ class _NuevaPartidaPageState extends State<NuevaPartidaPage> {
             ),
           ),
           Icon(
-            desplegado ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
+            desplegado ? Icons.keyboard_arrow_up_rounded : Icons.keyboard_arrow_down_rounded,
           ),
         ],
       ),
@@ -413,7 +413,7 @@ class _NuevaPartidaPageState extends State<NuevaPartidaPage> {
       isExpanded: true,
       decoration: const InputDecoration(
         labelText: 'Juego',
-        prefixIcon: Icon(Icons.extension),
+        prefixIcon: Icon(Icons.casino_rounded),
       ),
       items: juegos.map((juego) {
         return DropdownMenuItem(
@@ -451,7 +451,7 @@ class _NuevaPartidaPageState extends State<NuevaPartidaPage> {
       isExpanded: true,
       decoration: const InputDecoration(
         labelText: 'Número de jugadores',
-        prefixIcon: Icon(Icons.groups),
+        prefixIcon: Icon(Icons.groups_2_rounded),
       ),
       items: opcionesNumeroParticipantes(),
       onChanged: cambiarNumeroParticipantes,
@@ -473,7 +473,7 @@ class _NuevaPartidaPageState extends State<NuevaPartidaPage> {
         isExpanded: true,
         decoration: InputDecoration(
           labelText: 'Jugador ${index + 1}',
-          prefixIcon: const Icon(Icons.person),
+          prefixIcon: const Icon(Icons.person_2_rounded),
         ),
         items: jugadoresDisponiblesParaDropdown(index).map((jugador) {
           return DropdownMenuItem(
@@ -592,7 +592,7 @@ class _NuevaPartidaPageState extends State<NuevaPartidaPage> {
         child: FilledButton.icon(
           onPressed: finalizarPartida,
           icon: const Icon(
-            Icons.flag,
+            Icons.flag_rounded,
             size: 22,
           ),
           label: const Text(
@@ -639,6 +639,7 @@ class _NuevaPartidaPageState extends State<NuevaPartidaPage> {
               construirSeccionReloj(),
               const SizedBox(height: 10),
               construirSeccionFinalizarPartida(),
+              const SizedBox(height: 20)
             ],
           ),
         ),

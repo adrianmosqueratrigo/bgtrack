@@ -44,7 +44,7 @@ class _JuegosPageState extends State<JuegosPage> {
   }
 
   IconData iconoEstado(bool activo) {
-    return activo ? Icons.check_circle : Icons.cancel;
+    return activo ? Icons.check_circle_outline_rounded : Icons.cancel_outlined;
   }
 
   Widget construirAvatarJuego(Color primaryColor) {
@@ -53,8 +53,8 @@ class _JuegosPageState extends State<JuegosPage> {
       backgroundColor: primaryColor,
       foregroundColor: Colors.white,
       child: const Icon(
-        Icons.extension,
-        size: 22,
+        Icons.casino_rounded,
+        size: 28,
       ),
     );
   }
@@ -84,7 +84,7 @@ class _JuegosPageState extends State<JuegosPage> {
           ),
           const SizedBox(height: 2),
           Text(
-            '${juego.jugadoresMin}-${juego.jugadoresMax} jugs. ~ '
+            '${juego.jugadoresMin}-${juego.jugadoresMax} jugs ~ '
             '${juego.duracionEstimadaMinutos ?? 0} min',
             style: TextStyle(
               color: secondaryTextColor,
@@ -155,6 +155,7 @@ class _JuegosPageState extends State<JuegosPage> {
     Color secondaryTextColor,
   ) {
     return ListView.builder(
+      padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
       itemCount: juegos.length,
       itemBuilder: (context, index) {
         final juego = juegos[index];
@@ -176,7 +177,7 @@ class _JuegosPageState extends State<JuegosPage> {
 
   Widget construirError(Object error) {
     return Padding(
-      padding: const EdgeInsets.all(15),
+      padding: const EdgeInsets.all(20),
       child: Text(
         'Error al cargar juegos:\n$error',
         style: TextStyle(
