@@ -1,6 +1,8 @@
 # BGTrack
 
-BGTrack es una aplicación para la gestión y registro de partidas de juegos de mesa. Ésta permite registrar juegos, jugadores, partidas y sus puntuaciones y ganadores, además de consultar un histórico y estadísticas básicas.
+Aplicación de escritorio/móvil desarrollada con **Flutter** para registrar y consultar partidas de juegos de mesa.
+
+El proyecto permite gestionar una ludoteca, jugadores, partidas, estadísticas y usuarios, manteniendo un flujo completo desde la creación de una partida hasta su finalización y almacenamiento en base de datos.
 
 ---
 
@@ -11,178 +13,317 @@ BGTrack es una aplicación para la gestión y registro de partidas de juegos de 
 - MySQL
 - Docker
 - phpMyAdmin
-- Android Studio Emulator
-- Git / GitHub
-
----
-
-## Estado del proyecto
-
-El proyecto está actualmente en desarrollo.
-
-Funcionalidades previstas:
-
-- Login de usuarios.
-- Menú principal / dashboard.
-- Gestión de juegos.
-- Gestión de jugadores.
-- Registro de nuevas partidas.
-- Consulta de partidas jugadas.
-- Estadísticas básicas.
-- Gestión de usuarios para administradores.
+- SharedPreferences
+- Visual Studio Code
+- Android Studio / Emulador Android
 
 ---
 
 ## Requisitos previos
 
-Antes de ejecutar el proyecto, es necesario tener instalado:
+Antes de arrancar el proyecto, asegúrate de tener instalado:
 
 - Flutter SDK
-- Android Studio
-- Un emulador Android configurado (Pixel 7)
-- Docker Desktop
+- Dart SDK
 - Git
-- IDE (por ej. Visual Studio Code)
+- Docker Desktop
+- Visual Studio Code
+- Android Studio
+- Un emulador Android configurado
 
-Para comprobar que Flutter está correctamente instalado:
+> Nota: durante el desarrollo, se utilizó el emulador Pixel 7.
 
-    flutter doctor
+---
+
+## Arrancar el proyecto en local
+
+### 1. Clonar el repositorio
+
+```bash
+git clone <URL_DEL_REPOSITORIO>
+```
+
+Entrar en la carpeta del proyecto:
+
+```bash
+cd bgtrack
+```
+
+---
+
+### 2. Instalar dependencias de Flutter
+
+Desde la raíz del proyecto, ejecutar:
+
+```bash
+flutter pub get
+```
+
+---
+
+### 3. Levantar los contenedores Docker
+
+El proyecto utiliza Docker para levantar la base de datos MySQL y phpMyAdmin.
+
+```bash
+docker compose up -d
+```
+
+Este comando arranca los contenedores en segundo plano.
+
+Los scripts SQL se ejecutan automáticamente cuando se crea el contenedor de la base de datos.
+
+```txt
+bgtrack\docker\mysql\init
+```
+
+Esta es la ruta donde se ubican los scripts SQL.
+
+---
+
+### 4. Seleccionar el emulador desde el VS Code
+
+Desde el IDE, selecciona el emulador para que esté activo y disponible cuando se arranque la aplicación.
+
+
+---
+
+### 5. Arrancar la aplicación Flutter
+
+Desde VS Code, Android Studio o una terminal en la raíz del proyecto:
+
+```bash
+flutter run
+```
+
+---
+
+## URLs del proyecto
+
+Una vez arrancado Docker, estarán disponibles las siguientes URLs:
+
+| Servicio | URL |
+|---|---|
+| MySQL | http://localhost:3306 |
+| phpMyAdmin | http://localhost:8081 |
+
+---
+
+## Base de datos
+
+La base de datos se levanta mediante Docker Compose.
+
+El proyecto utiliza MySQL y contiene las tablas principales necesarias para gestionar usuarios, juegos, jugadores, partidas y participaciones.
+
+Tablas principales:
+
+- usuarios
+- juegos
+- jugadores
+- partidas
+- participaciones
+
+---
+
+## Acceso a phpMyAdmin
+
+phpMyAdmin se levanta mediante Docker Compose y está disponible en:
+
+```txt
+http://localhost:8081
+```
+
+Credenciales para el entorno local de desarrollo:
+
+| Campo | Valor |
+|---|---|
+| Servidor | mysql |
+| Usuario | bgtrack |
+| Contraseña | bgtrack |
+
+---
+
+## Usuarios de prueba
+
+El proyecto incluye usuarios de prueba para iniciar sesión en la aplicación.
+
+| Usuario | Contraseña | Rol |
+|---|---|---|
+| admin | 1234abc. | admin |
+
+---
+
+## Funcionalidades principales
+
+### Login y sesión
+
+- Inicio de sesión de usuarios.
+- Mantenimiento de sesión iniciada.
+- Cierre de sesión.
+- Diferenciación entre usuario normal y administrador.
+
+### Mi cuenta
+
+- Visualización de los datos del usuario logueado.
+- Edición de datos personales.
+- Acceso a gestión de usuarios para administradores.
+- Cierre de sesión.
+
+### Gestión de usuarios
+
+- Listado de usuarios.
+- Creación de usuarios.
+- Edición de usuarios.
+- Activación o desactivación de usuarios.
+- Asignación de rol de usuario o administrador.
+
+### Gestión de juegos
+
+- Listado de juegos.
+- Creación de juegos.
+- Edición de juegos.
+- Activación o desactivación de juegos.
+- Definición de número mínimo y máximo de jugadores.
+- Definición de duración aproximada.
+
+### Gestión de jugadores
+
+- Listado de jugadores.
+- Creación de jugadores.
+- Edición de jugadores.
+- Activación o desactivación de jugadores.
+- Registro de fecha de nacimiento y residencia.
+
+### Nueva partida
+
+- Selección de juego.
+- Selección del número de jugadores.
+- Selección de participantes.
+- Control de reloj de partida.
+- Confirmación de datos de partida.
+- Finalización de partida.
+
+### Finalizar partida
+
+- Resumen de la partida.
+- Selección del estado de la partida.
+- Registro de puntuaciones.
+- Marcado de ganador o ganadores.
+- Registro de observaciones.
+- Guardado de partida y participaciones.
+
+### Histórico de partidas
+
+- Listado de partidas registradas.
+- Consulta de detalle de cada partida.
+- Edición básica de partidas.
+- Visualización de participantes, puntuaciones y ganadores.
+
+### Estadísticas
+
+- Estadísticas generales.
+- Estadísticas por jugador.
+- Estadísticas por juego.
+- Cálculo de partidas jugadas, victorias, ratios y duración media.
 
 ---
 
 ## Estructura general del proyecto
 
-En desarrollo.
-
----
-
-## Base de datos con Docker
-
-El proyecto utiliza MySQL mediante Docker.
-
-Servicios definidos:
-
-| Servicio | Puerto local | Puerto contenedor |
-|---|---:|---:|
-| MySQL | 3306 | 3306 |
-| phpMyAdmin | 8081 | 80 |
-
-Credenciales de MySQL para desarrollo:
-
-    Base de datos: bgtrack
-    Usuario root: root
-    Contraseña root: root
-
-    Usuario app: bgtrack
-    Contraseña app: bgtrack
-
----
-
-## Levantar la base de datos
-
-Desde la raíz del proyecto, ejecutar:
-
-    docker compose up -d
-
-Comprobar que los contenedores están activos:
-
-    docker ps
-
-Acceder a phpMyAdmin:
-
-    http://localhost:8081
-
-Credenciales recomendadas para entrar:
-
-    Usuario: root
-    Contraseña: root
-
-También se puede usar:
-
-    Usuario: bgtrack
-    Contraseña: bgtrack
-
----
-
-## Inicialización de la base de datos
-
-Los scripts SQL se encuentran en:
-
-    docker/mysql/init/
-
-Importante: los scripts de inicialización solo se ejecutan automáticamente la primera vez que se crea el volumen.
-
-Si se necesita reiniciar la base de datos desde cero:
-
-    docker compose down -v
-    docker compose up -d
-
-> Atención: `docker compose down -v` elimina el volumen de datos de MySQL.
-
----
-
-## Ejecutar la aplicación Flutter
-
-Primero, arrancar el emulador desde Android Studio:
-
-    Android Studio → Device Manager → Start emulator
-
-Después, desde la raíz del proyecto:
-
-    flutter pub get
-    flutter devices
-    flutter run
-
-También se puede ejecutar desde Visual Studio Code:
-
-1. Abrir el proyecto en VS Code.
-2. Seleccionar el emulador Android.
-3. Abrir `lib/main.dart`.
-4. Pulsar `F5`.
+```txt
+bgtrack/
+├── assets/
+│   └── images/
+├── docker
+│   └── mysql/
+│       └── init/
+├── lib/
+│   ├── database/
+│   ├── models/
+│   ├── pages/
+│   ├── services/
+│   ├── theme/
+│   ├── utils/
+│   ├── widgets/
+│   └── main.dart
+├── compose.yml
+├── pubspec.yaml
+└── README.md
+```
 
 ---
 
 ## Comandos útiles
 
-Comprobar instalación de Flutter:
+Instalar dependencias:
 
-    flutter doctor
+```bash
+flutter pub get
+```
 
-Ver dispositivos disponibles:
+Ejecutar la aplicación:
 
-    flutter devices
+```bash
+flutter run
+```
 
-Ejecutar la app:
+Arrancar Docker:
 
-    flutter run
+```bash
+docker compose up -d
+```
 
-Levantar Docker:
+Parar Docker sin borrar datos:
 
-    docker compose up -d
+```bash
+docker compose down
+```
 
-Parar Docker:
+Parar Docker borrando también la base de datos:
 
-    docker compose down
-
-Reiniciar la base de datos desde cero:
-
-    docker compose down -v
-    docker compose up -d
-
-Entrar al contenedor de MySQL:
-
-    docker exec -it bgtrack_mysql mysql -u root -p
-
----
-
-## Notas de desarrollo
-
-La aplicación está pensada para ejecutarse en un emulador Android durante el desarrollo. La base de datos se ejecuta localmente mediante Docker.
-
-En una arquitectura final, la aplicación Flutter debería comunicarse con la base de datos mediante una API/backend, no directamente contra MySQL.
+```bash
+docker compose down -v
+```
 
 ---
 
-## Autor
+## Notas para desarrollo
 
-Proyecto desarrollado por Adrián M.
+- La aplicación está desarrollada con Flutter.
+- La base de datos utilizada es MySQL.
+- La conexión con la base de datos se configura en:
+
+```txt
+lib/database/connection.dart
+```
+
+- El tema visual general de la aplicación se configura en:
+
+```txt
+lib/theme/app_theme.dart
+```
+
+- Los widgets reutilizables se encuentran en:
+
+```txt
+lib/widgets/
+```
+
+- Los métodos comunes, como los mensajes `Snackbar`, se encuentran en:
+
+```txt
+lib/utils/
+```
+
+- Los scripts SQL iniciales se encuentran en:
+
+```txt
+01_schema.sql
+02_data_test.sql
+```
+
+---
+
+## Estado del proyecto
+
+Proyecto finalizado.
