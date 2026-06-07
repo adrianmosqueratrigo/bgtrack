@@ -6,9 +6,9 @@ SET CHARACTER SET utf8mb4;
 INSERT INTO usuarios 
 (rol, nombre, apellidos, username, email, password_hash, activo)
 VALUES
-('admin', 'Gandalf', 'The White', 'gandalf', 'admin@aulanosa.es', '1234', TRUE),
-('usuario', 'Aragorn', 'Son of Arathorn', 'aragorn', 'aragorn@aulanosa.es', '1234', TRUE),
-('usuario', 'Frodo', 'Bolsón', 'frodo', 'frodo@aulanosa.es', '1234', FALSE);
+('admin', 'Gandalf', 'The White', 'gandalf', 'gandalf@aulanosa.es', '1234abc.', TRUE),
+('usuario', 'Aragorn', 'Son of Arathorn', 'aragorn', 'aragorn@aulanosa.es', '1234abc.', TRUE),
+('usuario', 'Frodo', 'Bolsón', 'frodo', 'frodo@aulanosa.es', '1234abc.', FALSE);
 
 INSERT INTO juegos 
 (nombre, tipo, duracion_estimada_minutos, jugadores_min, jugadores_max)
@@ -78,36 +78,36 @@ VALUES
 INSERT INTO partidas
 (id, id_juego, id_usuario, fecha_hora, duracion_minutos, estado, notas)
 VALUES
-(2, 2, 1, '2026-01-10 17:30:00', 32, 'finalizada', 'Partida de prueba generada para cargar histórico.'),
+(2, 2, 1, '2026-01-10 17:30:00', 32, 'finalizada', NULL),
 (3, 5, 2, '2026-01-14 18:30:00', 35, 'finalizada', 'Sesión de tarde.'),
 (4, 9, 2, '2026-01-18 19:30:00', 47, 'finalizada', NULL),
-(5, 11, 2, '2026-01-22 20:30:00', 82, 'finalizada', 'Victoria clara del ganador.'),
-(6, 16, 2, '2026-01-26 21:30:00', 126, 'finalizada', 'Partida de prueba generada para cargar histórico.'),
-(7, 22, 2, '2026-01-30 17:30:00', 25, 'finalizada', 'Partida bastante disputada.'),
+(5, 11, 2, '2026-01-22 20:30:00', 82, 'finalizada', 'Épica.'),
+(6, 16, 2, '2026-01-26 21:30:00', 126, 'finalizada', NULL),
+(7, 22, 2, '2026-01-30 17:30:00', 25, 'finalizada', 'MVP'),
 (8, 32, 1, '2026-02-03 18:30:00', 35, 'finalizada', 'Sesión de tarde.'),
-(9, 43, 2, '2026-02-07 19:30:00', NULL, 'cancelada', 'Partida cancelada antes de finalizar.'),
+(9, 43, 2, '2026-02-07 19:30:00', 50, 'cancelada', NULL),
 (10, 48, 2, '2026-02-11 20:30:00', 71, 'finalizada', 'Partida igualada hasta el final.'),
 (11, 23, 2, '2026-02-15 21:30:00', 25, 'finalizada', 'Partida rápida.'),
-(12, 15, 2, '2026-02-19 17:30:00', 26, 'finalizada', 'Partida igualada hasta el final.'),
+(12, 15, 2, '2026-02-19 17:30:00', 26, 'finalizada', NULL),
 (13, 30, 2, '2026-02-23 18:30:00', 17, 'finalizada', NULL),
 (14, 27, 1, '2026-02-27 19:30:00', 55, 'finalizada', 'Victoria clara del ganador.'),
-(15, 37, 2, '2026-03-03 20:30:00', 127, 'finalizada', 'Sesión de tarde.'),
-(16, 6, 2, '2026-03-07 21:30:00', 135, 'finalizada', 'Partida rápida.'),
+(15, 37, 2, '2026-03-03 20:30:00', 127, 'finalizada', 'Menuda partida.'),
+(16, 6, 2, '2026-03-07 21:30:00', 135, 'finalizada', 'Primera partida y ni tan mal.'),
 (17, 1, 2, '2026-03-11 17:30:00', 36, 'finalizada', 'Se probó una estrategia diferente.'),
 (18, 10, 2, '2026-03-15 18:30:00', 36, 'finalizada', 'Partida rápida.'),
 (19, 13, 2, '2026-03-19 19:30:00', 55, 'finalizada', NULL),
 (20, 24, 1, '2026-03-23 20:30:00', 104, 'finalizada', 'Partida bastante disputada.'),
-(21, 33, 2, '2026-03-27 21:30:00', 23, 'finalizada', 'Partida de prueba generada para cargar histórico.'),
-(22, 40, 2, '2026-03-31 17:30:00', 39, 'finalizada', 'Partida con varios jugadores habituales.'),
-(23, 45, 2, '2026-04-04 18:30:00', NULL, 'cancelada', 'Partida cancelada antes de finalizar.'),
+(21, 33, 2, '2026-03-27 21:30:00', 23, 'finalizada', NULL),
+(22, 40, 2, '2026-03-31 17:30:00', 39, 'finalizada', 'Nadie quería el oro pero al final lloraron.'),
+(23, 45, 2, '2026-04-04 18:30:00', 70, 'cancelada', NULL),
 (24, 4, 2, '2026-04-08 19:30:00', 144, 'finalizada', 'Partida con varios jugadores habituales.'),
-(25, 35, 2, '2026-04-12 20:30:00', 100, 'finalizada', 'Partida bastante disputada.'),
-(26, 17, 1, '2026-04-16 21:30:00', 86, 'finalizada', 'Se probó una estrategia diferente.'),
-(27, 20, 2, '2026-04-20 17:30:00', 55, 'finalizada', 'Partida igualada hasta el final.'),
-(28, 21, 2, '2026-04-24 18:30:00', 72, 'finalizada', 'Victoria clara del ganador.'),
+(25, 35, 2, '2026-04-12 20:30:00', 100, 'finalizada', NULL),
+(26, 17, 1, '2026-04-16 21:30:00', 86, 'finalizada', 'Un poco sin más...'),
+(27, 20, 2, '2026-04-20 17:30:00', 55, 'finalizada', NULL),
+(28, 21, 2, '2026-04-24 18:30:00', 72, 'finalizada', 'Victoria clarísima.'),
 (29, 39, 2, '2026-04-28 19:30:00', 76, 'finalizada', 'Partida igualada hasta el final.'),
 (30, 41, 2, '2026-05-02 20:30:00', 83, 'finalizada', NULL),
-(31, 42, 2, '2026-05-06 21:30:00', 83, 'finalizada', 'Partida igualada hasta el final.');
+(31, 42, 2, '2026-05-06 21:30:00', 83, 'finalizada', 'Partida con trampas.');
 
 INSERT INTO participaciones
 (id_partida, id_jugador, puntuacion, es_ganador)

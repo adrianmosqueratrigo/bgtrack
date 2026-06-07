@@ -93,3 +93,8 @@ CREATE TABLE participaciones (
     CONSTRAINT uq_partida_jugador
         UNIQUE (id_partida, id_jugador)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+INSERT INTO usuarios 
+(rol, nombre, apellidos, username, email, password_hash, activo)
+VALUES
+('admin', 'Administrador', 'Todopoderoso', 'admin', 'admin@aulanosa.es', '1234abc.', TRUE;
