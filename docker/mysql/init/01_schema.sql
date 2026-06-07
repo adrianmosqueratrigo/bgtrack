@@ -97,4 +97,4 @@ CREATE TABLE participaciones (
 INSERT INTO usuarios 
 (rol, nombre, apellidos, username, email, password_hash, activo)
 VALUES
-('admin', 'Administrador', 'Todopoderoso', 'admin', 'admin@aulanosa.es', '1234abc.', TRUE;
+('admin', 'Administrador', 'Todopoderoso', 'admin', 'admin@aulanosa.es', '1234abc.', TRUE);
